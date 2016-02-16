@@ -5,10 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server -d",
-    "test": "webpack-dev-server -d --config webpack.test.config.js",
-    "mocha": "mocha",
-    "lint": "eslint src/**/*.js",
-    "karma": "karma start",
+    "test": "karma start",
     "build:dev": "webpack -d",
     "build:prod": "webpack -p"
   },
