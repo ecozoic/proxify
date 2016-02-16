@@ -1,4 +1,4 @@
-// https://github.com/deepsweet/babel-istanbul-loader
+// https://github.com/webpack/karma-webpack#alternative-usage
 
 /*global require*/
 
