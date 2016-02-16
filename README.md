@@ -1,1 +1,1 @@
-# proxy-log
+# proxyify

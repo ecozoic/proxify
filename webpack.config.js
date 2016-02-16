@@ -2,7 +2,7 @@ var path = require('path');
 
 module.exports = {
   context: path.resolve('src/'),
-  entry: ['./app'],
+  entry: ['./index'],
   output: {
     path: path.resolve('build/'),
     publicPath: '/public/assets/',
@@ -10,7 +10,9 @@ module.exports = {
   },
 
   devServer: {
-    contentBase: 'public'
+    contentBase: 'public',
+    host: 'localhost',
+    port: 8080
   },
 
   module: {
