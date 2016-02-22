@@ -1,6 +1,11 @@
 /**
  * Created by Mark.Mosby on 2/21/2016.
  */
+  var trapFns = require("trapFuncs.js"),
+      objTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "setPrototypeOf", "preventExtensions", "isExtensible", "ownKeys", "enumerate", "hasTarget"],
+      fnTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "setPrototypeOf", "preventExtensions", "isExtensible",
+        "ownKeys", "enumerate", "hasTarget", "has", "apply", "construct"],
+      arrTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "setPrototypeOf", "preventExtensions", "isExtensible", "enumerate", "has"];
 
 export default function proxify(obj, settings) {
 	if (typeof obj == "object")
@@ -17,161 +22,100 @@ function proxifyObject(obj, settings) {
       traps = [];
 	if (settings.keys) keys = settings.keys;
 	else if (settings.delegatable) {
-		for (var key in obj)
-			keys.push(key);
+		for (var key in obj)    //There's also Reflect.enumerate that can get us delegated keys, but I'm not sure if it produces
+			keys.push(key);       //keys, or if it produces an iterator that can iterate the delegatable keys
 	}
-	else {
-		keys = Reflect.ownKeys(obj);
-	}
+	else keys = Reflect.ownKeys(obj);
 
   if (settings.traps) traps = settings.traps;
-  else traps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "preventExtensions", "isExtensible", "ownKeys", "enumerate", "hasTarget"];
+  else traps = objTraps;
 
   var handler = {};
-
-	var handler = {
-		get(target, key, context) {
-			if (~keys.indexOf(key)) {
-				console.log(key + " accessed on " + target);
-			}
-			return Reflect.get(target, key, context);
-	},
-	set(target, key, val, context) {
-    if (~keys.indexOf(key)) {
-      console.log(key + "set on " + target + " with value of " + val);
+  Object.defineProperty(
+    handler,
+    "_internalKeys",
+    {
+      value: keys,
+      writable: false,
+      configurable: false,
+      enumerable: false
     }
-		Reflect.set(target, key, val, context);
-	},
-	deleteProperty(target, key, context) {
-    if (~keys.indexOf(key)) {
-      console.log(key + " removed from " + target);
-    }
-		Reflect.deleteProperty(target, key);
-	},
-	getOwnPropertyDescriptor(target, key) {
-		console.log("getOwnPropertyDescriptor called for " + target);
-	},
-	defineProperty(target, key, val, context) {
-		console.log("New property definition through Object.defineProperty(ies) on " + target, "key: " + key, "value: " + val);
-		Reflect.defineProperty(target, key, val);
-	},
-	getPrototypeOf(target, key, context) {
+  );
 
-	},
-	setPrototypeOf(target, key, context) {
+  for (let i = 0; i < traps.length; i++) {
+    if (Reflect.has(trapFns, traps[i]))
+      handler[traps[i]] = trapFns[traps[i]];
+  }
 
-	},
-	preventExtensions(target, key, context) {
-
-	},
-	isExtensible(target, key, context) {
-
-	},
-	ownKeys(target, key, context) {
-
-	},
-	enumerate(target, key, context) {
-
-	},
-	hastarget, key, context) {
-
-	}
-};
-return new Proxy(obj, handler);
+  return new Proxy(obj, handler);
 }
 
-function proxifyFunction(fn) {
-	var handler = {
-		get(target, key, context) {
-		console.log(key + " accessed on " + target);
-		return Reflect.get(target, key, context);
-	},
-	set(target, key, val, context) {
-		console.log(key + "set on " + target + " with value of " + val);
-		Reflect.set(target, key, val, context);
-	},
-	deleteProperty(target, key, context) {
-		console.log(key + " removed from " + target);
-		Reflect.deleteProperty(target, key);
-	},
-	getOwnPropertyDescriptor(target, key, context) {
+function proxifyFunction(fn, settings) {
+  var keys = [],
+      traps = [];
 
-	},
-	defineProperty(target, key, context) {
+  if (settings.keys) keys = settings.keys;
+  else if (settings.delegatable) {
+    for (var key in fn) {
+      keys.push(key);
+    }
+  }
+  else keys = Reflect.ownKeys(fn);
 
-	},
-	getPrototypeOf(target, key, context) {
+  if (settings.traps) traps = settings.traps;
+  else traps = fnTraps;
 
-	},
-	setPrototypeOf(target, key, context) {
+  var handler = {};
+  Object.defineProperty(
+    handler,
+    "_internalKeys",
+    {
+      value: keys,
+      writable: false,
+      configurable: false,
+      enumerable: false
+    }
+  );
 
-	},
-	preventExtensions(target, key, context) {
+  for (let i = 0; i < traps.length; i++) {
+    if (Reflect.has(trapFns, traps[i]))
+      handler[traps[i]] = trapFns[traps[i]];
+  }
 
-	},
-	isExtensible(target, key, context) {
-
-	},
-	ownKeys(target, key, context) {
-
-	},
-	enumerate(target, key, context) {
-
-	},
-	has(target, key, context) {
-
-	},
-	apply(target, key, context) {
-
-	},
-	construct(target, key, context) {
-
-	}
-};
-return new Proxy(fn, handler);
+  return new Proxy(fn, handler);
 }
 
-function proxifyArray (arr) {
-	var handler = {
-		get(target, key, context) {
-		console.log(key + " accessed on " + target);
-		return Reflect.get(target, key, context);
-	},
-	set(target, key, val, context) {
-		console.log(key + "set on " + target + " with value of " + val);
-		Reflect.set(target, key, val, context);
-	},
-	deleteProperty(target, key, context) {
-		console.log(key + " removed from " + target);
-		Reflect.deleteProperty(target, key);
-	},
-	getOwnPropertyDescriptor() {
+function proxifyArray (arr, settings) {
+  var keys = [],
+      traps = [];
 
-	},
-	defineProperty(target, key, context) {
+  if (settings.keys) keys = settings.keys;
+  else if (settings.delegatable) {
+    for (var key in arr) {
+      keys.push(key);
+    }
+  }
+  else keys = Reflect.ownKeys(fn);
 
-	},
-	getPrototypeOf(target, key, context) {
+  if (settings.traps) traps = settings.traps;
+  else traps = arrTraps;
 
-	},
-	setPrototypeOf(target, key, context) {
+	var handler = {};
+  Object.defineProperty(
+    handler,
+    "_internalKeys",
+    {
+      value: keys,
+      writable: false,
+      configurable: false,
+      enumerable: false
+    }
+  );
 
-	},
-	preventExtensions(target, key, context) {
+  for (let i = 0; i < traps.length; i++) {
+    if (Reflect.has(trapFns, traps[i]))
+      handler[traps[i]] = trapFns[traps[i]];
+  }
 
-	},
-	isExtensible(target, key, context) {
-
-	},
-	ownKeys(target, key, context) {
-
-	},
-	enumerate(target, key, context) {
-
-	},
-	has(target, key, context) {
-
-	}
-};
-return new Proxy(arr, handler);
+  return new Proxy(arr, handler);
 }
