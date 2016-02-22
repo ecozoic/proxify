@@ -19,7 +19,7 @@ export default function proxify(obj, settings) {
 
 function proxifyObject(obj, settings) {
 	var keys = [],
-      traps = [];
+      settings = settings && typeof settings == "object" ? settings : {};
 	if (settings.keys) keys = settings.keys;
 	else if (settings.delegatable) {
 		for (var key in obj)    //There's also Reflect.enumerate that can get us delegated keys, but I'm not sure if it produces
@@ -27,8 +27,7 @@ function proxifyObject(obj, settings) {
 	}
 	else keys = Reflect.ownKeys(obj);
 
-  if (settings.traps) traps = settings.traps;
-  else traps = objTraps;
+  var traps = settings.traps || objTraps;
 
   var handler = {};
   Object.defineProperty(
@@ -52,7 +51,7 @@ function proxifyObject(obj, settings) {
 
 function proxifyFunction(fn, settings) {
   var keys = [],
-      traps = [];
+      settings = settings && typeof settings == "object" ? settings : {};
 
   if (settings.keys) keys = settings.keys;
   else if (settings.delegatable) {
@@ -62,8 +61,7 @@ function proxifyFunction(fn, settings) {
   }
   else keys = Reflect.ownKeys(fn);
 
-  if (settings.traps) traps = settings.traps;
-  else traps = fnTraps;
+  traps = settings.traps || fnTraps;
 
   var handler = {};
   Object.defineProperty(
@@ -87,7 +85,7 @@ function proxifyFunction(fn, settings) {
 
 function proxifyArray (arr, settings) {
   var keys = [],
-      traps = [];
+      settings = settings && typeof settings == "object" ? settings : {};
 
   if (settings.keys) keys = settings.keys;
   else if (settings.delegatable) {
@@ -97,8 +95,7 @@ function proxifyArray (arr, settings) {
   }
   else keys = Reflect.ownKeys(fn);
 
-  if (settings.traps) traps = settings.traps;
-  else traps = arrTraps;
+  traps = settings.traps || arrTraps;
 
 	var handler = {};
   Object.defineProperty(
