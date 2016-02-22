@@ -3,8 +3,8 @@
  */
 var traps = {
   get: function _get(target, key, context) {
-    if (~context._internalKeys.indexOf(key)) {
-      console.log(key + " accessed on " + target);
+    if (~context._internalKeys.indexOf(key) || context._delegatable) {  //log the get operation if we find the key in the keys array
+      console.log(key + " accessed on " + target);                      //or delegation is allowed
     }
     return Reflect.get(target, key, context);
   },
@@ -50,9 +50,9 @@ var traps = {
   enumerate: function _enumerate(target, key, context) {
 
   },
-  hasTarget: function _hastarget, key, context) {
+  hasTarget: function _hastarget (target, key, context) {
 
   }
 };
 
-export traps;
+export traps as default;

@@ -12,7 +12,7 @@ export default function proxify(obj, settings) {
 		return proxifyObject(obj, settings);			//proxify this as an [object object]
 	else if (typeof obj == "function")
 		return proxifyFunction(obj, settings);		//proxify this as an [object function]
-	else if (obj instanceof Array)
+	else if (Array.isArray(obj))
 		return proxifyArray(obj, settings);			//proxify this as an [object array]
 	return obj;								//no proxification, return obj.
 }
@@ -20,6 +20,7 @@ export default function proxify(obj, settings) {
 function proxifyObject(obj, settings) {
 	var keys = [],
       settings = settings && typeof settings == "object" ? settings : {};
+
 	if (settings.keys) keys = settings.keys;
 	else if (settings.delegatable) {
 		for (var key in obj)    //There's also Reflect.enumerate that can get us delegated keys, but I'm not sure if it produces
@@ -35,6 +36,17 @@ function proxifyObject(obj, settings) {
     "_internalKeys",
     {
       value: keys,
+      writable: false,
+      configurable: false,
+      enumerable: false
+    }
+  );
+
+  Object.defineProperty(
+    handler,
+    "_delegatable",
+    {
+      value: settings.delegatable || false,
       writable: false,
       configurable: false,
       enumerable: false
