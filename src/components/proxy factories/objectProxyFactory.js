@@ -1,0 +1,57 @@
+/**
+ * Created by Mark.Mosby on 2/23/2016.
+ */
+var proxyState =  require('proxyState.js'),
+    objectTraps = require('objectTrapHandlers.js'),
+    proxyHelper = require('proxyHelper.js'),
+    logger =      require('logger.js');
+
+function proxifyObject(obj, settings) {
+  var keys = [];
+
+  if (settings.keys) keys = settings.keys;
+  else if (settings.delegatable) {
+    var curr = obj;
+    while (curr) {
+      keys.push(Object.keys(curr));
+      curr = Object.getPrototypeOf(curr);  //make sure we get all properties; enumerable or not
+    }
+  }
+  else keys = Reflect.ownKeys(obj);
+
+  var traps = settings.traps || proxyHelper.objTraps;
+
+  var handler = {};
+  Object.defineProperties(
+    handler, {
+      "addKeys": {
+        value: function _addKeys(newKeys) {
+          this._internalKeys = this._internalKeys.concat(newKeys);
+        },
+        writable: false,
+        configurable: false
+      },
+      "removeKeys": {
+        value: function _removeKeys(remKeys) {
+          var tmpKeys = [];
+          for (let i = 0; i < this._internalKeys.length; i++) {
+            if (~remKeys.indexOf(this._internalKeys[i]))
+              tmpKeys.push(this._internalKeys[i]);
+          }
+          this._internalKeys = tmpKeys;
+        },
+        writable: false,
+        configurable: false
+      }
+    }
+  );
+
+  for (let i = 0; i < traps.length; i++) {
+    if (Reflect.has(trapFns, traps[i]))
+      handler[traps[i]] = trapFns[traps[i]];
+  }
+
+  return new Proxy(obj, handler);
+}
+
+export proxifyObject as default;

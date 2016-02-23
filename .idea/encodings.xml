@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/components/proxy factories/objectProxyFactory.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/components/proxyHelper.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/components/proxyState.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/components/trap handlers/objectTrapHandlers.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/proxify.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/settings.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/trapFuncs.js" charset="UTF-8" />
