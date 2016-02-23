@@ -8,9 +8,9 @@
       arrTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "setPrototypeOf", "preventExtensions", "isExtensible", "enumerate", "has"];
 
 export default function proxify(obj, settings) {
-	if (typeof obj == "object")
+	if (typeof obj === "object")
 		return proxifyObject(obj, settings);			//proxify this as an [object object]
-	else if (typeof obj == "function")
+	else if (typeof obj === "function")
 		return proxifyFunction(obj, settings);		//proxify this as an [object function]
 	else if (Array.isArray(obj))
 		return proxifyArray(obj, settings);			//proxify this as an [object array]
@@ -19,37 +19,54 @@ export default function proxify(obj, settings) {
 
 function proxifyObject(obj, settings) {
 	var keys = [],
-      settings = settings && typeof settings == "object" ? settings : {};
+      settings = settings && typeof settings === "object" ? settings : {};
 
 	if (settings.keys) keys = settings.keys;
 	else if (settings.delegatable) {
-		for (var key in obj)    //There's also Reflect.enumerate that can get us delegated keys, but I'm not sure if it produces
-			keys.push(key);       //keys, or if it produces an iterator that can iterate the delegatable keys
+    var curr = obj;
+    while (curr) {
+      keys.push(Object.keys(curr));
+       curr = Object.getPrototypeOf(curr);  //make sure we get all properties; enumerable or not
+    }
 	}
 	else keys = Reflect.ownKeys(obj);
 
   var traps = settings.traps || objTraps;
 
   var handler = {};
-  Object.defineProperty(
-    handler,
-    "_internalKeys",
-    {
-      value: keys,
-      writable: false,
-      configurable: false,
-      enumerable: false
-    }
-  );
-
-  Object.defineProperty(
-    handler,
-    "_delegatable",
-    {
-      value: settings.delegatable || false,
-      writable: false,
-      configurable: false,
-      enumerable: false
+  Object.defineProperties(
+    handler, {
+      "_internalKeys": {
+        value: keys,
+        writable: false,
+        configurable: false,
+        enumerable: false
+      },
+      "delegatable": {
+        value: settings.delegatable || false,
+        writable: false,
+        configurable: false,
+        enumerable: false
+      },
+      "addKeys": {
+        value: function _addKeys(newKeys) {
+          this._internalKeys = this._internalKeys.concat(newKeys);
+        },
+        writable: false,
+        configurable: false
+      },
+      "removeKeys": {
+        value: function _removeKeys(remKeys) {
+          var tmpKeys = [];
+          for (let i = 0; i < this._internalKeys.length; i++) {
+            if (~remKeys.indexOf(this._internalKeys[i]))
+              tmpKeys.push(this._internalKeys[i]);
+          }
+          this._internalKeys = tmpKeys;
+        },
+        writable: false,
+        configurable: false
+      }
     }
   );
 
@@ -76,14 +93,33 @@ function proxifyFunction(fn, settings) {
   traps = settings.traps || fnTraps;
 
   var handler = {};
-  Object.defineProperty(
-    handler,
-    "_internalKeys",
-    {
-      value: keys,
-      writable: false,
-      configurable: false,
-      enumerable: false
+  Object.defineProperties(
+    handler, {
+      "_internalKeys": {
+        value: keys,
+        writable: false,
+        configurable: false,
+        enumerable: false
+      },
+      "addKeys": {
+        value: function _addKeys(newKeys) {
+          this._internalKeys = this._internalKeys.concat(newKeys);
+        },
+        writable: false,
+        configurable: false
+      },
+       "removeKeys": {
+         value: function _removeKeys(remKeys) {
+           var tmpKeys = [];
+           for (let i = 0; i < this._internalKeys.length; i++) {
+             if (~remKeys.indexOf(this._internalKeys[i]))
+              tmpKeys.push(this._internalKeys[i]);
+           }
+           this._internalKeys = tmpKeys;
+         },
+         writable: false,
+         configurable: false
+       }
     }
   );
 
