@@ -2,11 +2,11 @@
  * Created by Mark.Mosby on 2/23/2016.
  */
 var proxyState =  require('proxyState.js'),
-    objectTraps = require('objectTrapHandlers.js'),
+    arrayTraps = require('arrayTrapHandlers.js'),
     proxyHelper = require('proxyHelper.js'),
     logger =      require('logger.js');
 
-function proxifyObject(obj, settings) {
+function proxifyArray (arr, settings) {
   var keys = [];
 
   if (settings.keys) keys = settings.keys;
@@ -17,9 +17,9 @@ function proxifyObject(obj, settings) {
       curr = Object.getPrototypeOf(curr);  //make sure we get all properties; enumerable or not
     }
   }
-  else keys = Reflect.ownKeys(obj);
+  else keys = Reflect.ownKeys(fn);
 
-  var traps = settings.traps || proxyHelper.objTraps;
+  traps = settings.traps || proxyHelper.arrTraps;
 
   var handler = {};
   Object.defineProperties(
@@ -51,7 +51,5 @@ function proxifyObject(obj, settings) {
       handler[traps[i]] = trapFns[traps[i]];
   }
 
-  return new Proxy(obj, handler);
+  return new Proxy(arr, handler);
 }
-
-export proxifyObject as default;
