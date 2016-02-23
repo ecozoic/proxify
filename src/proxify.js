@@ -5,13 +5,14 @@
   //Modules for traps specific to a proxy type
   //Module for traps used by all proxy types + helper functions
   //Module for global proxy settings object that contains state info for each proxy instance - used for lookups when traps are executing
+  //Symbols on objects - how to proxy
   var trapFns = require("trapFuncs.js"),
       objTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "setPrototypeOf", "preventExtensions", "isExtensible", "ownKeys", "enumerate", "hasTarget"],
       fnTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "setPrototypeOf", "preventExtensions", "isExtensible",
         "ownKeys", "enumerate", "hasTarget", "has", "apply", "construct"],
       arrTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "setPrototypeOf", "preventExtensions", "isExtensible", "enumerate", "has"];
 
-export default function proxify(obj, settings) {
+export default function proxify(obj, settings = {}) {
 	if (typeof obj === "object")
 		return proxifyObject(obj, settings);			//proxify this as an [object object]
 	else if (typeof obj === "function")
@@ -22,8 +23,7 @@ export default function proxify(obj, settings) {
 }
 
 function proxifyObject(obj, settings) {
-	var keys = [],
-      settings = settings && typeof settings === "object" ? settings : {};
+	var keys = [];
 
 	if (settings.keys) keys = settings.keys;
 	else if (settings.delegatable) {
