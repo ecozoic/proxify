@@ -1,6 +1,10 @@
 /**
  * Created by Mark.Mosby on 2/21/2016.
  */
+  //Modules for each proxy factory type
+  //Modules for traps specific to a proxy type
+  //Module for traps used by all proxy types + helper functions
+  //Module for global proxy settings object that contains state info for each proxy instance - used for lookups when traps are executing
   var trapFns = require("trapFuncs.js"),
       objTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "setPrototypeOf", "preventExtensions", "isExtensible", "ownKeys", "enumerate", "hasTarget"],
       fnTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "setPrototypeOf", "preventExtensions", "isExtensible",
