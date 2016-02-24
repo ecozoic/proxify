@@ -55,4 +55,4 @@ var traps = {
   }
 };
 
-export traps as default;
+export default traps;

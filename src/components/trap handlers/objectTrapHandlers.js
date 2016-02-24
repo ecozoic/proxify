@@ -55,4 +55,4 @@ var objectTraps = {
   }
 };
 
-export objectTraps as default;
+export default objectTraps;

@@ -5,3 +5,9 @@ var objTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "def
     fnTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "setPrototypeOf", "preventExtensions", "isExtensible",
     "ownKeys", "enumerate", "hasTarget", "has", "apply", "construct"],
     arrTraps = ["get", "set", "deleteProperty", "getOwnPropertyDescriptor", "defineProperty", "getPrototypeOf", "setPrototypeOf", "preventExtensions", "isExtensible", "enumerate", "has"];
+
+module.exports = {
+  objTraps: objTraps,
+  fnTraps: fnTraps,
+  arrTraps: arrTraps
+};

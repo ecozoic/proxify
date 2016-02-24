@@ -1,17 +1,17 @@
 /**
  * Created by Mark.Mosby on 2/23/2016.
  */
-var proxyState =  require('proxyState.js'),
-    functionTraps = require('functionTrapHandlers.js'),
-    proxyHelper = require('proxyHelper.js'),
-    logger =      require('logger.js');
+import logger from '../logger';
+import objectTraps from '../trap handlers/objectTrapHandlers';
+import {fnTraps} from '../proxyHelper';
+import proxyState from '../proxyState';
 
-function proxifyFunction(fn, settings) {
+export default function proxifyFunction(fn, settings) {
   var keys = [];
 
   if (settings.keys) keys = settings.keys;
   else if (settings.delegatable) {
-    let curr = obj;
+    let curr = fn;
     while (curr) {
       keys.push(Object.keys(curr));
       curr = Object.getPrototypeOf(curr);  //make sure we get all properties; enumerable or not
@@ -19,7 +19,7 @@ function proxifyFunction(fn, settings) {
   }
   else keys = Reflect.ownKeys(fn);
 
-  traps = settings.traps || proxyHelper.fnTraps;
+  traps = settings.traps || fnTraps;
 
   var handler = {};
   Object.defineProperties(
@@ -47,11 +47,9 @@ function proxifyFunction(fn, settings) {
   );
 
   for (let i = 0; i < traps.length; i++) {
-    if (Reflect.has(trapFns, traps[i]))
-      handler[traps[i]] = trapFns[traps[i]];
+    if (Reflect.has(fnTraps, traps[i]))
+      handler[traps[i]] = fnTraps[traps[i]];
   }
 
   return new Proxy(fn, handler);
 }
-
-export proxifyFunction as default;

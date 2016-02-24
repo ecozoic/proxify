@@ -7,9 +7,9 @@
   //Module for global proxy settings object that contains state info for each proxy instance - used for lookups when traps are executing
   //Symbols on objects - how to proxy
 
-  var objectProxy =   require('objectProxyFactory.js'),
-      functionProxy = require('functionProxyFactory.js'),
-      arrayProxy =    require('arrayProxyFactory.js');
+import objectProxy from 'components/proxy factories/objectProxyFactory';
+import functionProxy from 'components/proxy factories/functionProxyFactory';
+import arrayProxy from 'components/proxy factories/arrayProxyFactory';
 
 export default function proxify(obj, settings = {}) {
 	if (typeof obj === "object")

@@ -1,12 +1,12 @@
 /**
  * Created by Mark.Mosby on 2/23/2016.
  */
-var proxyState =  require('proxyState.js'),
-    objectTraps = require('objectTrapHandlers.js'),
-    proxyHelper = require('proxyHelper.js'),
-    logger =      require('logger.js');
+import logger from '../logger';
+import objectTraps from '../trap handlers/objectTrapHandlers';
+import {objTraps} from '../proxyHelper';
+import proxyState from '../proxyState';
 
-function proxifyObject(obj, settings) {
+export default function proxifyObject(obj, settings) {
   var keys = [];
 
   if (settings.keys) keys = settings.keys;
@@ -19,7 +19,7 @@ function proxifyObject(obj, settings) {
   }
   else keys = Reflect.ownKeys(obj);
 
-  var traps = settings.traps || proxyHelper.objTraps;
+  var traps = settings.traps || objTraps;
 
   var handler = {};
   Object.defineProperties(
@@ -47,11 +47,9 @@ function proxifyObject(obj, settings) {
   );
 
   for (let i = 0; i < traps.length; i++) {
-    if (Reflect.has(trapFns, traps[i]))
-      handler[traps[i]] = trapFns[traps[i]];
+    if (Reflect.has(objTraps, traps[i]))
+      handler[traps[i]] = objTraps[traps[i]];
   }
 
   return new Proxy(obj, handler);
 }
-
-export proxifyObject as default;

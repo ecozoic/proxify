@@ -1,17 +1,17 @@
 /**
  * Created by Mark.Mosby on 2/23/2016.
  */
-var proxyState =  require('proxyState.js'),
-    arrayTraps = require('arrayTrapHandlers.js'),
-    proxyHelper = require('proxyHelper.js'),
-    logger =      require('logger.js');
+import logger from '../logger';
+import objectTraps from '../trap handlers/objectTrapHandlers';
+import {arrTraps} from '../proxyHelper';
+import proxyState from '../proxyState';
 
-function proxifyArray (arr, settings) {
+export default function proxifyArray (arr, settings) {
   var keys = [];
 
   if (settings.keys) keys = settings.keys;
   else if (settings.delegatable) {
-    let curr = obj;
+    let curr = arr;
     while (curr) {
       keys.push(Object.keys(curr));
       curr = Object.getPrototypeOf(curr);  //make sure we get all properties; enumerable or not
@@ -19,7 +19,7 @@ function proxifyArray (arr, settings) {
   }
   else keys = Reflect.ownKeys(fn);
 
-  traps = settings.traps || proxyHelper.arrTraps;
+  traps = settings.traps || arrTraps;
 
   var handler = {};
   Object.defineProperties(
@@ -47,8 +47,8 @@ function proxifyArray (arr, settings) {
   );
 
   for (let i = 0; i < traps.length; i++) {
-    if (Reflect.has(trapFns, traps[i]))
-      handler[traps[i]] = trapFns[traps[i]];
+    if (Reflect.has(arrTraps, traps[i]))
+      handler[traps[i]] = arrTraps[traps[i]];
   }
 
   return new Proxy(arr, handler);
