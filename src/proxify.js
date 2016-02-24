@@ -13,10 +13,10 @@ import arrayProxy from 'components/proxy factories/arrayProxyFactory';
 
 export default function proxify(obj, settings = {}) {
 	if (typeof obj === "object")
-		return objectProxy.proxifyObject(obj, settings);			//proxify this as an [object object]
+		return objectProxy(obj, settings);			//proxify this as an [object object]
 	else if (typeof obj === "function")
-		return functionProxy.proxifyFunction(obj, settings);		//proxify this as an [object function]
+		return functionProxy(obj, settings);		//proxify this as an [object function]
 	else if (Array.isArray(obj))
-		return arrayProxy.proxifyArray(obj, settings);			//proxify this as an [object array]
+		return arrayProxy(obj, settings);			//proxify this as an [object array]
 	return obj;								//no proxification, return obj.
 }

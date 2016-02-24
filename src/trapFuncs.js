@@ -1,7 +1,7 @@
 /**
  * Created by Mark.Mosby on 2/22/2016.
  */
-var traps = {
+export default traps = {
   get: function _get(target, key, context) {
     if (~context._internalKeys.indexOf(key) || context._delegatable) {  //log the get operation if we find the key in the keys array
       console.log(key + " accessed on " + target);                      //or delegation is allowed
@@ -54,5 +54,3 @@ var traps = {
 
   }
 };
-
-export default traps;
