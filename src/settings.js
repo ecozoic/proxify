@@ -8,6 +8,7 @@
 
   //ATTRIBUTES:
   //- delegatable: Should we log against delegated properties, or only on the obj's own keys? If not specified, we don't trap delegation
+  //- trapNewProperties: Should the proxy trap the properties that are added to an object (and potentially objects that it delegates to)?
   //- keys: The keys to trap, if not specified, we trap all keys
   //- traps: The list of traps to be set on the proxy. If not specified, we place all traps for the object type (object, function, array)
   //- logLevel: The log level of the proxy
@@ -22,6 +23,7 @@
 
 var settings = {
   delegatable: false,
+  trapNewProperties: true,
   keys: ["key1", "key2", "key3", "key4", "key5"],
   traps: ["get", "set"],
   logLevel: 1,
