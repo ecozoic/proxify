@@ -35,7 +35,7 @@ export default function proxifyArray (arr, settings) {
         value: function _removeKeys(remKeys) {
           var tmpKeys = [];
           for (let i = 0; i < this._internalKeys.length; i++) {
-            if (~remKeys.indexOf(this._internalKeys[i]))
+            if (remKeys.includes(this._internalKeys[i]))
               tmpKeys.push(this._internalKeys[i]);
           }
           this._internalKeys = tmpKeys;

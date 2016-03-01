@@ -7,7 +7,8 @@ import {objTraps} from '../proxyHelper';
 import proxyState from '../proxyState';
 
 export default function proxifyObject(obj, settings) {
-  var keys = [];
+  var keys = [],
+      disAllowedKeys = [];
 
   if (settings.keys) keys = settings.keys;
   else if (settings.delegatable) {
@@ -18,6 +19,24 @@ export default function proxifyObject(obj, settings) {
     }
   }
   else keys = Reflect.ownKeys(obj);
+
+  for (let i = 0; i <  keys.length; i++) {
+    var currProp = Reflect.getOwnPropertyDescriptor(obj, keys[i]);
+    if (!currProp && settings.delegatable) {
+      var parent = Object.getPrototypeOf(obj);
+      while (parent && !currProp) {
+        currProp = Reflect.getOwnPropertyDescriptor(parent, keys[i]);
+        if (!currProp)
+          parent = Object.getPrototypeOf(parent);
+      }
+    }
+    else if ((currProp.get && typeof currProp.get === "function") || (currProp.set && typeof currProp.set === "function")) {
+      keys.splice(i, 1);  //remove
+    }
+    else {
+      keys.splice(i, 1);
+    }
+  }
 
   var traps = settings.traps || objTraps;
 
@@ -35,7 +54,7 @@ export default function proxifyObject(obj, settings) {
         value: function _removeKeys(remKeys) {
           var tmpKeys = [];
           for (let i = 0; i < this._internalKeys.length; i++) {
-            if (~remKeys.indexOf(this._internalKeys[i]))
+            if (remKeys.includes(this._internalKeys[i]))
               tmpKeys.push(this._internalKeys[i]);
           }
           this._internalKeys = tmpKeys;
