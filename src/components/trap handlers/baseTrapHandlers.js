@@ -1,5 +1,5 @@
 /**
- * Created by Mark.Mosby on 2/23/2016.
+ * Created by Mark.Mosby on 3/1/2016.
  */
 export default objectTraps = {
   get: function _get(target, key, context) {

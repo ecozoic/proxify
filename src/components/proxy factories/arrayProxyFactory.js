@@ -2,7 +2,7 @@
  * Created by Mark.Mosby on 2/23/2016.
  */
 import logger from '../logger';
-import objectTraps from '../trap handlers/objectTrapHandlers';
+import baseTraps from '../trap handlers/baseTrapHandlers';
 import {arrTraps} from '../proxyHelper';
 import proxyState from '../proxyState';
 
@@ -19,7 +19,7 @@ export default function proxifyArray (arr, settings) {
   }
   else keys = Reflect.ownKeys(fn);
 
-  traps = settings.traps || arrTraps;
+  var traps = settings.traps || arrTraps;
 
   var handler = {};
   Object.defineProperties(
@@ -42,13 +42,19 @@ export default function proxifyArray (arr, settings) {
         },
         writable: false,
         configurable: false
+      },
+      "objectType": {
+        value: "array",
+        writable: false,
+        configurable: false,
+        enumerable: false
       }
     }
   );
 
   for (let i = 0; i < traps.length; i++) {
     if (Reflect.has(arrTraps, traps[i]))
-      handler[traps[i]] = arrTraps[traps[i]];
+      handler[traps[i]] = baseTraps[traps[i]];
   }
 
   return new Proxy(arr, handler);

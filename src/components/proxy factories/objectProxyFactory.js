@@ -2,7 +2,7 @@
  * Created by Mark.Mosby on 2/23/2016.
  */
 import logger from '../logger';
-import objectTraps from '../trap handlers/objectTrapHandlers';
+import baseTraps from '../trap handlers/baseTrapHandlers';
 import {objTraps} from '../proxyHelper';
 import proxyState from '../proxyState';
 
@@ -42,13 +42,19 @@ export default function proxifyObject(obj, settings) {
         },
         writable: false,
         configurable: false
+      },
+      "objectType": {
+        value: "object",
+        writable: false,
+        configurable: false,
+        enumerable: false
       }
     }
   );
 
   for (let i = 0; i < traps.length; i++) {
     if (Reflect.has(objTraps, traps[i]))
-      handler[traps[i]] = objTraps[traps[i]];
+      handler[traps[i]] = baseTraps[traps[i]];
   }
 
   return new Proxy(obj, handler);
