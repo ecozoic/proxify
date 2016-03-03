@@ -1,24 +1,25 @@
 /**
  * Created by Mark.Mosby on 2/23/2016.
  */
-import logger from '../logger';
-import baseTraps from '../trap handlers/baseTrapHandlers';
-import {objTraps} from '../proxyHelper';
-import proxyState from '../proxyState';
+import { objectTrapHandler } from '../handlers/objectTrapHandlers';
+import { objectTraps } from '../traps/objectTraps';
 
-export default function proxifyObject(obj, settings) {
-  var keys = [],
-      disAllowedKeys = [];
+export function proxifyObject(obj, settings) {
+  let keys = [];
+  let disAllowedKeys = [];
 
-  if (settings.keys) keys = settings.keys;
-  else if (settings.delegatable) {
+  if (settings.keys) {
+    keys = settings.keys;
+  } else if (settings.delegatable) {
     let curr = obj;
     while (curr) {
       keys.push(Object.keys(curr));
-      curr = Object.getPrototypeOf(curr);  //make sure we get all properties; enumerable or not
+      // make sure we get all properties; enumerable or not
+      curr = Object.getPrototypeOf(curr);
     }
+  } else {
+    keys = Reflect.ownKeys(obj);
   }
-  else keys = Reflect.ownKeys(obj);
 
   for (let i = 0; i <  keys.length; i++) {
     var currProp = Reflect.getOwnPropertyDescriptor(obj, keys[i]);
