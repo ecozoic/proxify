@@ -7,7 +7,8 @@
     "start": "webpack-dev-server -d",
     "test": "karma start",
     "build:dev": "webpack -d",
-    "build:prod": "webpack -p"
+    "build:prod": "webpack -p",
+    "doc": "jsdoc -c conf.json"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
     "eslint": "^1.10.3",
     "eslint-loader": "^1.2.1",
     "inject-loader": "^2.0.1",
+    "jsdoc": "^3.4.0",
     "karma": "^0.13.21",
     "karma-chrome-launcher": "^0.2.2",
     "karma-cli": "^0.1.2",

@@ -1,9 +1,6 @@
 import { baseTraps } from './baseTraps';
 
 let functionTraps = [
-  'ownKeys',
-  'has',
-  'hasTarget',
   'apply',
   'construct'
 ];

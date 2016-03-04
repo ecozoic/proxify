@@ -1,8 +1,6 @@
 import { baseTraps } from './baseTraps';
 
-let arrayTraps = [
-  'has'
-];
+let arrayTraps = [];
 
 arrayTraps = baseTraps.concat(arrayTraps);
 

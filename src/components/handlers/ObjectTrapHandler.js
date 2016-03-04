@@ -1,3 +1,9 @@
 import { BaseTrapHandler } from './BaseTrapHandler';
 
-export class ObjectTrapHandler extends BaseTrapHandler { }
+/**
+ * Class representing the traps used to proxy objects.
+ * Extends {@link BaseTrapHandler}.
+ */
+class ObjectTrapHandler extends BaseTrapHandler { }
+
+export { ObjectTrapHandler };

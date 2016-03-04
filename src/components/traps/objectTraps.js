@@ -1,9 +1,6 @@
 import { baseTraps } from './baseTraps';
 
-let objectTraps = [
-  'ownKeys',
-  'hasTarget'
-];
+let objectTraps = [];
 
 objectTraps = baseTraps.concat(objectTraps);
 
