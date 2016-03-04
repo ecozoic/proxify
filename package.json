@@ -39,6 +39,7 @@
     "chai": "^3.5.0",
     "eslint": "^1.10.3",
     "eslint-loader": "^1.2.1",
+    "inject-loader": "^2.0.1",
     "karma": "^0.13.21",
     "karma-chrome-launcher": "^0.2.2",
     "karma-cli": "^0.1.2",
