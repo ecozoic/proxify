@@ -10,17 +10,17 @@
 import { proxifyObject, proxifyFunction, proxifyArray } from './components/factories';
 
 export function proxify(obj, settings = {}) {
-	if (typeof obj === "object") {
-    //proxify this as an [object object]
+  if (typeof obj === 'object') {
+    // proxify this as an [object object]
     return proxifyObject(obj, settings);
-  } else if (typeof obj === "function") {
-    //proxify this as an [object function]
-		return proxifyFunction(obj, settings);
+  } else if (typeof obj === 'function') {
+    // proxify this as an [object function]
+    return proxifyFunction(obj, settings);
   } else if (Array.isArray(obj)) {
-    //proxify this as an [object array]
-		return proxifyArray(obj, settings);
+    // proxify this as an [object array]
+    return proxifyArray(obj, settings);
   }
 
-	//no proxification, return obj.
+	// no proxification, return obj.
   return obj;
 }

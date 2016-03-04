@@ -1,7 +1,7 @@
 /**
  * Created by Mark.Mosby on 2/23/2016.
  */
-import { functionTrapHandler } from '../handlers/functionTrapHandler';
+import { FunctionTrapHandler } from '../handlers/FunctionTrapHandler';
 import { functionTraps } from '../traps/functionTraps';
 
 export function proxifyFunction(fn, settings) {
@@ -20,27 +20,27 @@ export function proxifyFunction(fn, settings) {
     keys = Reflect.ownKeys(fn);
   }
 
-  let traps = settings.traps || fnTraps;
+  let traps = settings.traps || functionTraps;
 
   let handler = {};
   Object.defineProperties(
     handler, {
-      "addKeys": {
+      'addKeys': {
         value: function _addKeys(newKeys) {
           this._internalKeys = this._internalKeys.concat(newKeys);
         },
         writable: false,
         configurable: false
       },
-      "removeKeys": {
+      'removeKeys': {
         value: function _removeKeys(remKeys) {
           this._internalKeys = this._internalKeys.filter(key => !remKeys.includes(key));
         },
         writable: false,
         configurable: false
       },
-      "objectType": {
-        value: "function",
+      'objectType': {
+        value: 'function',
         writable: false,
         configurable: false,
         enumerable: false
@@ -48,6 +48,7 @@ export function proxifyFunction(fn, settings) {
     }
   );
 
+  let functionTrapHandler = new FunctionTrapHandler();
   traps.forEach((trap) => {
     if (functionTraps.includes(trap)) {
       handler[trap] = functionTrapHandler[trap];

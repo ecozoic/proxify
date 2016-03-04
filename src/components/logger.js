@@ -1,4 +1,4 @@
-export class Logger {
+class Logger {
   log(msg) {
     console.log(msg);
   }
@@ -15,3 +15,7 @@ export class Logger {
     console.warn(msg);
   }
 }
+
+// singleton
+let logger = new Logger();
+export default logger;

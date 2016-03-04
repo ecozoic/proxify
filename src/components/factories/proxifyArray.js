@@ -1,7 +1,7 @@
 /**
  * Created by Mark.Mosby on 2/23/2016.
  */
-import { arrayTrapHandler } from '../handlers/arrayTrapHandlers';
+import { ArrayTrapHandler } from '../handlers/ArrayTrapHandler';
 import { arrayTraps } from '../traps/arrayTraps';
 
 export function proxifyArray (arr, settings) {
@@ -17,7 +17,7 @@ export function proxifyArray (arr, settings) {
       curr = Object.getPrototypeOf(curr);
     }
   } else {
-    keys = Reflect.ownKeys(fn);
+    keys = Reflect.ownKeys(arr);
   }
 
   let traps = settings.traps || arrayTraps;
@@ -25,22 +25,22 @@ export function proxifyArray (arr, settings) {
   let handler = {};
   Object.defineProperties(
     handler, {
-      "addKeys": {
+      'addKeys': {
         value: function _addKeys(newKeys) {
           this._internalKeys = this._internalKeys.concat(newKeys);
         },
         writable: false,
         configurable: false
       },
-      "removeKeys": {
+      'removeKeys': {
         value: function _removeKeys(remKeys) {
           this._internalKeys = this._internalKeys.filter(key => !remKeys.includes(key));
         },
         writable: false,
         configurable: false
       },
-      "objectType": {
-        value: "array",
+      'objectType': {
+        value: 'array',
         writable: false,
         configurable: false,
         enumerable: false
@@ -48,6 +48,7 @@ export function proxifyArray (arr, settings) {
     }
   );
 
+  let arrayTrapHandler = new ArrayTrapHandler();
   traps.forEach((trap) => {
     if (arrayTraps.includes(trap)) {
       handler[trap] = arrayTrapHandler[trap];

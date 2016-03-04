@@ -1,3 +1,3 @@
-export { arrayTrapHandler } from './arrayTrapHandler';
-export { functionTrapHandler } from './functionTrapHandler';
-export { objectTrapHandler } from './objectTrapHandler';
+export { ArrayTrapHandler } from './arrayTrapHandler';
+export { FunctionTrapHandler } from './functionTrapHandler';
+export { ObjectTrapHandler } from './objectTrapHandler';

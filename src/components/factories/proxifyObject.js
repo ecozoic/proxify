@@ -1,12 +1,11 @@
 /**
  * Created by Mark.Mosby on 2/23/2016.
  */
-import { objectTrapHandler } from '../handlers/objectTrapHandlers';
+import { ObjectTrapHandler } from '../handlers/ObjectTrapHandler';
 import { objectTraps } from '../traps/objectTraps';
 
 export function proxifyObject(obj, settings) {
   let keys = [];
-  let disAllowedKeys = [];
 
   if (settings.keys) {
     keys = settings.keys;
@@ -21,37 +20,37 @@ export function proxifyObject(obj, settings) {
     keys = Reflect.ownKeys(obj);
   }
 
-  for (let i = 0; i <  keys.length; i++) {
-    var currProp = Reflect.getOwnPropertyDescriptor(obj, keys[i]);
+  keys.forEach((key, index) => {
+    let currProp = Reflect.getOwnPropertyDescriptor(obj, key);
     if (!currProp && settings.delegatable) {
-      var parent = Object.getPrototypeOf(obj);
+      let parent = Object.getPrototypeOf(obj);
+
       while (parent && !currProp) {
-        currProp = Reflect.getOwnPropertyDescriptor(parent, keys[i]);
-        if (!currProp)
+        currProp = Reflect.getOwnPropertyDescriptor(parent, key);
+        if (!currProp) {
           parent = Object.getPrototypeOf(parent);
+        }
       }
+    } else if ((currProp.get && typeof currProp.get === 'function') || (currProp.set && typeof currProp.set === 'function')) {
+      keys.splice(index, 1);  //remove
+    } else {
+      keys.splice(index, 1);
     }
-    else if ((currProp.get && typeof currProp.get === "function") || (currProp.set && typeof currProp.set === "function")) {
-      keys.splice(i, 1);  //remove
-    }
-    else {
-      keys.splice(i, 1);
-    }
-  }
+  });
 
-  var traps = settings.traps || objTraps;
+  let traps = settings.traps || objectTraps;
 
-  var handler = {};
+  let handler = {};
   Object.defineProperties(
     handler, {
-      "addKeys": {
+      'addKeys': {
         value: function _addKeys(newKeys) {
           this._internalKeys = this._internalKeys.concat(newKeys);
         },
         writable: false,
         configurable: false
       },
-      "removeKeys": {
+      'removeKeys': {
         value: function _removeKeys(remKeys) {
           var tmpKeys = [];
           for (let i = 0; i < this._internalKeys.length; i++) {
@@ -63,8 +62,8 @@ export function proxifyObject(obj, settings) {
         writable: false,
         configurable: false
       },
-      "objectType": {
-        value: "object",
+      'objectType': {
+        value: 'object',
         writable: false,
         configurable: false,
         enumerable: false
@@ -72,10 +71,12 @@ export function proxifyObject(obj, settings) {
     }
   );
 
-  for (let i = 0; i < traps.length; i++) {
-    if (Reflect.has(objTraps, traps[i]))
-      handler[traps[i]] = baseTraps[traps[i]];
-  }
+  let objectTrapHandler = new ObjectTrapHandler();
+  traps.forEach((trap) => {
+    if (objectTraps.includes(trap)) {
+      handler[trap] = objectTrapHandler[trap];
+    }
+  });
 
   return new Proxy(obj, handler);
 }

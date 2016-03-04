@@ -6,4 +6,4 @@ let arrayTraps = [
 
 arrayTraps = baseTraps.concat(arrayTraps);
 
-export arrayTraps;
+export { arrayTraps };

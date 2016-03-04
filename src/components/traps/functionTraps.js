@@ -10,4 +10,4 @@ let functionTraps = [
 
 functionTraps = baseTraps.concat(functionTraps);
 
-export functionTraps;
+export { functionTraps };

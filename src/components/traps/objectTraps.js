@@ -5,6 +5,6 @@ let objectTraps = [
   'hasTarget'
 ];
 
-objectTraps = baseTraps.concat(objTraps);
+objectTraps = baseTraps.concat(objectTraps);
 
-export objectTraps;
+export { objectTraps };
