@@ -1,7 +1,7 @@
 /**
  * Created by Mark.Mosby on 3/1/2016.
  */
-import { BaseTrapHandler } from './baseTrapHandler';
+import { BaseTrapHandler } from './BaseTrapHandler';
 import logger from '../logger';
 
 export class FunctionTrapHandler extends BaseTrapHandler {
