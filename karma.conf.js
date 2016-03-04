@@ -36,13 +36,13 @@ module.exports = function(config) {
             test: /\.js$/,
             exclude: [
               path.resolve('node_modules/'),
-              path.resolve('src/components/')
+              path.resolve('src/')
             ],
             loader: 'babel-loader'
           },
           {
             test: /\.js$/,
-            include: path.resolve('src/components/'),
+            include: path.resolve('src/'),
             loader: 'babel-istanbul-loader'
           }
         ]
