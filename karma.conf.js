@@ -5,7 +5,7 @@ module.exports = function(config) {
   config.set({
     browsers: ['Chrome'],
     singleRun: true,
-    frameworks: ['mocha'],
+    frameworks: ['mocha', 'sinon-chai'],
     files: [
       'test/index.js'
     ],
