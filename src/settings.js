@@ -21,21 +21,23 @@
   //are inherited down, so you can set a general policy at the top level, and then override it for certain keys/traps at the lower levels.
   //The specified keys will inherit any logging capabilities defined at the top level that have not been overridden at the lower levels.
 
-var settings = {
+const settings = {
   delegatable: false,
   trapNewProperties: true,
-  keys: ["key1", "key2", "key3", "key4", "key5"],
-  traps: ["get", "set"],
+  keys: ['key1', 'key2', 'key3', 'key4', 'key5'],
+  traps: ['get', 'set'],
   logLevel: 1,
-  "key1": {
+  'key1': {
     logLevel: 2,
     traps: []
   },
-  "key3": {
+  'key3': {
     traps: {
-      "get": {
+      'get': {
         logLevel: 4
       }
     }
   }
 };
+
+export { settings };
