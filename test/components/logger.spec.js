@@ -1,20 +1,58 @@
-/*global describe, it*/
+/*global sinon*/
 import logger from '../../src/components/logger';
 
 describe('Logger', () => {
-  it('should log', () => {
-    logger.log('hey');
+  let sandbox;
+
+  beforeEach(() => {
+    // create a sandbox
+    sandbox = sinon.sandbox.create();
+
+    // create some spies
+    sandbox.spy(console, 'log');
+    sandbox.spy(console, 'error');
+    sandbox.spy(console, 'info');
+    sandbox.spy(console, 'warn');
   });
 
-  it('should log error', () => {
-    logger.logError('hey');
+  afterEach(() => {
+    // restore environment
+    sandbox.restore();
   });
 
-  it('should log info', () => {
-    logger.logInfo('hey');
+  describe('#log', () => {
+    it('should log', () => {
+      const msg = 'hey';
+      logger.log(msg);
+
+      console.log.should.have.been.calledWith(msg);
+    });
   });
 
-  it('should log warning', () => {
-    logger.logWarn('hey');
+  describe('#logError', () => {
+    it('should log error', () => {
+      const msg = 'hey';
+      logger.logError(msg);
+
+      console.error.should.have.been.calledWith(msg);
+    });
+  });
+
+  describe('#logInfo', () => {
+    it('should log info', () => {
+      const msg = 'hey';
+      logger.logInfo(msg);
+
+      console.info.should.have.been.calledWith(msg);
+    });
+  });
+
+  describe('#logWarn', () => {
+    it('should log warning', () => {
+      const msg = 'hey';
+      logger.logWarn(msg);
+
+      console.warn.should.have.been.calledWith(msg);
+    });
   });
 });

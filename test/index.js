@@ -1,7 +1,5 @@
 // https://github.com/webpack/karma-webpack#alternative-usage
 
-/*global require*/
-
 // require all tests
 const testsContext = require.context('./components/', true, /\.spec\.js$/);
 testsContext.keys().forEach(testsContext);

@@ -15,7 +15,8 @@ module.exports = function(config) {
       'karma-sourcemap-loader',
       'karma-webpack',
       'karma-coverage',
-      'karma-mocha-reporter'
+      'karma-mocha-reporter',
+      'karma-sinon-chai'
     ],
     preprocessors: {
       'test/index.js': [ 'webpack', 'sourcemap']
