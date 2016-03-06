@@ -5,7 +5,7 @@ describe('proxify', () => {
 
   before(() => {
     // create injector to inject mock deps
-    let injector = require('inject!../src/index');
+    const injector = require('inject!../src/index');
 
     // create spies
     mockFactories = {

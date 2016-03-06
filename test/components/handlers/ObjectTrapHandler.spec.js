@@ -4,20 +4,28 @@ describe('ObjectTrapHandler', () => {
   let mockLogger;
 
   before(() => {
-    let injector =
+    let objInjector =
+      require('inject!../../../src/components/handlers/ObjectTrapHandler');
+    let baseInjector =
       require('inject!../../../src/components/handlers/BaseTrapHandler');
 
     mockLogger = {
       log: sinon.spy()
     };
 
-    const BaseTrapHandler = injector({
+    const BaseTrapHandler = baseInjector({
       '../logger': {
         logger: mockLogger
       }
     }).BaseTrapHandler;
 
-    handler = new BaseTrapHandler();
+    const ObjectTrapHandler = objInjector({
+      './BaseTrapHandler': {
+        BaseTrapHandler
+      }
+    }).ObjectTrapHandler;
+
+    handler = new ObjectTrapHandler();
   });
 
   afterEach(() => {
