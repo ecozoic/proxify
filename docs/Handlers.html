@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/logger.js</title>
+    <title>JSDoc: Namespace: Handlers</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,59 +17,113 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: components/logger.js</h1>
+    <h1 class="page-title">Namespace: Handlers</h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Logging utility class.
- * Exported as singleton so all modules share same instance.
- */
-class Logger {
-  /**
-   * Logs a message to the console.
-   * @param {string} msg - Message to log.
-   */
-  log(msg) {
-    console.log(msg);
-  }
+        <h2>Handlers</h2>
+        
+    
+</header>
 
-  /**
-   * Logs an error message to the console.
-   * @param {string} msg - Error message to log.
-   */
-  logError(msg) {
-    console.error(msg);
-  }
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Proxy trap handlers</div>
+        
 
-  /**
-   * Logs an info message to the console.
-   * @param {string} msg - Info message to log.
-   */
-  logInfo(msg) {
-    console.info(msg);
-  }
+        
 
-  /**
-   * Logs a warning message to the console.
-   * @param {string} msg - Warning message to log.
-   */
-  logWarn(msg) {
-    console.warn(msg);
-  }
-}
 
-// singleton
-let logger = new Logger();
-export { logger };
-</code></pre>
-        </article>
-    </section>
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_handlers_index.js.html">components/handlers/index.js</a>, <a href="components_handlers_index.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="Handlers.ArrayTrapHandler.html">ArrayTrapHandler</a></dt>
+            <dd></dd>
+        
+            <dt><a href="Handlers.BaseTrapHandler.html">BaseTrapHandler</a></dt>
+            <dd></dd>
+        
+            <dt><a href="Handlers.FunctionTrapHandler.html">FunctionTrapHandler</a></dt>
+            <dd></dd>
+        
+            <dt><a href="Handlers.ObjectTrapHandler.html">ObjectTrapHandler</a></dt>
+            <dd></dd>
+        </dl>
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

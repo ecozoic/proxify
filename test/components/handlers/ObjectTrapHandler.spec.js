@@ -14,7 +14,7 @@ describe('ObjectTrapHandler', () => {
     };
 
     const BaseTrapHandler = baseInjector({
-      '../logger': {
+      '../utils/logger': {
         logger: mockLogger
       }
     }).BaseTrapHandler;

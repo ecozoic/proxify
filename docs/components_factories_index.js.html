@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/logger.js</title>
+    <title>JSDoc: Source: components/factories/index.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: components/logger.js</h1>
+    <h1 class="page-title">Source: components/factories/index.js</h1>
 
     
 
@@ -27,46 +27,12 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Logging utility class.
- * Exported as singleton so all modules share same instance.
+ * Factory functions.
+ * @namespace Factories
  */
-class Logger {
-  /**
-   * Logs a message to the console.
-   * @param {string} msg - Message to log.
-   */
-  log(msg) {
-    console.log(msg);
-  }
-
-  /**
-   * Logs an error message to the console.
-   * @param {string} msg - Error message to log.
-   */
-  logError(msg) {
-    console.error(msg);
-  }
-
-  /**
-   * Logs an info message to the console.
-   * @param {string} msg - Info message to log.
-   */
-  logInfo(msg) {
-    console.info(msg);
-  }
-
-  /**
-   * Logs a warning message to the console.
-   * @param {string} msg - Warning message to log.
-   */
-  logWarn(msg) {
-    console.warn(msg);
-  }
-}
-
-// singleton
-let logger = new Logger();
-export { logger };
+export { proxifyArray } from './proxifyArray';
+export { proxifyFunction } from './proxifyFunction';
+export { proxifyObject } from './proxifyObject';
 </code></pre>
         </article>
     </section>

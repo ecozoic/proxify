@@ -1,6 +1,7 @@
 /**
  * Logging utility class.
  * Exported as singleton so all modules share same instance.
+ * @memberOf utils
  */
 class Logger {
   /**

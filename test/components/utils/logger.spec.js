@@ -1,5 +1,5 @@
 /*global sinon*/
-import { logger } from '../../src/components/logger';
+import { logger } from '../../../src/components/utils/logger';
 
 describe('Logger', () => {
   let sandbox;

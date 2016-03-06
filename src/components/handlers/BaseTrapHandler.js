@@ -1,6 +1,8 @@
-import { logger } from '../logger';
+import { logger } from '../utils/logger';
 
-/** Class representing the traps used across all proxify-able types. */
+/** Class representing the traps used across all proxify-able types.
+ * @memberOf handlers
+ */
 class BaseTrapHandler {
   /**
    * Trap for Object.defineProperty().

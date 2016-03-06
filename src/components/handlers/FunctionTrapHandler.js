@@ -1,9 +1,10 @@
 import { BaseTrapHandler } from './BaseTrapHandler';
-import { logger } from '../logger';
+import { logger } from '../utils/logger';
 
 /**
  * Class representing the traps used to proxy functions.
- * Extends {@link BaseTrapHandler}
+ * Extends {@link BaseTrapHandler}.
+ * @memberOf handlers
  */
 class FunctionTrapHandler extends BaseTrapHandler {
   /**
