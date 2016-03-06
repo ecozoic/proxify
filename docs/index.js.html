@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/handlers/FunctionTrapHandler.js</title>
+    <title>JSDoc: Source: index.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: components/handlers/FunctionTrapHandler.js</h1>
+    <h1 class="page-title">Source: index.js</h1>
 
     
 
@@ -26,39 +26,27 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { BaseTrapHandler } from './BaseTrapHandler';
-import { logger } from '../logger';
+            <pre class="prettyprint source linenums"><code>import { proxifyObject, proxifyFunction, proxifyArray } from './components/factories';
 
-/**
- * Class representing the traps used to proxy functions.
- * Extends {@link BaseTrapHandler}
+/** Main entry point for proxify.
+ * Takes in an array, function, or object and returns its proxified version.
+ * For all other types, does nothing and just returns what was passed in.
+ * @param {Array|Object|function} target - The object to be proxified.
+ * @returns {Proxy} The proxified target.
  */
-class FunctionTrapHandler extends BaseTrapHandler {
-  /**
-   * Trap for a function call.
-   * @param {Object} target - The target object.
-   * @param {Object} thisArg - The this argument for a function call.
-   * @param {Array} argumentsList - The list of arguments for the call.
-   * @returns {*} The return value of the function.
-   */
-  apply(target, thisArg, argumentsList) {
-    logger.log(`Function call on ${target}, this: ${thisArg}, args: ${argumentsList}`);
-    return Reflect.apply(target, thisArg, argumentsList);
+export function proxify(target) {
+  // delegate to appropriate factory
+  if (Array.isArray(target)) {
+    return proxifyArray(target);
+  } else if (typeof target === 'function') {
+    return proxifyFunction(target);
+  } else if (target !== null &amp;&amp; typeof target === 'object') {
+    return proxifyObject(target);
   }
 
-  /**
-   * Trap for the new operator.
-   * @param {Object} target - The target object.
-   * @param {Array} argumentsList - The list of arguments for the call.
-   * @returns {Object} The new object.
-   */
-  construct(target, argumentsList) {
-    logger.log(`Constructor call on ${target}, args: ${argumentsList}`);
-    return Reflect.construct(target, argumentsList);
-  }
+	// no proxification, return target
+  return target;
 }
-
-export { FunctionTrapHandler };
 </code></pre>
         </article>
     </section>

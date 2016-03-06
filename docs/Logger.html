@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: FunctionTrapHandler</title>
+    <title>JSDoc: Class: Logger</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: FunctionTrapHandler</h1>
+    <h1 class="page-title">Class: Logger</h1>
 
     
 
@@ -28,10 +28,10 @@
 
 <header>
     
-        <h2>FunctionTrapHandler</h2>
+        <h2>Logger</h2>
         
-            <div class="class-description">Class representing the traps used to proxy functions.
-Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
+            <div class="class-description">Logging utility class.
+Exported as singleton so all modules share same instance.</div>
         
     
 </header>
@@ -45,7 +45,7 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="FunctionTrapHandler"><span class="type-signature"></span>new FunctionTrapHandler<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Logger"><span class="type-signature"></span>new Logger<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
@@ -92,7 +92,7 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_handlers_FunctionTrapHandler.js.html">components/handlers/FunctionTrapHandler.js</a>, <a href="components_handlers_FunctionTrapHandler.js.html#line8">line 8</a>
+        <a href="components_logger.js.html">components/logger.js</a>, <a href="components_logger.js.html#line5">line 5</a>
     </li></ul></dd>
     
 
@@ -141,14 +141,14 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
 
     
 
-    <h4 class="name" id="apply"><span class="type-signature"></span>apply<span class="signature">(target, thisArg, argumentsList)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id="log"><span class="type-signature"></span>log<span class="signature">(msg)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Trap for a function call.
+    Logs a message to the console.
 </div>
 
 
@@ -184,13 +184,13 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
 
         <tr>
             
-                <td class="name"><code>target</code></td>
+                <td class="name"><code>msg</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
             
@@ -200,53 +200,7 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
 
             
 
-            <td class="description last">The target object.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>thisArg</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The this argument for a function call.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>argumentsList</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The list of arguments for the call.</td>
+            <td class="description last">Message to log.</td>
         </tr>
 
     
@@ -287,7 +241,7 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_handlers_FunctionTrapHandler.js.html">components/handlers/FunctionTrapHandler.js</a>, <a href="components_handlers_FunctionTrapHandler.js.html#line16">line 16</a>
+        <a href="components_logger.js.html">components/logger.js</a>, <a href="components_logger.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -310,28 +264,6 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The return value of the function.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">*</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -340,14 +272,14 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
 
     
 
-    <h4 class="name" id="construct"><span class="type-signature"></span>construct<span class="signature">(target, argumentsList)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="logError"><span class="type-signature"></span>logError<span class="signature">(msg)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Trap for the new operator.
+    Logs an error message to the console.
 </div>
 
 
@@ -383,13 +315,13 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
 
         <tr>
             
-                <td class="name"><code>target</code></td>
+                <td class="name"><code>msg</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
             
@@ -399,30 +331,7 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
 
             
 
-            <td class="description last">The target object.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>argumentsList</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The list of arguments for the call.</td>
+            <td class="description last">Error message to log.</td>
         </tr>
 
     
@@ -463,7 +372,7 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_handlers_FunctionTrapHandler.js.html">components/handlers/FunctionTrapHandler.js</a>, <a href="components_handlers_FunctionTrapHandler.js.html#line27">line 27</a>
+        <a href="components_logger.js.html">components/logger.js</a>, <a href="components_logger.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -486,28 +395,268 @@ Extends <a href="BaseTrapHandler.html">BaseTrapHandler</a></div>
 
 
 
-<h5>Returns:</h5>
+
+
 
         
-<div class="param-desc">
-    The new object.
+            
+
+    
+
+    <h4 class="name" id="logInfo"><span class="type-signature"></span>logInfo<span class="signature">(msg)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Logs an info message to the console.
 </div>
 
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
         
-<span class="param-type">Object</span>
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>msg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
-    </dd>
-</dl>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Info message to log.</td>
+        </tr>
 
     
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_logger.js.html">components/logger.js</a>, <a href="components_logger.js.html#line26">line 26</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="logWarn"><span class="type-signature"></span>logWarn<span class="signature">(msg)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Logs a warning message to the console.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>msg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Warning message to log.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_logger.js.html">components/logger.js</a>, <a href="components_logger.js.html#line34">line 34</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

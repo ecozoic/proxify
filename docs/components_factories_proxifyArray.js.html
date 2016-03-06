@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/handlers/FunctionTrapHandler.js</title>
+    <title>JSDoc: Source: components/factories/proxifyArray.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: components/handlers/FunctionTrapHandler.js</h1>
+    <h1 class="page-title">Source: components/factories/proxifyArray.js</h1>
 
     
 
@@ -26,39 +26,16 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { BaseTrapHandler } from './BaseTrapHandler';
-import { logger } from '../logger';
+            <pre class="prettyprint source linenums"><code>import { ArrayTrapHandler } from '../handlers';
 
 /**
- * Class representing the traps used to proxy functions.
- * Extends {@link BaseTrapHandler}
+ * Array proxy factory function.
+ * @param {Array} arr - The target array.
+ * @returns {Proxy} - The proxified array.
  */
-class FunctionTrapHandler extends BaseTrapHandler {
-  /**
-   * Trap for a function call.
-   * @param {Object} target - The target object.
-   * @param {Object} thisArg - The this argument for a function call.
-   * @param {Array} argumentsList - The list of arguments for the call.
-   * @returns {*} The return value of the function.
-   */
-  apply(target, thisArg, argumentsList) {
-    logger.log(`Function call on ${target}, this: ${thisArg}, args: ${argumentsList}`);
-    return Reflect.apply(target, thisArg, argumentsList);
-  }
-
-  /**
-   * Trap for the new operator.
-   * @param {Object} target - The target object.
-   * @param {Array} argumentsList - The list of arguments for the call.
-   * @returns {Object} The new object.
-   */
-  construct(target, argumentsList) {
-    logger.log(`Constructor call on ${target}, args: ${argumentsList}`);
-    return Reflect.construct(target, argumentsList);
-  }
+export function proxifyArray (arr) {
+  return new Proxy(arr, new ArrayTrapHandler());
 }
-
-export { FunctionTrapHandler };
 </code></pre>
         </article>
     </section>

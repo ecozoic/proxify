@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/handlers/FunctionTrapHandler.js</title>
+    <title>JSDoc: Source: components/logger.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: components/handlers/FunctionTrapHandler.js</h1>
+    <h1 class="page-title">Source: components/logger.js</h1>
 
     
 
@@ -26,39 +26,47 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { BaseTrapHandler } from './BaseTrapHandler';
-import { logger } from '../logger';
-
-/**
- * Class representing the traps used to proxy functions.
- * Extends {@link BaseTrapHandler}
+            <pre class="prettyprint source linenums"><code>/**
+ * Logging utility class.
+ * Exported as singleton so all modules share same instance.
  */
-class FunctionTrapHandler extends BaseTrapHandler {
+class Logger {
   /**
-   * Trap for a function call.
-   * @param {Object} target - The target object.
-   * @param {Object} thisArg - The this argument for a function call.
-   * @param {Array} argumentsList - The list of arguments for the call.
-   * @returns {*} The return value of the function.
+   * Logs a message to the console.
+   * @param {string} msg - Message to log.
    */
-  apply(target, thisArg, argumentsList) {
-    logger.log(`Function call on ${target}, this: ${thisArg}, args: ${argumentsList}`);
-    return Reflect.apply(target, thisArg, argumentsList);
+  log(msg) {
+    console.log(msg);
   }
 
   /**
-   * Trap for the new operator.
-   * @param {Object} target - The target object.
-   * @param {Array} argumentsList - The list of arguments for the call.
-   * @returns {Object} The new object.
+   * Logs an error message to the console.
+   * @param {string} msg - Error message to log.
    */
-  construct(target, argumentsList) {
-    logger.log(`Constructor call on ${target}, args: ${argumentsList}`);
-    return Reflect.construct(target, argumentsList);
+  logError(msg) {
+    console.error(msg);
+  }
+
+  /**
+   * Logs an info message to the console.
+   * @param {string} msg - Info message to log.
+   */
+  logInfo(msg) {
+    console.info(msg);
+  }
+
+  /**
+   * Logs a warning message to the console.
+   * @param {string} msg - Warning message to log.
+   */
+  logWarn(msg) {
+    console.warn(msg);
   }
 }
 
-export { FunctionTrapHandler };
+// singleton
+let logger = new Logger();
+export { logger };
 </code></pre>
         </article>
     </section>
