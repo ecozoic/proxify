@@ -18,4 +18,4 @@ class Logger {
 
 // singleton
 let logger = new Logger();
-export default logger;
+export { logger };

@@ -1,15 +1,15 @@
 import { proxifyObject, proxifyFunction, proxifyArray } from './components/factories';
 
-export function proxify(obj, settings = {}) {
+export function proxify(target) {
   // delegate to appropriate factory
-  if (Array.isArray(obj)) {
-    return proxifyArray(obj, settings);
-  } else if (typeof obj === 'function') {
-    return proxifyFunction(obj, settings);
-  } else if (obj !== null && typeof obj === 'object') {
-    return proxifyObject(obj, settings);
+  if (Array.isArray(target)) {
+    return proxifyArray(target);
+  } else if (typeof target === 'function') {
+    return proxifyFunction(target);
+  } else if (target !== null && typeof target === 'object') {
+    return proxifyObject(target);
   }
 
-	// no proxification, return obj.
-  return obj;
+	// no proxification, return target
+  return target;
 }

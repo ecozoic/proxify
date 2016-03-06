@@ -1,4 +1,4 @@
-import logger from '../logger';
+import { logger } from '../logger';
 
 /** Class representing the traps used across all proxify-able types. */
 class BaseTrapHandler {

@@ -1,23 +1,26 @@
 /*global sinon*/
-import logger from '../../src/components/logger';
+import { logger } from '../../src/components/logger';
 
 describe('Logger', () => {
   let sandbox;
+  const stubs = ['log', 'error', 'info', 'warn'];
 
-  beforeEach(() => {
+  before(() => {
     // create a sandbox
     sandbox = sinon.sandbox.create();
 
     // create some spies
-    sandbox.spy(console, 'log');
-    sandbox.spy(console, 'error');
-    sandbox.spy(console, 'info');
-    sandbox.spy(console, 'warn');
+    stubs.forEach(stub => sandbox.spy(console, stub));
+  });
+
+  after(() => {
+    // restore environment
+    sandbox.restore();
   });
 
   afterEach(() => {
-    // restore environment
-    sandbox.restore();
+    // reset spies
+    stubs.forEach(stub => console[stub].reset());
   });
 
   describe('#log', () => {

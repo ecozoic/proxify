@@ -1,5 +1,5 @@
 import { BaseTrapHandler } from './BaseTrapHandler';
-import logger from '../logger';
+import { logger } from '../logger';
 
 /**
  * Class representing the traps used to proxy functions.
