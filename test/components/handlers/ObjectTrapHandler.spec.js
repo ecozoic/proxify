@@ -41,18 +41,12 @@ describe('ObjectTrapHandler', () => {
   });
 
   describe('#get', () => {
-    let target;
-    let proxy;
-
-    beforeEach(() => {
-      target = {
+    it('handles property access', () => {
+      const target = {
         hello: 'world'
       };
+      const proxy = new Proxy(target, handler);
 
-      proxy = new Proxy(target, handler);
-    });
-
-    it('handles property access', () => {
       let values = [];
       values[0] = proxy.hello;                  // dot notation
       values[1] = proxy['hello'];               // bracket notation
@@ -62,12 +56,39 @@ describe('ObjectTrapHandler', () => {
       values.forEach(value => value.should.equal(target.hello));
     });
 
-    it.skip('handles inherited property access', () => {
-      // TODO
+    it('handles inherited property access', () => {
+      const Person = function(name) {
+        this.name = name;
+      };
+
+      const Ninja = function(name) {
+        Person.call(this, name);
+      };
+
+      Ninja.prototype = Object.create(Person.prototype);
+      Ninja.prototype.constructor = Ninja;
+
+      const target = new Ninja('Bob');
+      const proxy = new Proxy(target, handler);
+
+      const name = proxy.name;
+
+      mockLogger.log.should.have.been.calledOnce;
+      name.should.equal(target.name);
     });
 
-    it.skip('handles getters', () => {
-      // TODO
+    it('handles getters', () => {
+      const target = {
+        get hello() {
+          return 'world';
+        }
+      };
+      const proxy = new Proxy(target, handler);
+
+      const value = proxy.hello;
+
+      mockLogger.log.should.have.been.calledOnce;
+      value.should.equal(target.hello);
     });
   });
 
