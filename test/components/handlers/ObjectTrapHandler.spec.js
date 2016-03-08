@@ -117,7 +117,68 @@ describe('ObjectTrapHandler', () => {
   });
 
   describe('#set', () => {
-    // TODO
+    it('handles property assignment', () => {
+      const target = {
+        hello: 'world',
+        foo: 'bar',
+        count: 0
+      };
+      const proxy = new Proxy(target, handler);
+
+      proxy.hello = 'friend';           // dot notation
+      proxy['foo'] = 'baz';             // bracket notation
+      Reflect.set(proxy, 'count', 1);   // reflect api
+
+      // property assignment actually triggers 3 trap handlers for every write
+      // handlers are triggered in the following order:
+      // set -> getOwnPropertyDescriptor -> defineProperty
+      mockLogger.log.should.have.callCount(3 * 3);
+      target.hello.should.equal(proxy.hello);
+      target.foo.should.equal(proxy.foo);
+      target.count.should.equal(proxy.count);
+    });
+
+    it('handles inherited property assignment', () => {
+      const Person = function(name) {
+        this.name = name;
+      };
+
+      const Ninja = function(name) {
+        Person.call(this, name);
+      };
+
+      Ninja.prototype = Object.create(Person.prototype);
+      Ninja.prototype.constructor = Ninja;
+
+      const target = new Ninja('Bob');
+      const proxy = new Proxy(target, handler);
+
+      proxy.name = 'Jim';
+
+      mockLogger.log.should.have.been.calledThrice;
+      target.name.should.equal(proxy.name);
+    });
+
+    it('handles setters', () => {
+      const target = {
+        _prop: 'world',
+        get hello() {
+          return this._prop;
+        },
+        set hello(msg) {
+          this._prop = msg;
+        }
+      };
+      const proxy = new Proxy(target, handler);
+
+      proxy.hello = 'friend';
+
+      // setters actually trigger a total of four traps for every write
+      // traps are triggered in the following order:
+      // set (on setter) -> set (on underlying property) -> getOwnPropertyDescriptor -> defineProperty
+      mockLogger.log.should.have.callCount(4);
+      target.hello.should.equal(proxy.hello);
+    });
   });
 
   describe('#setPrototypeOf', () => {
