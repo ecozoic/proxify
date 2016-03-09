@@ -7,9 +7,6 @@ import { ObjectTrapHandler } from '../handlers';
  * @returns {Proxy} The proxified object.
  * @memberOf factories
  */
-export function proxifyObject(obj, settings) {
-  if (!settings.updateable)
-    return new Proxy(obj, new ObjectTrapHandler());
-  else
-    return { proxy: pObj, revoke: token } = Proxy(obj, new ObjectTrapHandler())
+export function proxifyObject(obj) {
+  return new Proxy(obj, new ObjectTrapHandler());
 }

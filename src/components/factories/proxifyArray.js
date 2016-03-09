@@ -7,9 +7,6 @@ import { ArrayTrapHandler } from '../handlers';
  * @returns {Proxy} - The proxified array.
  * @memberof factories
  */
-export function proxifyArray (arr, settings) {
-  if (!settings.updateable)
-    return new Proxy(arr, new ArrayTrapHandler());
-  else
-    return { proxy: pObj, revoke: token } = Proxy(arr, new ArrayTrapHandler());
+export function proxifyArray (arr) {
+  return new Proxy(arr, new ArrayTrapHandler());
 }

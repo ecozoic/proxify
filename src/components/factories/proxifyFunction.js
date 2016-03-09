@@ -7,9 +7,6 @@ import { FunctionTrapHandler } from '../handlers';
  * @returns {Proxy} - The proxified function.
  * @memberOf factories
  */
-export function proxifyFunction(fn, settings) {
-  if (!settins.updateable)
-    return new Proxy(fn, new FunctionTrapHandler());
-  else
-    return { proxy: pObj, revoke: token } = Proxy(fn, new FunctionTrapHandler());
+export function proxifyFunction(fn) {
+  return new Proxy(fn, new FunctionTrapHandler());
 }
