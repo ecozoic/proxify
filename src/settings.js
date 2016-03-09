@@ -13,6 +13,7 @@
   //- traps: The list of traps to be set on the proxy. If not specified, we place all traps for the object type (object, function, array)
   //- logLevel: The log level of the proxy
   //- key1: A more explicit and exact definition of how the proxifier should handle this specifiec obj key
+  //- updateable: when 'true' allows the proxy to follow newly added properties to the object
 
   //BEHAVIOR:
   //When only the top-level settings attributes are defined, the proxifier will log at the specified log level for all specified trap
