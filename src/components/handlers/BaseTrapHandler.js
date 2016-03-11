@@ -6,6 +6,7 @@ import { logger } from '../utils/logger';
 class BaseTrapHandler {
   /**
    * Trap for Object.defineProperty().
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/defineProperty}
    * @param {Object} target - The target object.
    * @param {string} property - The name of the property being defined or modified.
    * @param {Object} descriptor - The descriptor for the property being defined or modified.
@@ -18,6 +19,7 @@ class BaseTrapHandler {
 
   /**
    * Trap for the delete operator.
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/deleteProperty}
    * @param {Object} target - The target object.
    * @param {string} property - The name of the property to delete.
    * @returns {Boolean} Boolean indicating whether or not property deletion was successful.
@@ -29,6 +31,7 @@ class BaseTrapHandler {
 
   /**
    * Trap for getting a property value.
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/get}
    * @param {Object} target - The target object.
    * @param {string} property - The name of the property to get.
    * @param {Object} receiver - Either the proxy or an object that inherits from the proxy.
@@ -41,6 +44,7 @@ class BaseTrapHandler {
 
   /**
    * Trap for Object.getOwnPropertyDescriptor().
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/getOwnPropertyDescriptor}
    * @param {Object} target - The target object.
    * @param {string} property - The name of the property whose description should be retrieved.
    * @returns {Object|undefined} The descriptor object or undefined if property is undefined.
@@ -52,6 +56,7 @@ class BaseTrapHandler {
 
   /**
    * Trap for [[GetPrototypeOf]] internal method.
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/getPrototypeOf}
    * @param {Object} target - The target object.
    * @returns {Object|null} The prototype object or null if object has no prototype.
    */
@@ -62,6 +67,7 @@ class BaseTrapHandler {
 
   /**
    * Trap for the in operator.
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/has}
    * @param {Object} target - The target object.
    * @param {property} - The name of the property to check for existence.
    * @returns {Boolean} Boolean indicating whether or not property exists.
@@ -73,6 +79,7 @@ class BaseTrapHandler {
 
   /**
    * Trap for Object.isExtensible().
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/isExtensible}
    * @param {Object} target - The target object.
    * @returns {Boolean} Boolean indicating whether or not target is extensible.
    */
@@ -83,6 +90,7 @@ class BaseTrapHandler {
 
   /**
    * Trap for Object.getOwnPropertyNames().
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/ownKeys}
    * @param {Object} target - The target object.
    * @returns {string[]|Symbol[]} Enumerable representing the object's own keys.
    */
@@ -93,6 +101,7 @@ class BaseTrapHandler {
 
   /**
    * Trap for Object.preventExtensions().
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/preventExtensions}
    * @param {Object} target - The target object.
    * @returns {Boolean} Boolean indicating whether or not target is extensible.
    */
@@ -103,6 +112,7 @@ class BaseTrapHandler {
 
   /**
    * Trap for setting a property value.
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/set}
    * @param {Object} target - The target object.
    * @param {string} property - The name of the property to set.
    * @param {*} value - The new value of the property to set.
@@ -116,6 +126,7 @@ class BaseTrapHandler {
 
   /**
    * Trap for Object.setPrototypeOf().
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/setPrototypeOf}
    * @param {Object} target - The target object.
    * @param {Object|null} - The object's new prototype or null.
    */
