@@ -129,10 +129,11 @@ class BaseTrapHandler {
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/setPrototypeOf}
    * @param {Object} target - The target object.
    * @param {Object|null} - The object's new prototype or null.
+   * @returns {Boolean} Boolean indicating whether prototype was successfully set.
    */
   setPrototypeOf(target, prototype) {
     logger.log(`setPrototypeOf called on ${target}, prototype: ${prototype}`);
-    Reflect.setPrototypeOf(target, prototype);
+    return Reflect.setPrototypeOf(target, prototype);
   }
 }
 

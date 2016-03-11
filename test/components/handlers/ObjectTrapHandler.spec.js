@@ -270,6 +270,26 @@ describe('ObjectTrapHandler', () => {
   });
 
   describe('#setPrototypeOf', () => {
-    // TODO
+    it('handles setPrototypeOf calls', () => {
+      const Person = function(name) {
+        this.name = name;
+      };
+
+      const Ninja = function(weapon) {
+        this.weapon = weapon;
+      };
+
+      const proto = new Person('Bob');
+      const target = new Ninja('nunchucks');
+      const objProxy = new Proxy(target, handler);
+      const reflectProxy = new Proxy(target, handler);
+
+      Object.setPrototypeOf(objProxy, proto);
+      Reflect.setPrototypeOf(reflectProxy, proto);
+
+      mockLogger.log.should.have.been.calledTwice;
+      objProxy.__proto__.should.equal(target.__proto__);
+      reflectProxy.__proto__.should.equal(target.__proto__);
+    });
   });
 });
