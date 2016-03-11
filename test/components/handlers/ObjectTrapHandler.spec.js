@@ -1,4 +1,4 @@
-/*global sinon*/
+/*global sinon, should*/
 describe('ObjectTrapHandler', () => {
   let handler;
   let mockLogger;
@@ -37,7 +37,44 @@ describe('ObjectTrapHandler', () => {
   });
 
   describe('#deleteProperty', () => {
-    // TODO
+    it('handles property deletion', () => {
+      const target = {
+        hello: 'world',
+        foo: 'bar',
+        count: 0
+      };
+      const proxy = new Proxy(target, handler);
+
+      delete proxy.hello;                       // dot notation
+      delete proxy['foo'];                      // bracket notation
+      Reflect.deleteProperty(proxy, 'count');   // reflect api
+
+      mockLogger.log.should.have.been.calledThrice;
+      should.equal(proxy.hello, target.hello);
+      should.equal(proxy.foo, target.foo);
+      should.equal(proxy.count, target.count);
+    });
+
+    it('handles inherited property deletion', () => {
+      const Person = function(name) {
+        this.name = name;
+      };
+
+      const Ninja = function(name) {
+        Person.call(this, name);
+      };
+
+      Ninja.prototype = Object.create(Person.prototype);
+      Ninja.prototype.constructor = Ninja;
+
+      const target = new Ninja('Bob');
+      const proxy = new Proxy(target, handler);
+
+      delete proxy.name;
+
+      mockLogger.log.should.have.been.calledOnce;
+      should.equal(proxy.name, target.name);
+    });
   });
 
   describe('#get', () => {
