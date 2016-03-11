@@ -35,5 +35,8 @@ node_modules
 # Webpack bundles
 build
 
-# IDEA
+# idea directory
 .idea
+
+# Docs directory used by jsdoc
+docs
