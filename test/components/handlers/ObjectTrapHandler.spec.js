@@ -134,7 +134,58 @@ describe('ObjectTrapHandler', () => {
   });
 
   describe('#getPrototypeOf', () => {
-    // TODO
+    let Person;
+    let Ninja;
+    let target;
+    let proxy;
+
+    before(() => {
+      Person = function(name) {
+        this.name = name;
+      };
+
+      Ninja = function(name) {
+        Person.call(this, name);
+      };
+
+      Ninja.prototype = Object.create(Person.prototype);
+      Ninja.prototype.constructor = Ninja;
+
+      target = new Ninja('Bob');
+      proxy = new Proxy(target, handler);
+    });
+
+    it('handles getPrototypeOf calls', () => {
+      const objProto = Object.getPrototypeOf(proxy);
+      const reflectProto = Reflect.getPrototypeOf(proxy);
+
+      mockLogger.log.should.have.been.calledTwice;
+      objProto.should.equal(Object.getPrototypeOf(target));
+      reflectProto.should.equal(Object.getPrototypeOf(target));
+    });
+
+    it('handles __proto__ access', () => {
+      const proto = proxy.__proto__;
+
+      // __proto__ access triggers two traps in this order:
+      // get (access __proto__ property) -> getPrototypeOf
+      mockLogger.log.should.have.been.calledTwice;
+      proto.should.equal(target.__proto__);
+    });
+
+    it('handles isPrototypeOf calls', () => {
+      const isProto = Ninja.prototype.isPrototypeOf(proxy);
+
+      mockLogger.log.should.have.been.calledOnce;
+      isProto.should.equal(Ninja.prototype.isPrototypeOf(target));
+    });
+
+    it('handles instanceof checks', () => {
+      const isInstance = proxy instanceof Person;
+
+      mockLogger.log.should.have.been.calledOnce;
+      isInstance.should.equal(target instanceof Person);
+    });
   });
 
   describe('#has', () => {
