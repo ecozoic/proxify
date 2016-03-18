@@ -33,7 +33,30 @@ describe('ObjectTrapHandler', () => {
   });
 
   describe('#defineProperty', () => {
-    // TODO
+    it('handles property definition', () => {
+      const target = {};
+      const proxy = new Proxy(target, handler);
+
+      Object.defineProperty(proxy, 'hello', {
+        configurable: false,
+        enumerable: true,
+        value: 'world',
+        writable: true
+      });
+
+      Reflect.defineProperty(proxy, 'foo', {
+        configurable: false,
+        enumerable: true,
+        value: 'bar',
+        writable: true
+      });
+
+      mockLogger.log.should.have.been.calledTwice;
+      proxy.hello.should.equal(target.hello);
+      target.hello.should.equal('world');
+      proxy.foo.should.equal(target.foo);
+      target.foo.should.equal('bar');
+    });
   });
 
   describe('#deleteProperty', () => {
@@ -53,6 +76,10 @@ describe('ObjectTrapHandler', () => {
       should.equal(proxy.hello, target.hello);
       should.equal(proxy.foo, target.foo);
       should.equal(proxy.count, target.count);
+
+      should.equal(target.hello, undefined);
+      should.equal(target.foo, undefined);
+      should.equal(target.count, undefined);
     });
 
     it('handles inherited property deletion', () => {
@@ -74,6 +101,7 @@ describe('ObjectTrapHandler', () => {
 
       mockLogger.log.should.have.been.calledOnce;
       should.equal(proxy.name, target.name);
+      should.equal(target.name, undefined);
     });
   });
 
@@ -90,7 +118,10 @@ describe('ObjectTrapHandler', () => {
       values[2] = Reflect.get(proxy, 'hello');  // reflect API
 
       mockLogger.log.should.have.callCount(values.length);
-      values.forEach(value => value.should.equal(target.hello));
+      values.forEach(value => {
+        value.should.equal(target.hello);
+        value.should.equal('world');
+      });
     });
 
     it('handles inherited property access', () => {
@@ -112,6 +143,7 @@ describe('ObjectTrapHandler', () => {
 
       mockLogger.log.should.have.been.calledOnce;
       name.should.equal(target.name);
+      target.name.should.equal('Bob');
     });
 
     it('handles getters', () => {
@@ -126,11 +158,37 @@ describe('ObjectTrapHandler', () => {
 
       mockLogger.log.should.have.been.calledOnce;
       value.should.equal(target.hello);
+      target.hello.should.equal('world');
     });
   });
 
   describe('#getOwnPropertyDescriptor', () => {
-    // TODO
+    it('handles property description queries', () => {
+      const target = {};
+
+      Object.defineProperty(target, 'hello', {
+        configurable: false,
+        enumerable: true,
+        value: 'world',
+        writable: true
+      });
+
+      Reflect.defineProperty(target, 'foo', {
+        configurable: false,
+        enumerable: true,
+        value: 'bar',
+        writable: true
+      });
+
+      const proxy = new Proxy(target, handler);
+
+      const objProp = Object.getOwnPropertyDescriptor(proxy, 'hello');
+      const reflectProp = Reflect.getOwnPropertyDescriptor(proxy, 'foo');
+
+      mockLogger.log.should.have.been.calledTwice;
+      objProp.value.should.equal(Object.getOwnPropertyDescriptor(target, 'hello').value);
+      reflectProp.value.should.equal(Reflect.getOwnPropertyDescriptor(target, 'foo').value);
+    });
   });
 
   describe('#getPrototypeOf', () => {
@@ -189,19 +247,156 @@ describe('ObjectTrapHandler', () => {
   });
 
   describe('#has', () => {
-    // TODO
+    it('handles property query', () => {
+      const target = {
+        hello: 'world'
+      };
+
+      const proxy = new Proxy(target, handler);
+
+      const has = 'hello' in proxy;
+      mockLogger.log.should.have.been.calledOnce;
+      has.should.equal('hello' in target);
+      has.should.be.true;
+    });
+
+    it('handles inherited property query', () => {
+      const Person = function(name) {
+        this.name = name;
+      };
+
+      const Ninja = function(name) {
+        Person.call(this, name);
+      };
+
+      Ninja.prototype = Object.create(Person.prototype);
+      Ninja.prototype.constructor = Ninja;
+
+      const target = new Ninja('Bob');
+      const proxy = new Proxy(target, handler);
+
+      const has = 'name' in proxy;
+      mockLogger.log.should.have.been.calledOnce;
+      has.should.equal('name' in target);
+      has.should.be.true;
+    });
+
+    it('handles reflect has', () => {
+      const target = {
+        hello: 'world'
+      };
+
+      const proxy = new Proxy(target, handler);
+
+      const has = Reflect.has(proxy, 'hello');
+
+      mockLogger.log.should.have.been.calledOnce;
+      has.should.equal(Reflect.has(target, 'hello'));
+      has.should.be.true;
+    });
   });
 
   describe('#isExtensible', () => {
-    // TODO
+    it('handles extensibility checks', () => {
+      const target = {};
+      const proxy = new Proxy(target, handler);
+
+      const objExt = Object.isExtensible(proxy);
+      const refExt = Reflect.isExtensible(proxy);
+
+      mockLogger.log.should.have.been.calledTwice;
+      objExt.should.equal(Object.isExtensible(target));
+      refExt.should.equal(Reflect.isExtensible(target));
+    });
   });
 
   describe('#ownKeys', () => {
-    // TODO
+    let target;
+    let symbol;
+    let proxy;
+
+    before(() => {
+      target = {};
+      symbol = Symbol('test');
+
+      Object.defineProperty(target, 'hello', {
+        configurable: false,
+        enumerable: true,
+        value: 'world',
+        writable: true
+      });
+
+      Object.defineProperty(target, 'foo', {
+        configurable: false,
+        enumerable: false,
+        value: 'bar',
+        writable: true
+      });
+
+      target[symbol] = 'simba';
+      proxy = new Proxy(target, handler);
+    });
+
+    it('handles own string properties', () => {
+      // both enumerable and non-enumerable but no symbols
+      const propNames = Object.getOwnPropertyNames(proxy);
+
+      mockLogger.log.should.have.been.calledOnce;
+      propNames.should.have.length(2);
+      propNames.includes('hello').should.be.true;
+      propNames.includes('foo').should.be.true;
+      propNames.includes(symbol).should.be.false;
+    });
+
+    it('handles own symbol properties', () => {
+      // symbol props only
+      const symbolProps = Object.getOwnPropertySymbols(proxy);
+
+      mockLogger.log.should.have.been.calledOnce;
+      symbolProps.should.have.length(1);
+      symbolProps.includes(symbol).should.be.true;
+    });
+
+    it('handles enumerable properties', () => {
+      // enumerable only (same as for-in)
+      // this triggers (n+1) traps where n is the number of string properties
+      // in this case: ownKeys -> property descriptor for 'hello' -> property descriptor for 'foo'
+      const propNames = Object.keys(proxy);
+
+      mockLogger.log.should.have.been.calledThrice;
+      propNames.should.have.length(1);
+      propNames.includes('hello').should.be.true;
+    });
+
+    it('handles own keys', () => {
+      const ownKeys = Reflect.ownKeys(proxy);
+
+      mockLogger.log.should.have.been.calledOnce;
+      ownKeys.should.have.length(3);
+      ownKeys.includes('hello').should.be.true;
+      ownKeys.includes('foo').should.be.true;
+      ownKeys.includes(symbol).should.be.true;
+    });
   });
 
   describe('#preventExtensions', () => {
-    // TODO
+    it('handles prevent extension calls', () => {
+      const target1 = {};
+      const proxy1 = new Proxy(target1, handler);
+
+      const target2 = {};
+      const proxy2 = new Proxy(target2, handler);
+
+      Object.preventExtensions(proxy1);
+      Reflect.preventExtensions(proxy2);
+
+      mockLogger.log.should.have.been.calledTwice;
+
+      Object.isExtensible(proxy1).should.be.false;
+      Object.isExtensible(target1).should.be.false;
+      Reflect.isExtensible(proxy2).should.be.false;
+      Reflect.isExtensible(target2).should.be.false;
+    });
   });
 
   describe('#set', () => {
@@ -222,8 +417,11 @@ describe('ObjectTrapHandler', () => {
       // set -> getOwnPropertyDescriptor -> defineProperty
       mockLogger.log.should.have.callCount(3 * 3);
       target.hello.should.equal(proxy.hello);
+      target.hello.should.equal('friend');
       target.foo.should.equal(proxy.foo);
+      target.foo.should.equal('baz');
       target.count.should.equal(proxy.count);
+      target.count.should.equal(1);
     });
 
     it('handles inherited property assignment', () => {
@@ -245,6 +443,7 @@ describe('ObjectTrapHandler', () => {
 
       mockLogger.log.should.have.been.calledThrice;
       target.name.should.equal(proxy.name);
+      target.name.should.equal('Jim');
     });
 
     it('handles setters', () => {
@@ -266,6 +465,7 @@ describe('ObjectTrapHandler', () => {
       // set (on setter) -> set (on underlying property) -> getOwnPropertyDescriptor -> defineProperty
       mockLogger.log.should.have.callCount(4);
       target.hello.should.equal(proxy.hello);
+      target.hello.should.equal('friend');
     });
   });
 
