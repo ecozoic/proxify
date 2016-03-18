@@ -1,6 +1,6 @@
 {
-  "name": "proxy-log",
-  "version": "0.0.1",
+  "name": "proxify",
+  "version": "0.1.0",
   "description": "An ES6 library for wrapping objects in proxies that provide logging and profiling information",
   "main": "index.js",
   "scripts": {
@@ -20,20 +20,17 @@
     "proxy",
     "logging",
     "profiling",
+    "diagnostics",
     "webpack",
     "mocha",
+    "karma",
     "istanbul",
     "babel"
   ],
-  "private": true,
   "contributors": [
-    {
-      "name": "John Mitchell",
-      "email": "johnnn.mitchell@gmail.com"
-    },
-    {
-      "name": "Mark Mosby"
-    }],
+    "John Mitchell <johnnn.mitchell@gmail.com>",
+    "Mark Mosby"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ecozoic/proxy-log/issues"

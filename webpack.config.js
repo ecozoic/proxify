@@ -4,9 +4,9 @@ module.exports = {
   context: path.resolve('src/'),
   entry: ['./index'],
   output: {
-    path: path.resolve('build/'),
+    path: path.resolve('lib/'),
     publicPath: '/public/assets/',
-    filename: 'bundle.js'
+    filename: 'proxify.js'
   },
 
   devServer: {

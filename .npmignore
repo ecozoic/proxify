@@ -1,0 +1,11 @@
+src
+test
+coverage
+public
+
+.babelrc
+.editorconfig
+.eslintrc.json
+conf.json
+karma.conf.js
+webpack.config.js
