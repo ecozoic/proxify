@@ -70,3 +70,4 @@ npm run doc
 * Configuration layer (customize which keys and traps trigger logging)
 * Use EventEmitter within the traps for improved performance and to support multiple/custom reporters
 * Deep (recursive) proxification
+* Add more useful metadata to logs (stack traces, timestamps, etc)
