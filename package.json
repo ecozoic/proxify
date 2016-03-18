@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ecozoic/proxy-log.git"
+    "url": "git+https://github.com/ecozoic/proxify.git"
   },
   "keywords": [
     "es6",
@@ -33,9 +33,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ecozoic/proxy-log/issues"
+    "url": "https://github.com/ecozoic/proxify/issues"
   },
-  "homepage": "https://github.com/ecozoic/proxy-log#readme",
+  "homepage": "https://github.com/ecozoic/proxify#readme",
   "devDependencies": {
     "babel-core": "^6.6.5",
     "babel-istanbul": "^0.6.1",
