@@ -1,6 +1,6 @@
 {
-  "name": "proxify",
-  "version": "0.1.0",
+  "name": "proxify-js",
+  "version": "0.1.1",
   "description": "An ES6 library for wrapping objects in proxies that provide logging and profiling information",
   "main": "index.js",
   "scripts": {
