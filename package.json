@@ -8,7 +8,8 @@
     "test": "karma start",
     "build:dev": "webpack -d",
     "build:prod": "webpack -p",
-    "doc": "jsdoc -c conf.json"
+    "doc": "jsdoc -c conf.json",
+    "webpack": ""
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,14 @@
     "babel"
   ],
   "private": true,
-  "author": "John Mitchell <johnnn.mitchell@gmail.com>",
+  "contributors": [
+    {
+      "name": "John Mitchell",
+      "email": "johnnn.mitchell@gmail.com"
+    },
+    {
+      "name": "Mark Mosby"
+    }],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ecozoic/proxy-log/issues"
