@@ -2,6 +2,10 @@
 
 **proxify** provides ES6 proxies of objects, arrays, and functions with embedded logging functionality to assist in diagnostics or profiling.
 
+```
+npm install --save proxify-js
+```
+
 ```javascript
 import { proxify } from 'path/to/proxify';
 
