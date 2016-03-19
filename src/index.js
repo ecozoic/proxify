@@ -20,3 +20,16 @@ export function proxify(target, settings = {}) {
 	// no proxification, return target
   return target;
 }
+
+function extrapolateSettings(settings) {
+  var delegatable = settings.delegatable || false;
+  var trapNewProperties = settings.trapNewProperties || false;
+  var keys = settins.keys || [];
+  var traps = settings.traps || [];
+  var logLevel = settings.logLevel || 1;
+  delete settings.delegatable;
+  delete settings.trapNewProperties;
+  delete settings.keys;
+  delete settings.traps;
+  delete settings.logLevel;
+}
