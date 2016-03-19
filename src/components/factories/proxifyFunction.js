@@ -7,6 +7,6 @@ import { FunctionTrapHandler } from '../handlers';
  * @returns {Proxy} - The proxified function.
  * @memberOf factories
  */
-export function proxifyFunction(fn) {
+export function proxifyFunction(fn, settings) {
   return new Proxy(fn, new FunctionTrapHandler());
 }

@@ -5,7 +5,7 @@ import { proxifyObject, proxifyFunction, proxifyArray } from './components/facto
  * For all other types, does nothing and just returns what was passed in.
  * @param {Array|Object|function} target - The object to be proxified.
  * @param {Object} settings - The settings for the proxy
- * @returns {Proxy} The proxified target.
+ * @returns {Proxy|*} The proxified target.
  */
 export function proxify(target, settings = {}) {
   // delegate to appropriate factory
