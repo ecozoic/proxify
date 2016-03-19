@@ -37,9 +37,8 @@ const settings = {
   },
   'key3': {
     traps: {
-      'get': {
-        logLevel: 4
-      }
+      'get': 4,
+      'set': 2
     }
   }
 };
