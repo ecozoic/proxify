@@ -4,7 +4,7 @@ import { proxifyObject, proxifyFunction, proxifyArray } from './components/facto
  * Takes in an array, function, or object and returns its proxified version.
  * For all other types, does nothing and just returns what was passed in.
  * @param {Array|Object|function} target - The object to be proxified.
- * @param {Object} settings - The settings for the proxy
+ * @param {Object} [settings = {}] - The settings for the proxy
  * @returns {Proxy|*} The proxified target.
  */
 export function proxify(target, settings = {}) {
@@ -23,25 +23,35 @@ export function proxify(target, settings = {}) {
 
 /** Takes the settings object and extrapolates it to its
  * most specific form: 1 logLevel per trap per key.
+ * @param {Object|Array|Function} target - The target object to be proxified
  * @param {Object} settings - The settings object received from the proxify function
  * @returns {undefined}
  */
-function normalizeSettings(settings) {
+function normalizeSettings(target, settings) {
+  //TODO: If proxy should delegate, should we add delegated keys here, or check them at run time?
   var keys = settings.keys || [],
       traps = settings.traps || [],
+      normalizedKeys = [],
       logLevel = settings.logLevel || 1,
-      normalizedKeys = [];
+      delegatable = settings.delegatable || false,
+      trapNewProps = settings.trapNewProperties || false;
 
   delete settings.keys;
   delete settings.traps;
   delete settings.logLevel;
+  delete settings.delegatable;
+  delete settings.trapNewProperties;
 
-  //This needs to be used outside this for-in block so key is a var, not let
+  //If a settings object with no keys was passed, default to the keys on the target object
+  if (!keys.length && !Object.getOwnPropertyNames(settings).length)
+    keys = Object.getOwnPropertyNames(target);
+
+  //Iterate the object keys that were specified in the settings object
   for (let key in settings) {
     if (settings.hasOwnProperty(key)) {
       normalizedKeys.push(key);
       if (Array.isArray(settings[key].traps)) {
-        turnSettingsTrapDefinitionsIntoObjects(settings[key], settings[key].traps, logLevel);
+        turnSettingsTrapDefinitionsIntoObjects(settings[key], logLevel);
       }
       //We only want to inherit down if this key was included at the top level.
       if (keys.includes(key)) {
@@ -57,7 +67,8 @@ function normalizeSettings(settings) {
     }
   }
 
-  /*TODO: The inner foreach is the same as is used above. Can't be declared out of scope because it
+  /*
+    TODO: The inner foreach is the same as is used above. Can't be declared out of scope because it
     TODO: know the key - but this should be able to be refactored
   */
   keys.forEach(function keysIterationCallback(key) {
@@ -70,17 +81,21 @@ function normalizeSettings(settings) {
       });
     }
   });
+
+  //Add these back to the settings object after key normalization
+  settings.delegatable = delegatable;
+  settings.trapNewProperties = trapNewProps;
 }
 
 /**
  * Replaces an array of trap names with their object counterparts
  * @param {Object} keyDef - reference to a specific key in the settings object
- * @param {Object} keyTraps - an array of traps for the key
  * @param {number} logLevel - the default logLevel of the proxy
  * @returns {undefined}
  */
-function turnSettingsTrapDefinitionsIntoObjects(keyDef, keyTraps, logLevel) {
-  var keyLogLevel = keyDef.logLevel || logLevel;
+function turnSettingsTrapDefinitionsIntoObjects(keyDef, logLevel) {
+  var keyLogLevel = keyDef.logLevel || logLevel,
+      keyTraps = keyDef.traps;
   //Remove the key's logLevel and reset traps to be an object
   delete keyDef.logLevel;
   keyDef.traps = {};

@@ -104,4 +104,16 @@ describe('proxify', () => {
       mockFactories[spy].should.not.have.been.called;
     }
   });
+
+  //TODO: Add more tests for settings normalization
+  it('normalizes the settings object', function settingsNormalizationTest1() {
+    var settings = {
+      keys: ['test1', 'test2'],
+      traps: ['get'],
+      logLevel: 1
+    };
+    proxify({}, settings);
+    //TODO: Temporary fill-in until I talk with John
+    mockFactories.proxifyObject.should.have.been.calledOnce;
+  });
 });
