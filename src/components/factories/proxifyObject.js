@@ -7,6 +7,6 @@ import { ObjectTrapHandler } from '../handlers';
  * @returns {Proxy} The proxified object.
  * @memberOf factories
  */
-export function proxifyObject(obj) {
+export function proxifyObject(obj, settings) {
   return new Proxy(obj, new ObjectTrapHandler());
 }
