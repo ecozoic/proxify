@@ -4,3 +4,4 @@
  */
 export { logger } from './logger';
 export { AsyncEventEmitter } from './AsyncEventEmitter';
+export { trapDefinitions } from './trapDefinitions';

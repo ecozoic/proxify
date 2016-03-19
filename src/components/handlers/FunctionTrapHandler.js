@@ -18,15 +18,15 @@ class FunctionTrapHandler extends BaseTrapHandler {
    * @param {Array} argumentsList - The list of arguments for the call.
    * @returns {*} The return value of the function.
    */
-  apply(target, thisArg, argumentsList) {
-    this.onTrap('apply', target, thisArg, argumentsList);
-    return Reflect.apply(target, thisArg, argumentsList);
+  apply(target, context, argumentsList) {
+    this.onTrap('apply', target, context, argumentsList);
+    return Reflect.apply(target, context, argumentsList);
   }
 
   /**
    * Trap for the new operator.
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/construct}
-   * @param {Object} target - The target object.
+   * @param {Function} target - The target object.
    * @param {Array} argumentsList - The list of arguments for the call.
    * @returns {Object} The new object.
    */

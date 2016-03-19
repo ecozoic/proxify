@@ -15,9 +15,18 @@ npm install --save proxify-js
 ```javascript
 import { proxify } from 'proxify-js';
 
-const target = new MyObject();
+var target = new MyObject();
+    target = proxify(target);
+```
+
+Note: If you want to keep a reference to the proxified object, then you should 
+assign the proxy to a different variable:
+```javascript
 const proxy = proxify(target);
 ```
+
+Doing so however will mean all usages of the target object will need to be replaced 
+with the proxy reference in order to make use of proxify's logging capabilities.
 
 Once an object has been proxified, you can send it on its merry way through the rest of your application and see logging statements indicating how your application is consuming your object.
 
@@ -47,6 +56,7 @@ Property definition on [object Object], property: total, descriptor { ... }
 * It's useful to override Object#toString() to get a more helpful description of your object in the logs
 * Proxies are only available in the latest browsers. Check the [ES6 Compatibility table](https://kangax.github.io/compat-table/es6/).
 * Check out the awesome [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler) documentation on proxies to learn more about the various traps and the operations they intercept.
+* Also check the [ES6 Reflection](http://www.ecma-international.org/ecma-262/6.0/#sec-reflection) and [ES6 Proxy](http://www.ecma-international.org/ecma-262/6.0/#sec-proxy-object-internal-methods-and-internal-slots) specifications.
 
 ## Development
 

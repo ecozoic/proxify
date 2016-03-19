@@ -4,7 +4,7 @@ import { AsyncEventEmitter, logger } from '../utils';
 /**
  * Object proxy factory function.
  * @param {Object} obj - The target object.
- * @param {Object} settings - The settings for the proxy
+ * @param {Object} config - The settings for proxifing the object
  * @returns {Proxy} The proxified object.
  * @memberOf factories
  */

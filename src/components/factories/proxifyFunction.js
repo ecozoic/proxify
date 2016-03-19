@@ -1,10 +1,11 @@
 import { FunctionTrapHandler } from '../handlers';
+import { normalizeConfig } from '../utils';
 import { AsyncEventEmitter, logger } from '../utils';
 
 /**
  * Function proxy factory function.
  * @param {function} fn - The target function.
- * @param {Object} settings - The settings for the proxy
+ * @param {Object} config - The settings for proxifing the function
  * @returns {Proxy} - The proxified function.
  * @memberOf factories
  */
