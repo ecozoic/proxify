@@ -8,6 +8,7 @@ import { proxifyObject, proxifyFunction, proxifyArray } from './components/facto
  * @returns {Proxy|*} The proxified target.
  */
 export function proxify(target, settings = {}) {
+  normalizeSettings(settings, Object.getOwnPropertyNames(target));
   // delegate to appropriate factory
   if (Array.isArray(target)) {
     return proxifyArray(target, settings);
@@ -23,12 +24,13 @@ export function proxify(target, settings = {}) {
 
 /** Takes the settings object and extrapolates it to its
  * most specific form: 1 logLevel per trap per key.
- * @param {Object|Array|Function} target - The target object to be proxified
  * @param {Object} settings - The settings object received from the proxify function
+ * @param {Array} objKeys - The target object's keys
  * @returns {undefined}
  */
-function normalizeSettings(target, settings) {
+function normalizeSettings(settings, objKeys) {
   //TODO: If proxy should delegate, should we add delegated keys here, or check them at run time?
+  //TODO: If no traps are defined at the top level, which traps, if any, should we default to?
   var keys = settings.keys || [],
       traps = settings.traps || [],
       normalizedKeys = [],
@@ -44,7 +46,7 @@ function normalizeSettings(target, settings) {
 
   //If a settings object with no keys was passed, default to the keys on the target object
   if (!keys.length && !Object.getOwnPropertyNames(settings).length)
-    keys = Object.getOwnPropertyNames(target);
+    keys = objKeys;
 
   //Iterate the object keys that were specified in the settings object
   for (let key in settings) {
@@ -67,17 +69,13 @@ function normalizeSettings(target, settings) {
     }
   }
 
-  /*
-    TODO: The inner foreach is the same as is used above. Can't be declared out of scope because it
-    TODO: know the key - but this should be able to be refactored
-  */
   keys.forEach(function keysIterationCallback(key) {
     if (!normalizedKeys.includes(key)) {
-      settings[key] = {};
+      settings[key] = {
+        traps: {}
+      };
       traps.forEach(function trapIterationCallback(trap) {
-        if (!settings[key].traps[trap]) {
-          settings[key].traps[trap] = logLevel;
-        }
+        settings[key].traps[trap] = logLevel;
       });
     }
   });
