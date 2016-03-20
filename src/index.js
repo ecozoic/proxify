@@ -36,13 +36,15 @@ function normalizeSettings(settings, objKeys) {
       normalizedKeys = [],
       logLevel = settings.logLevel || 1,
       delegatable = settings.delegatable || false,
-      trapNewProps = settings.trapNewProperties || false;
+      trapNewProps = settings.trapNewProperties || false,
+      name = settings.name || "";
 
   delete settings.keys;
   delete settings.traps;
   delete settings.logLevel;
   delete settings.delegatable;
   delete settings.trapNewProperties;
+  delete settings.name;
 
   //If a settings object with no keys was passed, default to the keys on the target object
   if (!keys.length && !Object.getOwnPropertyNames(settings).length)
@@ -83,6 +85,9 @@ function normalizeSettings(settings, objKeys) {
   //Add these back to the settings object after key normalization
   settings.delegatable = delegatable;
   settings.trapNewProperties = trapNewProps;
+
+  if (name !== "")
+    settings.name = name;
 }
 
 /**

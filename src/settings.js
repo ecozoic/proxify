@@ -7,6 +7,7 @@
 
 
   //ATTRIBUTES:
+  //- name: A name for the object to show in the logs
   //- delegatable: Should we log against delegated properties, or only on the obj's own keys? If not specified, we don't trap delegation
   // ---- delegation is trapped by default
   //- trapNewProperties: Should the proxy trap the properties that are added to an object (and potentially objects that it delegates to)?
