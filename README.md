@@ -12,7 +12,8 @@ import { proxify } from 'path/to/proxify';
 const target = new MyObject();
       target = proxify(target);
       
-Note: If you want to keep a reference to the proxified object, then you should assign the proxy to a different variable:
+Note: If you want to keep a reference to the proxified object, then you should 
+assign the proxy to a different variable:
 const proxy = proxify(target);
 ```
 
