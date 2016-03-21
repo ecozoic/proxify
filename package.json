@@ -1,8 +1,8 @@
 {
   "name": "proxify-js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "An ES6 library for wrapping objects in proxies that provide logging and profiling information",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "webpack-dev-server -d",
     "test": "karma start",
