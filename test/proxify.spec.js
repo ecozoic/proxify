@@ -105,6 +105,19 @@ describe('proxify', () => {
     }
   });
 
+  it('normalized a falsey settings object', function falseySettingsCallback() {
+    proxify({a:1});
+    var retSet = {
+      a: {
+        traps: {
+          
+        }
+      },
+      delegatable: false,
+      trapNewProperties: false
+    };
+  });
+
   //TODO: Add more tests for settings normalization
   it('normalizes the settings object', function settingsNormalizationTest1() {
     var settings = {
@@ -113,7 +126,21 @@ describe('proxify', () => {
       logLevel: 1
     };
     proxify({}, settings);
-    //TODO: Temporary fill-in until I talk with John
-    mockFactories.proxifyObject.should.have.been.calledOnce;
+
+    var retSet = {
+      test1: {
+        traps: {
+          get: 1
+        }
+      },
+      test2: {
+        traps: {
+          get: 1
+        }
+      },
+      delegatable: false,
+      trapNewProperties: false
+    };
+    expect(settings).to.deep.equal(retSet);
   });
 });

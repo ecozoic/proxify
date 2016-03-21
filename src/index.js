@@ -8,18 +8,18 @@ import { proxifyObject, proxifyFunction, proxifyArray } from './components/facto
  * @returns {Proxy|*} The proxified target.
  */
 export function proxify(target, settings = {}) {
+  var targetType = typeof target;
+  if (!target || (targetType !== 'function' && targetType !== 'object'))
+    return target;
   normalizeSettings(settings, Object.getOwnPropertyNames(target));
   // delegate to appropriate factory
   if (Array.isArray(target)) {
-    return proxifyArray(target, settings);
+    return proxifyArray(target);
   } else if (typeof target === 'function') {
-    return proxifyFunction(target, settings);
+    return proxifyFunction(target);
   } else if (target !== null && typeof target === 'object') {
-    return proxifyObject(target, settings);
+    return proxifyObject(target);
   }
-
-	// no proxification, return target
-  return target;
 }
 
 /** Takes the settings object and extrapolates it to its
@@ -32,12 +32,12 @@ function normalizeSettings(settings, objKeys) {
   //TODO: If proxy should delegate, should we add delegated keys here, or check them at run time?
   //TODO: If no traps are defined at the top level, which traps, if any, should we default to?
   var keys = settings.keys || [],
-      traps = settings.traps || [],
-      normalizedKeys = [],
-      logLevel = settings.logLevel || 1,
-      delegatable = settings.delegatable || false,
-      trapNewProps = settings.trapNewProperties || false,
-      name = settings.name || "";
+    traps = settings.traps || [],
+    normalizedKeys = [],
+    logLevel = settings.logLevel || 1,
+    delegatable = settings.delegatable || false,
+    trapNewProps = settings.trapNewProperties || false,
+    name = settings.name || '';
 
   delete settings.keys;
   delete settings.traps;
@@ -86,7 +86,7 @@ function normalizeSettings(settings, objKeys) {
   settings.delegatable = delegatable;
   settings.trapNewProperties = trapNewProps;
 
-  if (name !== "")
+  if (name !== '')
     settings.name = name;
 }
 
@@ -98,7 +98,7 @@ function normalizeSettings(settings, objKeys) {
  */
 function turnSettingsTrapDefinitionsIntoObjects(keyDef, logLevel) {
   var keyLogLevel = keyDef.logLevel || logLevel,
-      keyTraps = keyDef.traps;
+    keyTraps = keyDef.traps;
   //Remove the key's logLevel and reset traps to be an object
   delete keyDef.logLevel;
   keyDef.traps = {};
