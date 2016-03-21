@@ -78,7 +78,7 @@ function normalizeSettings(settings, objKeys) {
       };
       traps.forEach(function trapIterationCallback(trap) {
         this[trap] = logLevel;
-      }, settings[key].traps);
+      }, this[key].traps);
     }
   }, settings);
 

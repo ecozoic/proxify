@@ -106,16 +106,18 @@ describe('proxify', () => {
   });
 
   it('normalized a falsey settings object', function falseySettingsCallback() {
-    proxify({a:1});
+    var set = {};
+    proxify({a:1}, set);
     var retSet = {
       a: {
         traps: {
-          
+
         }
       },
       delegatable: false,
       trapNewProperties: false
     };
+    expect(set).to.deep.equal(retSet);
   });
 
   //TODO: Add more tests for settings normalization
