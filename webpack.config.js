@@ -4,7 +4,7 @@ module.exports = {
   context: path.resolve('src/'),
   entry: ['./index'],
   output: {
-    path: path.resolve('lib/'),
+    path: path.resolve('dist/'),
     publicPath: '/public/assets/',
     filename: 'proxify.js'
   },
