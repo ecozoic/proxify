@@ -1,5 +1,5 @@
 import { proxifyObject, proxifyFunction, proxifyArray } from './components/factories';
-import { normalizeSettings } from './utils/settingsNormalizer';
+import { normalizeSettings } from './components/utils';
 
 /** Main entry point for proxify.
  * Takes in an array, function, or object and returns its proxified version.
@@ -12,6 +12,7 @@ export function proxify(target, settings = {}) {
   var targetType = typeof target;
   if (!target || (targetType !== 'function' && targetType !== 'object'))
     return target;
+  //TODO: move usage into factories
   normalizeSettings(settings, Object.getOwnPropertyNames(target));
   // delegate to appropriate factory
   if (Array.isArray(target)) {
