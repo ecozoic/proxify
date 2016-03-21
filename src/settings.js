@@ -12,7 +12,8 @@
   // ---- delegation is trapped by default
   //- trapNewProperties: Should the proxy trap the properties that are added to an object (and potentially objects that it delegates to)?
   //- keys: The keys to trap, if not specified, we trap all keys
-  //- traps: The list of traps to be set on the proxy. If not specified, we place all traps for the object type (object, function, array)
+  //- traps: The list of traps to log for on the proxy. All traps are always defined, but we only log for those specified.
+  //  If no traps are specified, we place all traps for the object type (object, function, array)
   //- logLevel: The log level of the proxy
   //- key1: A more explicit and exact definition of how the proxifier should handle this specifiec obj key
   //- updateable: when 'true' allows the proxy to follow newly added properties to the object

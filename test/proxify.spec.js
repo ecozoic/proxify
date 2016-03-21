@@ -1,4 +1,4 @@
-/*global sinon*/
+/*global sinon, expect*/
 describe('proxify', () => {
   let proxify;
   let mockFactories;
@@ -105,7 +105,8 @@ describe('proxify', () => {
     }
   });
 
-  it('normalized a falsey settings object', function falseySettingsCallback() {
+  it('normalized an empty settings object', function falseySettingsCallback() {
+    //TODO: We need to figure out what the defaults are for traps if none are specified
     var set = {};
     proxify({a:1}, set);
     var retSet = {
@@ -120,7 +121,6 @@ describe('proxify', () => {
     expect(set).to.deep.equal(retSet);
   });
 
-  //TODO: Add more tests for settings normalization
   it('normalizes the settings object', function settingsNormalizationTest1() {
     var settings = {
       keys: ['test1', 'test2'],

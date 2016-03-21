@@ -30,7 +30,7 @@ export function proxify(target, settings = {}) {
  */
 function normalizeSettings(settings, objKeys) {
   //TODO: If proxy should delegate, should we add delegated keys here, or check them at run time?
-  //TODO: If no traps are defined at the top level, which traps, if any, should we default to?
+  //TODO: If no traps are defined at the top level, figure out a way to get a reference to the appropriate object type traps
   var keys = settings.keys || [],
     traps = settings.traps || [],
     normalizedKeys = [],
