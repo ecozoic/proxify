@@ -63,24 +63,24 @@ function normalizeSettings(settings, objKeys) {
         //and add it to each key in settings if it wasn't already
         //specified at that lower level.
         traps.forEach(function trapIterationCallback(trap) {
-          if (!settings[key].traps[trap]) {
-            settings[key].traps[trap] = logLevel;
+          if (!this[trap]) {
+            this[trap] = logLevel;
           }
-        });
+        },settings[key].traps);
       }
     }
   }
 
   keys.forEach(function keysIterationCallback(key) {
     if (!normalizedKeys.includes(key)) {
-      settings[key] = {
+      this[key] = {
         traps: {}
       };
       traps.forEach(function trapIterationCallback(trap) {
-        settings[key].traps[trap] = logLevel;
-      });
+        this[trap] = logLevel;
+      }, settings[key].traps);
     }
-  });
+  }, settings);
 
   //Add these back to the settings object after key normalization
   settings.delegatable = delegatable;
@@ -106,6 +106,6 @@ function turnSettingsTrapDefinitionsIntoObjects(keyDef, logLevel) {
   //Add each key to the new traps object and set its logLevel to
   //the pre-specified level.
   keyTraps.forEach(function keyTrapsIterationCallback(trap) {
-    keyDef.traps[trap] = keyLogLevel;
-  });
+    this[trap] = keyLogLevel;
+  }, keyDef.traps);
 }
