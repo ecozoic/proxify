@@ -12,20 +12,26 @@ export function normalizeSettings(settings, objKeys) {
   //TODO: If proxy should delegate, should we add delegated keys here, or check them at run time?
   //TODO: pass in trap handlers from factories to get list of default traps when none are specified in settings
   //TODO: also used trap handlers to compare specified traps before adding due to existence alone
-  var keys = settings.keys || [],
-    traps = settings.traps || [],
+  var keys = settings.hasOwnProperty('keys') && settings.keys || [],
+    traps = settings.hasOwnProperty('traps') && settings.traps || [],
     normalizedKeys = [],
-    logLevel = settings.logLevel || 1,
-    delegatable = settings.delegatable || false,
-    trapNewProps = settings.trapNewProperties || false,
+    logLevel = settings.hasOwnProperty('logLevel') && settings.logLevel || 1,
+    delegatable = settings.hasOwnProperty('delegatable') && settings.delegatable || false,
+    trapNewProps = settings.hasOwnProperty('trapNewProperties') && settings.trapNewProperties || false,
     name = settings.name || '';
 
-  delete settings.keys;
-  delete settings.traps;
-  delete settings.logLevel;
-  delete settings.delegatable;
-  delete settings.trapNewProperties;
-  delete settings.name;
+  try {
+    delete settings.keys;
+    delete settings.traps;
+    delete settings.logLevel;
+    delete settings.delegatable;
+    delete settings.trapNewProperties;
+    delete settings.name;
+  }
+  catch(e) {
+    //TODO: figure out how to stop proxification if unable to delete settings properties
+    return;
+  }
 
   //If a settings object with no keys was passed, default to the keys on the target object
   if (!keys.length && !Object.getOwnPropertyNames(settings).length)

@@ -41,4 +41,20 @@ describe('settingsNormalizer', function snModuleCallback() {
     };
     expect(settings).to.deep.equal(retSet);
   });
+
+  it('should create default settings due to disallowed delegation', function snTest3Callback() {
+    var set = {
+        keys: ['test1', 'test2'],
+        traps: ['get', 'set'],
+        logLevel: 2
+      },
+      delSet = Object.create(set);
+    normalizeSettings(delSet, Object.getOwnPropertyNames({}));
+
+    //TODO: update this test once default traps are place on the settings when undefined
+    var retSet = Object.create(set);
+    retSet.delegatable = false;
+    retSet.trapNewProperties = false;
+    expect(delSet).to.deep.equal(retSet);
+  });
 });

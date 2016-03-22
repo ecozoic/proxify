@@ -26,6 +26,8 @@
   //the proxifer will override any of the general settings with those specified in the key's definition. All higher-level definitions
   //are inherited down, so you can set a general policy at the top level, and then override it for certain keys/traps at the lower levels.
   //The specified keys will inherit any logging capabilities defined at the top level that have not been overridden at the lower levels.
+  //All properties defined by the settings object must be owned by the settings object itself; no delegated properties will be included
+  //in the internal implementation.
 
 const settings = {
   delegatable: false,
