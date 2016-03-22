@@ -104,7 +104,7 @@ describe('proxify', () => {
       mockFactories[spy].should.not.have.been.called;
     }
   });
-
+/*
   it('normalized an empty settings object', function falseySettingsCallback() {
     //TODO: We need to figure out what the defaults are for traps if none are specified
     var set = {};
@@ -144,5 +144,5 @@ describe('proxify', () => {
       trapNewProperties: false
     };
     expect(settings).to.deep.equal(retSet);
-  });
+  });*/
 });
