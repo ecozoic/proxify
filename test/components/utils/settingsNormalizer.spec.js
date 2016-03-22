@@ -1,4 +1,4 @@
-/*global sinon, expect*/
+/*global expect*/
 import { normalizeSettings } from '../../../src/components/utils/settingsNormalizer';
 
 describe('settingsNormalizer', function snModuleCallback() {
