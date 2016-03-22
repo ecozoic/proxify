@@ -69,7 +69,7 @@ class BaseTrapHandler {
    * Trap for the in operator.
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/has}
    * @param {Object} target - The target object.
-   * @param {property} - The name of the property to check for existence.
+   * @param {String} property - The name of the property to check for existence.
    * @returns {Boolean} Boolean indicating whether or not property exists.
    */
   has(target, property) {
@@ -128,7 +128,7 @@ class BaseTrapHandler {
    * Trap for Object.setPrototypeOf().
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/setPrototypeOf}
    * @param {Object} target - The target object.
-   * @param {Object|null} - The object's new prototype or null.
+   * @param {Object|null} prototype - The object's new prototype or null.
    * @returns {Boolean} Boolean indicating whether prototype was successfully set.
    */
   setPrototypeOf(target, prototype) {
