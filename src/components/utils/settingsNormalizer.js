@@ -10,7 +10,8 @@
  */
 export function normalizeSettings(settings, objKeys) {
   //TODO: If proxy should delegate, should we add delegated keys here, or check them at run time?
-  //TODO: If no traps are defined at the top level, figure out a way to get a reference to the appropriate object type traps
+  //TODO: pass in trap handlers from factories to get list of default traps when none are specified in settings
+  //TODO: also used trap handlers to compare specified traps before adding due to existence alone
   var keys = settings.keys || [],
     traps = settings.traps || [],
     normalizedKeys = [],
