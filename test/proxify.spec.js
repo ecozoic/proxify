@@ -1,4 +1,4 @@
-/*global sinon, expect*/
+/*global sinon*/
 describe('proxify', () => {
   let proxify;
   let mockFactories;
@@ -104,45 +104,4 @@ describe('proxify', () => {
       mockFactories[spy].should.not.have.been.called;
     }
   });
-/*
-  it('normalized an empty settings object', function falseySettingsCallback() {
-    //TODO: We need to figure out what the defaults are for traps if none are specified
-    var set = {};
-    proxify({a:1}, set);
-    var retSet = {
-      a: {
-        traps: {
-
-        }
-      },
-      delegatable: false,
-      trapNewProperties: false
-    };
-    expect(set).to.deep.equal(retSet);
-  });
-
-  it('normalizes the settings object', function settingsNormalizationTest1() {
-    var settings = {
-      keys: ['test1', 'test2'],
-      traps: ['get'],
-      logLevel: 1
-    };
-    proxify({}, settings);
-
-    var retSet = {
-      test1: {
-        traps: {
-          get: 1
-        }
-      },
-      test2: {
-        traps: {
-          get: 1
-        }
-      },
-      delegatable: false,
-      trapNewProperties: false
-    };
-    expect(settings).to.deep.equal(retSet);
-  });*/
 });
