@@ -33,7 +33,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
   var keys = config.hasOwnProperty('keys') && config.keys || [],
     traps = config.hasOwnProperty('traps') && config.traps || [],
     normalizedKeys = [],
-    logLevel = config.hasOwnProperty('logLevel') && config.logLevel && isInteger(config.logLevel) || 1,
+    logLevel = config.hasOwnProperty('logLevel') && config.logLevel && Number.isInteger(config.logLevel) || 1,
     delegatable = config.hasOwnProperty('delegatable') && config.delegatable || false,
     trapNewProps = config.hasOwnProperty('trapNewProperties') && config.trapNewProperties || false,
     name = config.name || '';
@@ -141,7 +141,7 @@ function inheritTopLevelTraps(configKeyDef, traps, availableTraps, logLevel) {
   }
   else if (typeof traps === 'object') {
     for (var trap in traps) {
-      if (traps.hasOwnProperty(trap) && isInteger(trap) && !configKeyDef.traps[trap]
+      if (traps.hasOwnProperty(trap) && Number.isInteger(trap) && !configKeyDef.traps[trap]
         && availableTraps.includes(trap) && trapDefs[trap] === 'key') {
         configKeyDef.traps[trap] = Number(traps[trap]);
       }
@@ -167,21 +167,10 @@ function setObjectLevelTraps(config, traps, availableTraps, logLevel) {
   }
   else if (typeof traps === 'object') {
     for (var trap in traps) {
-      if (traps.hasOwnProperty(trap) && isInteger(trap) && availableTraps.includes(trap) &&
+      if (traps.hasOwnProperty(trap) && Number.isInteger(trap) && availableTraps.includes(trap) &&
         (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
         config.objectTraps[trap] = Number(traps[trap]);
       }
     }
   }
-}
-
-/**
- * Determines if the value is or can be coerced to an integer
- * @param {*} value - Any value
- * @returns {boolean} Return true is the value either is an integer or can be coerced to one,
- * any other value will coerce to NaN and thus return false
- */
-function isInteger(value) {
-  return (typeof parseInt(Number(value.toString()).toString()) === 'number' &&
-  parseInt(Number(value.toString()).toString()) === parseInt(Number(value.toString()).toString()));
 }
