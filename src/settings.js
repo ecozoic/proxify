@@ -8,6 +8,9 @@
   //TODO: We need to be able to specify traps that operate on the object itself, and not on traps.
   //Need a way to be able to specify that in the options object + have a way to normalize it.
 
+  //TODO: If a trap is specified for a key or object, but the logLevel is not an integer, should we
+  //TODO: ignore that trap altogether, or set a default logLevel?
+
   //ATTRIBUTES:
   //- name: A name for the object to show in the logs
   //- delegatable: Should we log against delegated properties, or only on the obj's own keys? If not specified, we don't trap delegation

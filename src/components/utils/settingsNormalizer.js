@@ -33,7 +33,7 @@ export function normalizeSettings(settings, objKeys, availableTraps) {
   var keys = settings.hasOwnProperty('keys') && settings.keys || [],
     traps = settings.hasOwnProperty('traps') && settings.traps || [],
     normalizedKeys = [],
-    logLevel = settings.hasOwnProperty('logLevel') && settings.logLevel || 1,
+    logLevel = settings.hasOwnProperty('logLevel') && settings.logLevel && isInteger(settings.logLevel) || 1,
     delegatable = settings.hasOwnProperty('delegatable') && settings.delegatable || false,
     trapNewProps = settings.hasOwnProperty('trapNewProperties') && settings.trapNewProperties || false,
     name = settings.name || '';
@@ -141,7 +141,7 @@ function inheritTopLevelTraps(settingsKeyDef, traps, availableTraps, logLevel) {
   }
   else if (typeof traps === 'object') {
     for (var trap in traps) {
-      if (traps.hasOwnProperty(trap) && typeof Number(trap) === 'number' && !settingsKeyDef.traps[trap]
+      if (traps.hasOwnProperty(trap) && isInteger(trap) && !settingsKeyDef.traps[trap]
         && availableTraps.includes(trap) && trapDefs[trap] === 'key') {
         settingsKeyDef.traps[trap] = Number(traps[trap]);
       }
@@ -167,10 +167,21 @@ function setObjectLevelTraps(options, traps, availableTraps, logLevel) {
   }
   else if (typeof traps === 'object') {
     for (var trap in traps) {
-      if (traps.hasOwnProperty(trap) && typeof Number(trap) === 'number' && availableTraps.includes(trap) &&
+      if (traps.hasOwnProperty(trap) && isInteger(trap) && availableTraps.includes(trap) &&
         (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
         options.objectTraps[trap] = Number(traps[trap]);
       }
     }
   }
+}
+
+/**
+ * Determines if the value is or can be coerced to an integer
+ * @param {*} value - Any value
+ * @returns {boolean} Return true is the value either is an integer or can be coerced to one,
+ * any other value will coerce to NaN and thus return false
+ */
+function isInteger(value) {
+  return (typeof parseInt(Number(value.toString()).toString()) === 'number' &&
+  parseInt(Number(value.toString()).toString()) === parseInt(Number(value.toString()).toString()));
 }
