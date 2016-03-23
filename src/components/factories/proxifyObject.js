@@ -1,4 +1,5 @@
 import { ObjectTrapHandler } from '../handlers';
+import { AsyncEventEmitter, logger } from '../utils';
 
 /**
  * Object proxy factory function.
@@ -8,5 +9,8 @@ import { ObjectTrapHandler } from '../handlers';
  * @memberOf factories
  */
 export function proxifyObject(obj) {
-  return new Proxy(obj, new ObjectTrapHandler());
+  const emitter = new AsyncEventEmitter();
+  emitter.on('trap', logger.logTrap.bind(logger));
+
+  return new Proxy(obj, new ObjectTrapHandler(emitter));
 }
