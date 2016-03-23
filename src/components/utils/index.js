@@ -3,4 +3,4 @@
   @namespace utils
  */
 export { logger } from './logger';
-export { normalizeSettings } from './settingsNormalizer';
+export { normalizeConfig } from './configNormalizer';
