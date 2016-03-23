@@ -31,22 +31,54 @@
   //All properties defined by the settings object must be owned by the settings object itself; no delegated properties will be included
   //in the internal implementation.
 
-const settings = {
+var settings = {
   delegatable: false,
   trapNewProperties: true,
+  name: 'name_of_object_to_appear_in_logs',
   keys: ['key1', 'key2', 'key3', 'key4', 'key5'],
   traps: ['get', 'set'],
   logLevel: 1,
-  'key1': {
+  key1: {
     logLevel: 2,
     traps: []
   },
-  'key3': {
+  key3: {
     traps: {
-      'get': 4,
-      'set': 2
+      get: 4,
+      set: 2
     }
   }
 };
 
-export { settings };
+var settings2 = {
+  traps: {
+    get: 1,
+    set: 2,
+    getOwnPropertyNames: 3
+  }
+};
+
+var finalTrapForm = {
+  delegatable: false,
+  trapNewProperties: true,
+  name: 'name_of_object_to_appear_in_logs',
+  objectTraps: {
+    getPrototypeOf: 2,
+    has: 2,
+    ownKeys: 2,
+    setPrototypeOf: 1
+  },
+  key1: {
+    traps: {
+      get: 2,
+      set: 1,
+      deleteProperty: 1
+    }
+  },
+  key2: {
+    traps: {
+      get: 1,
+      set: 1
+    }
+  }
+};
