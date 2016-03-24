@@ -9,6 +9,6 @@ import { normalizeConfig } from '../utils';
  * @memberOf factories
  */
 export function proxifyObject(obj, config) {
-  normalizeConfig(config, Object.getOwnPropertyNames(obj), Object.getOwnPropertyNames(ObjectTrapHandler));
+  config = normalizeConfig(config, Object.getOwnPropertyNames(obj), Object.getOwnPropertyNames(ObjectTrapHandler));
   return new Proxy(obj, new ObjectTrapHandler());
 }

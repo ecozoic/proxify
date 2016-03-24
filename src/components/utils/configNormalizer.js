@@ -23,9 +23,14 @@ var trapDefs = {
  * @param {Object} config - The settings object received from the proxify function
  * @param {Array} objKeys - The target object's keys
  * @param {Array} availableTraps - The available traps for this object type
- * @returns {undefined}
+ * @returns {Object} - Returns a new config object
  */
 export function normalizeConfig(config, objKeys, availableTraps) {
+  var newConf = {
+    delegatable: config.hasOwnProperty('delegatable') && config.delegatable || false,
+    trapNewProps: config.hasOwnProperty('trapNewProperties') && config.trapNewProperties || true,
+    name: config.name || undefined
+  };
   //TODO: If proxy should delegate, should we add delegated keys here, or check them at run time?
   //TODO: pass in trap handlers from factories to get list of default traps when none are specified in settings
   //TODO: also used trap handlers to compare specified traps before adding due to existence alone
@@ -33,10 +38,12 @@ export function normalizeConfig(config, objKeys, availableTraps) {
   var keys = config.hasOwnProperty('keys') && config.keys || [],
     traps = config.hasOwnProperty('traps') && config.traps || [],
     normalizedKeys = [],
-    logLevel = config.hasOwnProperty('logLevel') && config.logLevel && Number.isInteger(config.logLevel) || 1,
-    delegatable = config.hasOwnProperty('delegatable') && config.delegatable || false,
-    trapNewProps = config.hasOwnProperty('trapNewProperties') && config.trapNewProperties || false,
-    name = config.name || '';
+    logLevel;
+
+  if (!Number.isInteger(config.logLevel))
+    throw 'logLevel value for config object is not an integer';
+  else
+    logLevel = config.hasOwnProperty('logLevel') && config.logLevel  || 1;
 
   try {
     delete config.keys;
@@ -47,8 +54,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
     delete config.name;
   }
   catch(e) {
-    //TODO: figure out how to stop proxification if unable to delete settings properties
-    return;
+    throw 'Unable to delete properties from provided config object.';
   }
 
   //If a settings object with no keys was passed, default to the keys on the target object
@@ -63,11 +69,12 @@ export function normalizeConfig(config, objKeys, availableTraps) {
     if (config.hasOwnProperty(key)) {
       normalizedKeys.push(key);
       if (Array.isArray(config[key].traps)) {
-        turnSettingsTrapDefinitionsIntoObjects(config[key], logLevel);
+        newConf[key] = {};
+        turnSettingsTrapDefinitionsIntoObjects(newConf[key], config[key], logLevel);
       }
       //We only want to inherit down if this key was included at the top level.
       if (keys.includes(key)) {
-        inheritTopLevelTraps(config[key], traps, availableTraps, logLevel);
+        inheritTopLevelTraps(newConf[key], traps, availableTraps, logLevel);
         //Iterate each trap defined at the top level of the settings object
         //and add it to each key in settings if it wasn't already
         //specified at that lower level.
@@ -79,71 +86,68 @@ export function normalizeConfig(config, objKeys, availableTraps) {
       }
     }
   }
-  //TODO: update this based on 'keyDefs' and 'availableTraps'
+
   keys.forEach(function keysIterationCallback(key) {
     if (!normalizedKeys.includes(key)) {
       this[key] = {
         traps: {}
       };
       traps.forEach(function trapIterationCallback(trap) {
+        if (traps.hasOwnProperty(trap) && availableTraps.includes(trap) && trapDefs[key] === 'key')
         this[trap] = logLevel;
       }, this[key].traps);
     }
-  }, config);
+  }, newConf);
 
-  setObjectLevelTraps(config, traps, availableTraps, logLevel);
-
-  //Add these back to the settings object after key normalization
-  config.delegatable = delegatable;
-  config.trapNewProperties = trapNewProps;
-
-  if (name !== '')
-    config.name = name;
+  setObjectLevelTraps(newConf, traps, availableTraps, logLevel);
+  return newConf;
 }
 
 /**
  * Replaces an array of trap names with their object counterparts
+ * @param {Object} newConfKey - The key definition for the new config object being created
  * @param {Object} keyDef - reference to a specific key in the settings object
  * @param {number} logLevel - the default logLevel of the proxy
  * @returns {undefined}
  */
-function turnSettingsTrapDefinitionsIntoObjects(keyDef, logLevel) {
+function turnSettingsTrapDefinitionsIntoObjects(newConfKey, keyDef, logLevel) {
   var keyLogLevel = keyDef.logLevel || logLevel,
     keyTraps = keyDef.traps;
   //Remove the key's logLevel and reset traps to be an object
   delete keyDef.logLevel;
-  keyDef.traps = {};
+  newConfKey.traps = {};
 
   //Add each key to the new traps object and set its logLevel to
   //the pre-specified level.
   keyTraps.forEach(function keyTrapsIterationCallback(trap) {
     this[trap] = keyLogLevel;
-  }, keyDef.traps);
+  }, newConfKey.traps);
 }
 
 /**
  * Set the key specific traps defined at the top level of the options object so they inherit
  * the traps defined above unless specifically overridden. Will not place object specific traps
  * on the keys.
- * @param {Object} configKeyDef - The object for 1 key in the options object.
+ * @param {Object} newConfKeyDef - The key definition for the new config object.
  * @param {Object|Array} traps - The list of traps specified for this proxy at the top level.
  * @param {Array} availableTraps - The list of available traps for this type of object
  * @param {number} logLevel - The given logLevel
  * @returns {undefined}
  */
-function inheritTopLevelTraps(configKeyDef, traps, availableTraps, logLevel) {
+function inheritTopLevelTraps(newConfKeyDef, traps, availableTraps, logLevel) {
   if (Array.isArray(traps)) {
     traps.forEach(function trapIterationCallback(trap) {
       if (!this[trap] && availableTraps.includes(trap) && trapDefs[trap] === 'key') {
         this[trap] = logLevel;
       }
-    },configKeyDef.traps);
+    },newConfKeyDef.traps);
   }
   else if (typeof traps === 'object') {
     for (var trap in traps) {
-      if (traps.hasOwnProperty(trap) && Number.isInteger(trap) && !configKeyDef.traps[trap]
-        && availableTraps.includes(trap) && trapDefs[trap] === 'key') {
-        configKeyDef.traps[trap] = Number(traps[trap]);
+      if (traps.hasOwnProperty(trap) && !newConfKeyDef.traps[trap] && availableTraps.includes(trap) && trapDefs[trap] === 'key') {
+        if (!Number.isInteger(trap))
+          throw 'logLevel value for ' + trap + ' is not an integer';
+        newConfKeyDef.traps[trap] = Number(traps[trap]);
       }
     }
   }
@@ -151,25 +155,26 @@ function inheritTopLevelTraps(configKeyDef, traps, availableTraps, logLevel) {
 
 /**
  * Sets the object level traps on the options object.
- * @param {Object} config - The options object
+ * @param {Object} newConf - The new config object
  * @param {Object|Array} traps - The given traps for the options object
  * @param {Array} availableTraps - The list of available traps for this type of object
  * @param {number} logLevel - The base logLevel for the options object
  */
-function setObjectLevelTraps(config, traps, availableTraps, logLevel) {
-  config.objectTraps = {};
+function setObjectLevelTraps(newConf, traps, availableTraps, logLevel) {
+  newConf.objectTraps = {};
   if (Array.isArray(traps)) {
     traps.forEach(function trapIterationCallback(trap) {
       if (availableTraps.includes(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
         this[trap] = logLevel;
       }
-    }, config.objectTraps);
+    }, newConf.objectTraps);
   }
   else if (typeof traps === 'object') {
     for (var trap in traps) {
-      if (traps.hasOwnProperty(trap) && Number.isInteger(trap) && availableTraps.includes(trap) &&
-        (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
-        config.objectTraps[trap] = Number(traps[trap]);
+      if (traps.hasOwnProperty(trap) && availableTraps.includes(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
+        if (!Number.isInteger(trap))
+          throw 'logLevel value for ' + trap + ' is not an integer';
+        newConf.objectTraps[trap] = Number(traps[trap]);
       }
     }
   }
