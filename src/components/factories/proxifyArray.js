@@ -9,6 +9,6 @@ import { normalizeConfig } from '../utils';
  * @memberof factories
  */
 export function proxifyArray (arr, config) {
-  config = normalizeConfig(config, Object.getOwnPropertyNames(arr), Object.getOwnPropertyNames(ArrayTrapHandler));
+  config = normalizeConfig(config, Object.getOwnPropertyNames(arr), Object.getOwnPropertyNames(ArrayTrapHandler.prototype));
   return new Proxy(arr, new ArrayTrapHandler());
 }

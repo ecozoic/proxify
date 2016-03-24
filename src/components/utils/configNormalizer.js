@@ -26,9 +26,10 @@ var trapDefs = {
  * @returns {Object} - Returns a new config object
  */
 export function normalizeConfig(config, objKeys, availableTraps) {
+  availableTraps.splice(0,1);
   var newConf = {
     delegatable: config.hasOwnProperty('delegatable') && config.delegatable || false,
-    trapNewProps: config.hasOwnProperty('trapNewProperties') && config.trapNewProperties || true,
+    trapNewProperties: config.hasOwnProperty('trapNewProperties') && config.trapNewProperties || true,
     name: config.name || undefined
   };
   //TODO: If proxy should delegate, should we add delegated keys here, or check them at run time?
@@ -40,7 +41,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
     normalizedKeys = [],
     logLevel;
 
-  if (!Number.isInteger(config.logLevel))
+  if (config.logLevel && !Number.isInteger(config.logLevel))
     throw 'logLevel value for config object is not an integer';
   else
     logLevel = config.hasOwnProperty('logLevel') && config.logLevel  || 1;
@@ -62,7 +63,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
     keys = objKeys;
 
   if (!traps.length)
-    traps = Object.getOwnPropertyNames(availableTraps);
+    traps = availableTraps;
 
   //Iterate the object keys that were specified in the settings object
   for (let key in config) {
@@ -93,7 +94,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
         traps: {}
       };
       traps.forEach(function trapIterationCallback(trap) {
-        if (traps.hasOwnProperty(trap) && availableTraps.includes(trap) && trapDefs[key] === 'key')
+        if (~availableTraps.indexOf(trap) && trapDefs[trap] === 'key')
         this[trap] = logLevel;
       }, this[key].traps);
     }
@@ -137,14 +138,14 @@ function turnSettingsTrapDefinitionsIntoObjects(newConfKey, keyDef, logLevel) {
 function inheritTopLevelTraps(newConfKeyDef, traps, availableTraps, logLevel) {
   if (Array.isArray(traps)) {
     traps.forEach(function trapIterationCallback(trap) {
-      if (!this[trap] && availableTraps.includes(trap) && trapDefs[trap] === 'key') {
+      if (!this[trap] && ~availableTraps.indexOf(trap) && trapDefs[trap] === 'key') {
         this[trap] = logLevel;
       }
     },newConfKeyDef.traps);
   }
   else if (typeof traps === 'object') {
     for (var trap in traps) {
-      if (traps.hasOwnProperty(trap) && !newConfKeyDef.traps[trap] && availableTraps.includes(trap) && trapDefs[trap] === 'key') {
+      if (traps.hasOwnProperty(trap) && !newConfKeyDef.traps[trap] && ~availableTraps.indexOf(trap) && trapDefs[trap] === 'key') {
         if (!Number.isInteger(trap))
           throw 'logLevel value for ' + trap + ' is not an integer';
         newConfKeyDef.traps[trap] = Number(traps[trap]);
@@ -164,14 +165,14 @@ function setObjectLevelTraps(newConf, traps, availableTraps, logLevel) {
   newConf.objectTraps = {};
   if (Array.isArray(traps)) {
     traps.forEach(function trapIterationCallback(trap) {
-      if (availableTraps.includes(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
+      if (~availableTraps.indexOf(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
         this[trap] = logLevel;
       }
     }, newConf.objectTraps);
   }
   else if (typeof traps === 'object') {
     for (var trap in traps) {
-      if (traps.hasOwnProperty(trap) && availableTraps.includes(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
+      if (traps.hasOwnProperty(trap) && ~availableTraps.indexOf(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
         if (!Number.isInteger(trap))
           throw 'logLevel value for ' + trap + ' is not an integer';
         newConf.objectTraps[trap] = Number(traps[trap]);
