@@ -6,7 +6,8 @@ import { ObjectTrapHandler, FunctionTrapHandler, ArrayTrapHandler } from '../../
 describe('settingsNormalizer', function snModuleCallback() {
   it('should return default values for empty settings object', function snTest1Callback() {
     var set = {};
-    var conf = normalizeConfig(set, Object.getOwnPropertyNames({a:1}), Object.getOwnPropertyNames(ObjectTrapHandler.prototype));
+    var tmp = ObjectTrapHandler;
+    var conf = normalizeConfig(set, Object.getOwnPropertyNames({a:1}), Object.getOwnPropertyNames(tmp.prototype));
     var retSet = {
       a: {
         traps: {
