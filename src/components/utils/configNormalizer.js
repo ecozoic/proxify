@@ -26,7 +26,10 @@ var trapDefs = {
  * @returns {Object} - Returns a new config object
  */
 export function normalizeConfig(config, objKeys, availableTraps) {
-  availableTraps.splice(0,1);
+  if (~availableTraps.indexOf('constructor')) {
+    availableTraps.splice(availableTraps.indexOf('constructor', 1));
+  }
+
   var newConf = {
     delegatable: config.hasOwnProperty('delegatable') && config.delegatable || false,
     trapNewProperties: config.hasOwnProperty('trapNewProperties') && config.trapNewProperties || true,
@@ -95,7 +98,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
       };
       traps.forEach(function trapIterationCallback(trap) {
         if (~availableTraps.indexOf(trap) && trapDefs[trap] === 'key')
-        this[trap] = logLevel;
+          this[trap] = logLevel;
       }, this[key].traps);
     }
   }, newConf);
