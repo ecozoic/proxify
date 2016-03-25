@@ -19,3 +19,7 @@ branches:
   only:
     - "develop"
     - "master"
+
+addons:
+  code_climate:
+    repo_token: 799f46987d9e0acc3b811318ef0c132d003ec08b04583d86b7fb764b31823af7

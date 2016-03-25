@@ -55,7 +55,7 @@ module.exports = function(config) {
       noInfo: true
     },
     coverageReporter: {
-      type: 'html',
+      type: 'lcov',
       dir: 'coverage/'
     }
   });
