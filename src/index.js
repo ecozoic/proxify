@@ -7,14 +7,14 @@ import { proxifyObject, proxifyFunction, proxifyArray } from './components/facto
  * @param {Object} settings - The settings for the proxy
  * @returns {Proxy|*} The proxified target.
  */
-export function proxify(target, settings = {}) {
+export function proxify(target) {
   // delegate to appropriate factory
   if (Array.isArray(target)) {
-    return proxifyArray(target, settings);
+    return proxifyArray(target);
   } else if (typeof target === 'function') {
-    return proxifyFunction(target, settings);
+    return proxifyFunction(target);
   } else if (target !== null && typeof target === 'object') {
-    return proxifyObject(target, settings);
+    return proxifyObject(target);
   }
 
 	// no proxification, return target
