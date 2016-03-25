@@ -13,7 +13,7 @@ npm install --save proxify-js
 ## Features
 
 ```javascript
-import { proxify } from 'proxify';
+import { proxify } from 'proxify-js';
 
 const target = new MyObject();
 const proxy = proxify(target);
