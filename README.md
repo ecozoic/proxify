@@ -1,13 +1,19 @@
 # proxify
 
+[![Build Status](https://travis-ci.org/ecozoic/proxify.svg?branch=master)](https://travis-ci.org/ecozoic/proxify) [![Dependency Status](https://david-dm.org/ecozoic/proxify.svg)](https://david-dm.org/ecozoic/proxify)
+
 **proxify** provides ES6 proxies of objects, arrays, and functions with embedded logging functionality to assist in diagnostics or profiling.
+
+## Installation
 
 ```
 npm install --save proxify-js
 ```
 
+## Features
+
 ```javascript
-import { proxify } from 'path/to/proxify';
+import { proxify } from 'proxify-js';
 
 const target = new MyObject();
 const proxy = proxify(target);

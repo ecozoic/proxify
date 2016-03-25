@@ -6,7 +6,8 @@ module.exports = {
   output: {
     path: path.resolve('dist/'),
     publicPath: '/public/assets/',
-    filename: 'proxify.js'
+    filename: 'proxify.js',
+    library: 'proxify'
   },
 
   devServer: {
