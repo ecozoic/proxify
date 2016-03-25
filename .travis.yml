@@ -14,6 +14,9 @@ before_install:
 
 script: npm test
 
+after_script:
+  - "codeclimate-test-reporter < coverage/Chrome*/lcov.info"
+
 # whitelist
 branches:
   only:
