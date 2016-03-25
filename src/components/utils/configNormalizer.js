@@ -78,7 +78,11 @@ export function normalizeConfig(config, objKeys, availableTraps) {
       }
       //We only want to inherit down if this key was included at the top level.
       if (keys.includes(key)) {
-        inheritTopLevelTraps(newConf[key], traps, availableTraps, logLevel);
+        if (!newConf[key])
+          newConf[key] = { traps: {} };
+        let keyLogLevel = config[key].logLevel || logLevel;
+        setConfigKeySpecifiedTraps(config[key], newConf[key], availableTraps, keyLogLevel);
+        inheritTopLevelTraps(newConf[key], config[key], traps, availableTraps, keyLogLevel);
         //Iterate each trap defined at the top level of the settings object
         //and add it to each key in settings if it wasn't already
         //specified at that lower level.
@@ -129,16 +133,44 @@ function turnSettingsTrapDefinitionsIntoObjects(newConfKey, keyDef, logLevel) {
 }
 
 /**
+ * Sets the most specific level of trap definitions on the new config object
+ * @param {Object} confKeyDef - The config object's key's definition
+ * @param {Object} newConfKeyDef - The new config object's key's definition
+ * @param {Array} availableTraps - An array of available traps
+ * @param {number} logLevel - The logLevel for the traps
+ */
+function setConfigKeySpecifiedTraps(confKeyDef, newConfKeyDef, availableTraps, logLevel) {
+  if (Array.isArray(confKeyDef.traps)) {
+    confKeyDef.traps.forEach(function configKeyTrapsCallback(trap) {
+      if (!this[trap])
+        this[trap] = logLevel;
+    }, newConfKeyDef.traps);
+  }
+  else if (typeof confKeyDef.traps === 'object') {
+    for (var trap in confKeyDef.traps) {
+      if (!Number.isInteger(confKeyDef.traps[trap]))
+        throw 'logLevel for trap is not an integer';
+      if (confKeyDef.traps.hasOwnProperty(trap) && ~availableTraps.indexOf(trap) && trapDefs[trap] === 'key') {
+        newConfKeyDef.traps[trap] = confKeyDef.traps[trap];
+      }
+    }
+  }
+}
+
+/**
  * Set the key specific traps defined at the top level of the options object so they inherit
  * the traps defined above unless specifically overridden. Will not place object specific traps
  * on the keys.
  * @param {Object} newConfKeyDef - The key definition for the new config object.
+ * @param {Object} configKeyDef - The key definition for the config object.
  * @param {Object|Array} traps - The list of traps specified for this proxy at the top level.
  * @param {Array} availableTraps - The list of available traps for this type of object
  * @param {number} logLevel - The given logLevel
  * @returns {undefined}
  */
-function inheritTopLevelTraps(newConfKeyDef, traps, availableTraps, logLevel) {
+function inheritTopLevelTraps(newConfKeyDef, configKeyDef, traps, availableTraps, logLevel) {
+  if (!newConfKeyDef.traps)
+    newConfKeyDef.traps = {};
   if (Array.isArray(traps)) {
     traps.forEach(function trapIterationCallback(trap) {
       if (!this[trap] && ~availableTraps.indexOf(trap) && trapDefs[trap] === 'key') {

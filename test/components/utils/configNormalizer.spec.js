@@ -123,4 +123,89 @@ describe('settingsNormalizer', function configNormalizationModule() {
     };
     expect(conf).to.deep.equal(retConf);
   });
+
+  it('should normalize config with default values for a function', function configNormalizationTest5() {
+    var conf = normalizeConfig({}, Object.getOwnPropertyNames({a: 1}), fnTraps);
+
+    var retConf = {
+      delegatable: false,
+      trapNewProperties: true,
+      name: undefined,
+      a: {
+        traps: {
+          deleteProperty: 1,
+          get: 1,
+          getOwnPropertyDescriptor: 1,
+          set: 1
+        }
+      },
+      objectTraps: {
+        defineProperty: 1,
+        getPrototypeOf: 1,
+        has: 1,
+        isExtensible: 1,
+        ownKeys: 1,
+        preventExtensions: 1,
+        setPrototypeOf: 1,
+        apply: 1,
+        construct: 1
+      }
+    };
+    expect(conf).to.deep.equal(retConf);
+  });
+
+  it('should return a fully normalized config object', function configNormalizationTest6() {
+    var settings = {
+      delegatable: false,
+      trapNewProperties: true,
+      name: 'name_of_object_to_appear_in_logs',
+      keys: ['key1', 'key2', 'key3'],
+      traps: ['get', 'set', 'preventExtensions', 'getPrototypeOf'],
+      logLevel: 3,
+      key1: {
+        logLevel: 2,
+        traps: ['deleteProperty', 'getOwnPropertyDescriptor']
+      },
+      key3: {
+        traps: {
+          get: 4,
+          set: 2
+        }
+      }
+    };
+
+    var conf = normalizeConfig(settings, Object.getOwnPropertyNames({}), fnTraps);
+
+    var retConf = {
+      delegatable: false,
+      trapNewProperties: true,
+      name: 'name_of_object_to_appear_in_logs',
+      key1: {
+        traps: {
+          get: 3,
+          set: 3,
+          deleteProperty: 2,
+          getOwnPropertyDescriptor: 2
+        }
+      },
+      key2: {
+        traps: {
+          get: 3,
+          set:3
+        }
+      },
+      key3: {
+        traps: {
+          get: 4,
+          set: 2
+        }
+      },
+      objectTraps: {
+        preventExtensions: 3,
+        getPrototypeOf: 3
+      }
+    };
+    console.log(conf);
+    expect(conf).to.deep.equal(retConf);
+  });
 });
