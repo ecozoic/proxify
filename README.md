@@ -1,6 +1,6 @@
 # proxify
 
-[![Build Status](https://travis-ci.org/ecozoic/proxify.svg?branch=develop)](https://travis-ci.org/ecozoic/proxify) [![Dependency Status](https://david-dm.org/ecozoic/proxify.svg)](https://david-dm.org/ecozoic/proxify)
+[![Build Status](https://travis-ci.org/ecozoic/proxify.svg?branch=master)](https://travis-ci.org/ecozoic/proxify) [![Dependency Status](https://david-dm.org/ecozoic/proxify.svg)](https://david-dm.org/ecozoic/proxify)
 
 **proxify** provides ES6 proxies of objects, arrays, and functions with embedded logging functionality to assist in diagnostics or profiling.
 
