@@ -15,6 +15,7 @@ before_install:
 script: npm test
 
 after_script:
+  - "npm install -g codeclimate-test-reporter"
   - "codeclimate-test-reporter < coverage/Chrome*/lcov.info"
 
 # whitelist
