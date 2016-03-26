@@ -17,5 +17,6 @@ export function proxify(target, config = {}) {
     return proxifyObject(target, config);
   }
 
+	// no proxification, return target
   return target;
 }

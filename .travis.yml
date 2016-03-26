@@ -1,0 +1,29 @@
+language: node_js
+
+node_js:
+  - "5"
+  - "4"
+
+before_install:
+  - "export CHROME_BIN=/usr/bin/google-chrome"
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - "sudo apt-get install -y libappindicator1 fonts-liberation"
+  - "wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+  - "sudo dpkg -i google-chrome*.deb"
+
+script: npm test
+
+after_script:
+  - "npm install -g codeclimate-test-reporter"
+  - "codeclimate-test-reporter < coverage/Chrome*/lcov.info"
+
+# whitelist
+branches:
+  only:
+    - "develop"
+    - "master"
+
+addons:
+  code_climate:
+    repo_token: 799f46987d9e0acc3b811318ef0c132d003ec08b04583d86b7fb764b31823af7
