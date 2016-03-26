@@ -4,6 +4,7 @@ import { normalizeConfig } from '../../../src/components/utils/configNormalizer'
 var objTraps = ['defineProperty', 'deleteProperty', 'get', 'getOwnPropertyDescriptor', 'getPrototypeOf', 'has', 'isExtensible', 'ownKeys', 'preventExtensions', 'set', 'setPrototypeOf'];
 var arrTraps = ['defineProperty', 'deleteProperty', 'get', 'getOwnPropertyDescriptor', 'getPrototypeOf', 'has', 'isExtensible', 'ownKeys', 'preventExtensions', 'set', 'setPrototypeOf'];
 var fnTraps = ['defineProperty', 'deleteProperty', 'get', 'getOwnPropertyDescriptor', 'getPrototypeOf', 'has', 'isExtensible', 'ownKeys', 'preventExtensions', 'set', 'setPrototypeOf', 'apply', 'construct'];
+var defaultLogLevel = 1;
 
 
 describe('settingsNormalizer', function configNormalizationModule() {
@@ -13,20 +14,20 @@ describe('settingsNormalizer', function configNormalizationModule() {
     var retSet = {
       a: {
         traps: {
-          deleteProperty: 1,
-          get: 1,
-          getOwnPropertyDescriptor: 1,
-          set: 1
+          deleteProperty: defaultLogLevel,
+          get: defaultLogLevel,
+          getOwnPropertyDescriptor: defaultLogLevel,
+          set: defaultLogLevel
         }
       },
       objectTraps: {
-        defineProperty: 1,
-        getPrototypeOf: 1,
-        has: 1,
-        isExtensible: 1,
-        ownKeys: 1,
-        preventExtensions: 1,
-        setPrototypeOf: 1
+        defineProperty: defaultLogLevel,
+        getPrototypeOf: defaultLogLevel,
+        has: defaultLogLevel,
+        isExtensible: defaultLogLevel,
+        ownKeys: defaultLogLevel,
+        preventExtensions: defaultLogLevel,
+        setPrototypeOf: defaultLogLevel
       },
       delegatable: false,
       trapNewProperties: true,
@@ -77,20 +78,20 @@ describe('settingsNormalizer', function configNormalizationModule() {
       name: undefined,
       a: {
         traps: {
-          deleteProperty: 1,
-          get: 1,
-          getOwnPropertyDescriptor: 1,
-          set: 1
+          deleteProperty: defaultLogLevel,
+          get: defaultLogLevel,
+          getOwnPropertyDescriptor: defaultLogLevel,
+          set: defaultLogLevel
         }
       },
       objectTraps: {
-        defineProperty: 1,
-        getPrototypeOf: 1,
-        has: 1,
-        isExtensible: 1,
-        ownKeys: 1,
-        preventExtensions: 1,
-        setPrototypeOf: 1
+        defineProperty: defaultLogLevel,
+        getPrototypeOf: defaultLogLevel,
+        has: defaultLogLevel,
+        isExtensible: defaultLogLevel,
+        ownKeys: defaultLogLevel,
+        preventExtensions: defaultLogLevel,
+        setPrototypeOf: defaultLogLevel
       }
     };
     expect(conf).to.deep.equal(retConf);
@@ -105,20 +106,20 @@ describe('settingsNormalizer', function configNormalizationModule() {
       name: undefined,
       a: {
         traps: {
-          deleteProperty: 1,
-          get: 1,
-          getOwnPropertyDescriptor: 1,
-          set: 1
+          deleteProperty: defaultLogLevel,
+          get: defaultLogLevel,
+          getOwnPropertyDescriptor: defaultLogLevel,
+          set: defaultLogLevel
         }
       },
       objectTraps: {
-        defineProperty: 1,
-        getPrototypeOf: 1,
-        has: 1,
-        isExtensible: 1,
-        ownKeys: 1,
-        preventExtensions: 1,
-        setPrototypeOf: 1
+        defineProperty: defaultLogLevel,
+        getPrototypeOf: defaultLogLevel,
+        has: defaultLogLevel,
+        isExtensible: defaultLogLevel,
+        ownKeys: defaultLogLevel,
+        preventExtensions: defaultLogLevel,
+        setPrototypeOf: defaultLogLevel
       }
     };
     expect(conf).to.deep.equal(retConf);
@@ -133,22 +134,22 @@ describe('settingsNormalizer', function configNormalizationModule() {
       name: undefined,
       a: {
         traps: {
-          deleteProperty: 1,
-          get: 1,
-          getOwnPropertyDescriptor: 1,
-          set: 1
+          deleteProperty: defaultLogLevel,
+          get: defaultLogLevel,
+          getOwnPropertyDescriptor: defaultLogLevel,
+          set: defaultLogLevel
         }
       },
       objectTraps: {
-        defineProperty: 1,
-        getPrototypeOf: 1,
-        has: 1,
-        isExtensible: 1,
-        ownKeys: 1,
-        preventExtensions: 1,
-        setPrototypeOf: 1,
-        apply: 1,
-        construct: 1
+        defineProperty: defaultLogLevel,
+        getPrototypeOf: defaultLogLevel,
+        has: defaultLogLevel,
+        isExtensible: defaultLogLevel,
+        ownKeys: defaultLogLevel,
+        preventExtensions: defaultLogLevel,
+        setPrototypeOf: defaultLogLevel,
+        apply: defaultLogLevel,
+        construct: defaultLogLevel
       }
     };
     expect(conf).to.deep.equal(retConf);
@@ -191,7 +192,7 @@ describe('settingsNormalizer', function configNormalizationModule() {
       key2: {
         traps: {
           get: 3,
-          set:3
+          set: 3
         }
       },
       key3: {
@@ -294,7 +295,7 @@ describe('settingsNormalizer', function configNormalizationModule() {
     expect(thrown).to.equal(1);
     expect(conf).to.equal(undefined);
   });
-  //TODO: Add test to ensure non-keys are not added to the config
+
   it('should not add non-available traps to config', function configNormalizationTest10() {
     var set = {
       keys: ['key1'],
@@ -305,8 +306,8 @@ describe('settingsNormalizer', function configNormalizationModule() {
     var retConf = {
       key1: {
         traps: {
-          get: 1,
-          set: 1
+          get: defaultLogLevel,
+          set: defaultLogLevel
         }
       },
       objectTraps: {},

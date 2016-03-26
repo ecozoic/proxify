@@ -48,4 +48,4 @@ Object.defineProperties(
   }
 );
 
-export { proxyState }
+export { proxyState };
