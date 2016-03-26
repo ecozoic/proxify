@@ -74,7 +74,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
         setConfigKeySpecifiedTraps(config[key], newConf[key], availableTraps);
       }
       else if (Array.isArray(config[key].traps)) {
-        newConf[key] = {};
+        newConf[key] = { traps: {} };
         turnSettingsTrapDefinitionsIntoObjects(newConf[key], config[key], availableTraps, logLevel);
       }
       //We only want to inherit down if this key was included at the top level.
@@ -117,7 +117,6 @@ function turnSettingsTrapDefinitionsIntoObjects(newConfKey, keyDef, availableTra
     throw 'Cannot set non-integer value for traps';
   //Remove the key's logLevel and reset traps to be an object
   delete keyDef.logLevel;
-  newConfKey.traps = {};
 
   //Add each key to the new traps object and set its logLevel to
   //the pre-specified level.
@@ -132,6 +131,7 @@ function turnSettingsTrapDefinitionsIntoObjects(newConfKey, keyDef, availableTra
  * @param {Object} confKeyDef - The config object's key's definition.
  * @param {Object} newConfKeyDef - The new config object's key's definition.
  * @param {Array} availableTraps - An array of available traps.
+ * @returns {undefined}
  */
 function setConfigKeySpecifiedTraps(confKeyDef, newConfKeyDef, availableTraps) {
   for (var trap in confKeyDef.traps) {
@@ -169,6 +169,7 @@ function inheritTopLevelTraps(newConfKeyDef, traps, availableTraps, logLevel) {
  * @param {Object|Array} traps - The given traps for the options object
  * @param {Array} availableTraps - The list of available traps for this type of object
  * @param {number} logLevel - The base logLevel for the options object
+ * @returns {undefined}
  */
 function setObjectLevelTraps(newConf, traps, availableTraps, logLevel) {
   newConf.objectTraps = {};
