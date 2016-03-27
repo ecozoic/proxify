@@ -5,6 +5,10 @@ import { BaseTrapHandler } from './BaseTrapHandler';
  * Extends {@link handlers.BaseTrapHandler}.
  * @memberOf handlers
  */
-class ObjectTrapHandler extends BaseTrapHandler { }
+class ObjectTrapHandler extends BaseTrapHandler {
+  constructor(emitter) {
+    super(emitter);
+  }
+}
 
 export { ObjectTrapHandler };

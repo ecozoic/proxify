@@ -1,4 +1,5 @@
 import { ArrayTrapHandler } from '../handlers';
+import { AsyncEventEmitter, logger } from '../utils';
 
 /**
  * Array proxy factory function.
@@ -8,5 +9,8 @@ import { ArrayTrapHandler } from '../handlers';
  * @memberof factories
  */
 export function proxifyArray (arr) {
-  return new Proxy(arr, new ArrayTrapHandler());
+  const emitter = new AsyncEventEmitter();
+  emitter.on('trap', logger.logTrap.bind(logger));
+
+  return new Proxy(arr, new ArrayTrapHandler(emitter));
 }
