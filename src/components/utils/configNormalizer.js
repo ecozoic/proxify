@@ -1,6 +1,3 @@
-/**
- * Created by Mark.Mosby on 3/21/2016.
- */
 
 var trapDefs = {
   defineProperty: 'object',
@@ -31,12 +28,11 @@ export function normalizeConfig(config, objKeys, availableTraps) {
   }
 
   var newConf = {
-    delegatable: config.hasOwnProperty('delegatable') && config.delegatable || false,
-    trapNewProperties: config.hasOwnProperty('trapNewProperties') && config.trapNewProperties || true,
-    name: config.name || undefined
+    delegatable: config.hasOwnProperty('delegatable') ? config.delegatable : false,
+    trapNewProperties: config.hasOwnProperty('trapNewProperties') ? config.trapNewProperties : true,
+    name: config.hasOwnProperty('name') ? config.name : undefined
   };
 
-  //TODO: Turn the lower level arrays into sets
   var keys = config.hasOwnProperty('keys') ? config.keys : [],
     traps = config.hasOwnProperty('traps') ? config.traps : availableTraps,
     normalizedKeys = [],
@@ -62,7 +58,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
   //If a settings object with no keys was passed, default to the keys on the target object
   if (!keys.length && !Object.getOwnPropertyNames(config).length)
     keys = objKeys;
-  
+
   //Iterate the object keys that were specified in the settings object
   for (let key in config) {
     if (config.hasOwnProperty(key)) {
@@ -84,7 +80,9 @@ export function normalizeConfig(config, objKeys, availableTraps) {
     }
   }
 
+  //Get any remaining top-level keys that weren't inherited
   keys.forEach(function keysIterationCallback(key) {
+    //If the current key iteration has already been normalizes, continue
     if (!normalizedKeys.includes(key)) {
       this[key] = {
         traps: {}
@@ -113,8 +111,6 @@ function turnSettingsTrapDefinitionsIntoObjects(newConfKey, keyDef, availableTra
     keyTraps = keyDef.traps;
   if (!Number.isInteger(keyLogLevel))
     throw 'Cannot set non-integer value for traps';
-  //Remove the key's logLevel and reset traps to be an object
-  delete keyDef.logLevel;
 
   //Add each key to the new traps object and set its logLevel to
   //the pre-specified level.

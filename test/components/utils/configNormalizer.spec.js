@@ -34,6 +34,9 @@ describe('settingsNormalizer', function configNormalizationModule() {
       name: undefined
     };
     expect(conf).to.deep.equal(retSet);
+    expect(conf.objectTraps).to.deep.equal(retSet.objectTraps);
+    expect(conf.a).to.deep.equal(retSet.a);
+    expect(conf.a.traps).to.deep.equal(retSet.a.traps);
   });
 
   it('normalizes the config object', function configNormalizationTest2() {
@@ -61,6 +64,11 @@ describe('settingsNormalizer', function configNormalizationModule() {
       name: undefined
     };
     expect(conf).to.deep.equal(retSet);
+    expect(conf.objectTraps).to.deep.equal(retSet.objectTraps);
+    expect(conf.test1).to.deep.equal(retSet.test1);
+    expect(conf.test1.traps).to.deep.equal(retSet.test1.traps);
+    expect(conf.test2).to.deep.equal(retSet.test2);
+    expect(conf.test2.traps).to.deep.equal(retSet.test2.traps);
   });
 
   it('should create default settings due to disallowed delegation', function configNormalizationTest3() {
@@ -95,6 +103,9 @@ describe('settingsNormalizer', function configNormalizationModule() {
       }
     };
     expect(conf).to.deep.equal(retConf);
+    expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
+    expect(conf.a).to.deep.equal(retConf.a);
+    expect(conf.a.traps).to.deep.equal(retConf.a.traps);
   });
 
   it('should proxify an array with defaults on empty config object', function configNormalizationTest4() {
@@ -123,6 +134,9 @@ describe('settingsNormalizer', function configNormalizationModule() {
       }
     };
     expect(conf).to.deep.equal(retConf);
+    expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
+    expect(conf.a).to.deep.equal(retConf.a);
+    expect(conf.a.traps).to.deep.equal(retConf.a.traps);
   });
 
   it('should normalize config with default values for a function', function configNormalizationTest5() {
@@ -153,6 +167,9 @@ describe('settingsNormalizer', function configNormalizationModule() {
       }
     };
     expect(conf).to.deep.equal(retConf);
+    expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
+    expect(conf.a).to.deep.equal(retConf.a);
+    expect(conf.a.traps).to.deep.equal(retConf.a.traps);
   });
 
   it('should return a fully normalized config object', function configNormalizationTest6() {
@@ -207,6 +224,13 @@ describe('settingsNormalizer', function configNormalizationModule() {
       }
     };
     expect(conf).to.deep.equal(retConf);
+    expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
+    expect(conf.key1).to.deep.equal(retConf.key1);
+    expect(conf.key1.traps).to.deep.equal(retConf.key1.traps);
+    expect(conf.key2).to.deep.equal(retConf.key2);
+    expect(conf.key3.traps).to.deep.equal(retConf.key3.traps);
+    expect(conf.key3).to.deep.equal(retConf.key3);
+    expect(conf.key3.traps).to.deep.equal(retConf.key3.traps);
   });
 
   it('should inherit but not overwrite config values', function configNormalizationTest7() {
@@ -255,6 +279,11 @@ describe('settingsNormalizer', function configNormalizationModule() {
       objectTraps: {}
     };
     expect(conf).to.deep.equal(retConf);
+    expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
+    expect(conf.key1).to.deep.equal(retConf.key1);
+    expect(conf.key1.traps).to.deep.equal(retConf.key1.traps);
+    expect(conf.key2).to.deep.equal(retConf.key2);
+    expect(conf.key2.traps).to.deep.equal(retConf.key2.traps);
   });
 
   it('should throw when logLevel is NaN', function configNormalizationTest8() {
@@ -315,7 +344,9 @@ describe('settingsNormalizer', function configNormalizationModule() {
       delegatable: false,
       trapNewProperties: true
     };
-    console.log(conf);
     expect(conf).to.deep.equal(retConf);
+    expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
+    expect(conf.key1).to.deep.equal(retConf.key1);
+    expect(conf.key1.traps).to.deep.equal(retConf.key1.traps);
   });
 });

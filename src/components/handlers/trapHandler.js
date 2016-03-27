@@ -1,6 +1,3 @@
-/**
- * Created by Mark.Mosby on 3/26/2016.
- */
 import { logger } from '../utils/logger';
 
 /** Object that defines the traps used across all proxify-able types.

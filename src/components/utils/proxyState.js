@@ -1,5 +1,6 @@
 /**
- * Created by Mark.Mosby on 3/25/2016.
+ * Holds the state information for each proxy we're tracking
+ * @type {{}}
  */
 var proxyState = {};
 
