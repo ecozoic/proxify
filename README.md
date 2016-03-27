@@ -21,6 +21,8 @@ var target = new MyObject();
 Note: If you want to keep a reference to the proxified object, then you should 
 assign the proxy to a different variable:
 const proxy = proxify(target);
+Doing so however will mean all usages of the target object will need to be replaced 
+with the proxy reference in order to make use of proxify's logging capabilities.
 ```
 
 Once an object has been proxified, you can send it on its merry way through the rest of your application and see logging statements indicating how your application is consuming your object.
