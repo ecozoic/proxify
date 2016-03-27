@@ -21,7 +21,7 @@ var target = new MyObject();
 
 Note: If you want to keep a reference to the proxified object, then you should 
 assign the proxy to a different variable:
-```
+```javascript
 const proxy = proxify(target);
 ```
 
