@@ -1,4 +1,5 @@
 import { FunctionTrapHandler } from '../handlers';
+import { normalizeConfig } from '../utils';
 import { AsyncEventEmitter, logger } from '../utils';
 
 /**
