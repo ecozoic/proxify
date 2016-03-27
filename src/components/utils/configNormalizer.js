@@ -38,7 +38,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
 
   //TODO: Turn the lower level arrays into sets
   var keys = config.hasOwnProperty('keys') ? config.keys : [],
-    traps = config.hasOwnProperty('traps') ? config.traps : [],
+    traps = config.hasOwnProperty('traps') ? config.traps : availableTraps,
     normalizedKeys = [],
     logLevel;
 
@@ -62,9 +62,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
   //If a settings object with no keys was passed, default to the keys on the target object
   if (!keys.length && !Object.getOwnPropertyNames(config).length)
     keys = objKeys;
-
-  if (!traps.length)
-    traps = availableTraps;
+  
   //Iterate the object keys that were specified in the settings object
   for (let key in config) {
     if (config.hasOwnProperty(key)) {
