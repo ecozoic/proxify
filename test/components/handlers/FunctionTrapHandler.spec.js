@@ -1,38 +1,20 @@
 /*global sinon*/
+import { FunctionTrapHandler } from '../../../src/components/handlers';
+
 describe('FunctionTrapHandler', () => {
   let handler;
-  let mockLogger;
+  let mockEmitter;
 
   before(() => {
-    let fnInjector =
-      require('inject!../../../src/components/handlers/FunctionTrapHandler');
-    let baseInjector =
-      require('inject!../../../src/components/handlers/BaseTrapHandler');
-
-    mockLogger = {
-      log: sinon.spy()
+    mockEmitter = {
+      emit: sinon.spy()
     };
 
-    const BaseTrapHandler = baseInjector({
-      '../utils/logger': {
-        logger: mockLogger
-      }
-    }).BaseTrapHandler;
-
-    const FunctionTrapHandler = fnInjector({
-      './BaseTrapHandler': {
-        BaseTrapHandler
-      },
-      '../utils/logger': {
-        logger: mockLogger
-      }
-    }).FunctionTrapHandler;
-
-    handler = new FunctionTrapHandler();
+    handler = new FunctionTrapHandler(mockEmitter);
   });
 
   afterEach(() => {
-    mockLogger.log.reset();
+    mockEmitter.emit.reset();
   });
 
   describe('#apply', () => {
@@ -47,7 +29,9 @@ describe('FunctionTrapHandler', () => {
       results[2] = proxy.call(this);
       results[3] = Reflect.apply(proxy, this, []);
 
-      mockLogger.log.should.have.callCount(6);
+      mockEmitter.emit.should.have.callCount(6);
+      mockEmitter.emit.should.have.been.calledWith('trap', 'get');
+      mockEmitter.emit.should.have.been.calledWith('trap', 'apply');
       results.forEach(result => result.should.be.true);
     });
   });
@@ -61,7 +45,8 @@ describe('FunctionTrapHandler', () => {
       const ProxyPerson = new Proxy(Person, handler);
       const person = new ProxyPerson('Phil');
 
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'construct');
       person.name.should.equal('Phil');
     });
   });

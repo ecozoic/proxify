@@ -1,5 +1,5 @@
 import { FunctionTrapHandler } from '../handlers';
-import { normalizeConfig } from '../utils';
+import { AsyncEventEmitter, logger } from '../utils';
 
 /**
  * Function proxy factory function.
@@ -9,7 +9,9 @@ import { normalizeConfig } from '../utils';
  * @memberOf factories
  */
 export function proxifyFunction(fn, config) {
-  var trapHandler = new FunctionTrapHandler();
+  const emitter = new AsyncEventEmitter();
+  emitter.on('trap', logger.logTrap.bind(logger));
+  var trapHandler = new FunctionTrapHandler(emitter);
   config = normalizeConfig(config, Object.getOwnPropertyNames(fn), Object.getOwnPropertyNames(trapHandler.prototype));
   return new Proxy(fn, trapHandler);
 }

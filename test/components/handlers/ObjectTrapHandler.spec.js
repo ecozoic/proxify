@@ -1,35 +1,20 @@
 /*global sinon, should*/
+import { ObjectTrapHandler } from '../../../src/components/handlers';
+
 describe('ObjectTrapHandler', () => {
   let handler;
-  let mockLogger;
+  let mockEmitter;
 
   before(() => {
-    let objInjector =
-      require('inject!../../../src/components/handlers/ObjectTrapHandler');
-    let baseInjector =
-      require('inject!../../../src/components/handlers/BaseTrapHandler');
-
-    mockLogger = {
-      log: sinon.spy()
+    mockEmitter = {
+      emit: sinon.spy()
     };
 
-    const BaseTrapHandler = baseInjector({
-      '../utils/logger': {
-        logger: mockLogger
-      }
-    }).BaseTrapHandler;
-
-    const ObjectTrapHandler = objInjector({
-      './BaseTrapHandler': {
-        BaseTrapHandler
-      }
-    }).ObjectTrapHandler;
-
-    handler = new ObjectTrapHandler();
+    handler = new ObjectTrapHandler(mockEmitter);
   });
 
   afterEach(() => {
-    mockLogger.log.reset();
+    mockEmitter.emit.reset();
   });
 
   describe('#defineProperty', () => {
@@ -51,7 +36,8 @@ describe('ObjectTrapHandler', () => {
         writable: true
       });
 
-      mockLogger.log.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'defineProperty');
       proxy.hello.should.equal(target.hello);
       target.hello.should.equal('world');
       proxy.foo.should.equal(target.foo);
@@ -72,7 +58,8 @@ describe('ObjectTrapHandler', () => {
       delete proxy['foo'];                      // bracket notation
       Reflect.deleteProperty(proxy, 'count');   // reflect api
 
-      mockLogger.log.should.have.been.calledThrice;
+      mockEmitter.emit.should.have.been.calledThrice;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'deleteProperty');
       should.equal(proxy.hello, target.hello);
       should.equal(proxy.foo, target.foo);
       should.equal(proxy.count, target.count);
@@ -99,7 +86,8 @@ describe('ObjectTrapHandler', () => {
 
       delete proxy.name;
 
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'deleteProperty');
       should.equal(proxy.name, target.name);
       should.equal(target.name, undefined);
     });
@@ -117,7 +105,8 @@ describe('ObjectTrapHandler', () => {
       values[1] = proxy['hello'];               // bracket notation
       values[2] = Reflect.get(proxy, 'hello');  // reflect API
 
-      mockLogger.log.should.have.callCount(values.length);
+      mockEmitter.emit.should.have.callCount(values.length);
+      mockEmitter.emit.should.have.been.calledWith('trap', 'get');
       values.forEach(value => {
         value.should.equal(target.hello);
         value.should.equal('world');
@@ -141,7 +130,8 @@ describe('ObjectTrapHandler', () => {
 
       const name = proxy.name;
 
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'get');
       name.should.equal(target.name);
       target.name.should.equal('Bob');
     });
@@ -156,7 +146,8 @@ describe('ObjectTrapHandler', () => {
 
       const value = proxy.hello;
 
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'get');
       value.should.equal(target.hello);
       target.hello.should.equal('world');
     });
@@ -185,7 +176,8 @@ describe('ObjectTrapHandler', () => {
       const objProp = Object.getOwnPropertyDescriptor(proxy, 'hello');
       const reflectProp = Reflect.getOwnPropertyDescriptor(proxy, 'foo');
 
-      mockLogger.log.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'getOwnPropertyDescriptor');
       objProp.value.should.equal(Object.getOwnPropertyDescriptor(target, 'hello').value);
       reflectProp.value.should.equal(Reflect.getOwnPropertyDescriptor(target, 'foo').value);
     });
@@ -217,7 +209,8 @@ describe('ObjectTrapHandler', () => {
       const objProto = Object.getPrototypeOf(proxy);
       const reflectProto = Reflect.getPrototypeOf(proxy);
 
-      mockLogger.log.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'getPrototypeOf');
       objProto.should.equal(Object.getPrototypeOf(target));
       reflectProto.should.equal(Object.getPrototypeOf(target));
     });
@@ -227,21 +220,25 @@ describe('ObjectTrapHandler', () => {
 
       // __proto__ access triggers two traps in this order:
       // get (access __proto__ property) -> getPrototypeOf
-      mockLogger.log.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'get');
+      mockEmitter.emit.should.have.been.calledWith('trap', 'getPrototypeOf');
       proto.should.equal(target.__proto__);
     });
 
     it('handles isPrototypeOf calls', () => {
       const isProto = Ninja.prototype.isPrototypeOf(proxy);
 
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'getPrototypeOf');
       isProto.should.equal(Ninja.prototype.isPrototypeOf(target));
     });
 
     it('handles instanceof checks', () => {
       const isInstance = proxy instanceof Person;
 
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'getPrototypeOf');
       isInstance.should.equal(target instanceof Person);
     });
   });
@@ -255,7 +252,8 @@ describe('ObjectTrapHandler', () => {
       const proxy = new Proxy(target, handler);
 
       const has = 'hello' in proxy;
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'has');
       has.should.equal('hello' in target);
       has.should.be.true;
     });
@@ -276,7 +274,8 @@ describe('ObjectTrapHandler', () => {
       const proxy = new Proxy(target, handler);
 
       const has = 'name' in proxy;
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'has');
       has.should.equal('name' in target);
       has.should.be.true;
     });
@@ -290,7 +289,8 @@ describe('ObjectTrapHandler', () => {
 
       const has = Reflect.has(proxy, 'hello');
 
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'has');
       has.should.equal(Reflect.has(target, 'hello'));
       has.should.be.true;
     });
@@ -304,7 +304,8 @@ describe('ObjectTrapHandler', () => {
       const objExt = Object.isExtensible(proxy);
       const refExt = Reflect.isExtensible(proxy);
 
-      mockLogger.log.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'isExtensible');
       objExt.should.equal(Object.isExtensible(target));
       refExt.should.equal(Reflect.isExtensible(target));
     });
@@ -341,7 +342,8 @@ describe('ObjectTrapHandler', () => {
       // both enumerable and non-enumerable but no symbols
       const propNames = Object.getOwnPropertyNames(proxy);
 
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'ownKeys');
       propNames.should.have.length(2);
       propNames.includes('hello').should.be.true;
       propNames.includes('foo').should.be.true;
@@ -352,7 +354,8 @@ describe('ObjectTrapHandler', () => {
       // symbol props only
       const symbolProps = Object.getOwnPropertySymbols(proxy);
 
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'ownKeys');
       symbolProps.should.have.length(1);
       symbolProps.includes(symbol).should.be.true;
     });
@@ -363,7 +366,9 @@ describe('ObjectTrapHandler', () => {
       // in this case: ownKeys -> property descriptor for 'hello' -> property descriptor for 'foo'
       const propNames = Object.keys(proxy);
 
-      mockLogger.log.should.have.been.calledThrice;
+      mockEmitter.emit.should.have.been.calledThrice;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'ownKeys');
+      mockEmitter.emit.should.have.been.calledWith('trap', 'getOwnPropertyDescriptor');
       propNames.should.have.length(1);
       propNames.includes('hello').should.be.true;
     });
@@ -371,7 +376,8 @@ describe('ObjectTrapHandler', () => {
     it('handles own keys', () => {
       const ownKeys = Reflect.ownKeys(proxy);
 
-      mockLogger.log.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledOnce;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'ownKeys');
       ownKeys.should.have.length(3);
       ownKeys.includes('hello').should.be.true;
       ownKeys.includes('foo').should.be.true;
@@ -390,7 +396,8 @@ describe('ObjectTrapHandler', () => {
       Object.preventExtensions(proxy1);
       Reflect.preventExtensions(proxy2);
 
-      mockLogger.log.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'preventExtensions');
 
       Object.isExtensible(proxy1).should.be.false;
       Object.isExtensible(target1).should.be.false;
@@ -415,7 +422,10 @@ describe('ObjectTrapHandler', () => {
       // property assignment actually triggers 3 trap handlers for every write
       // handlers are triggered in the following order:
       // set -> getOwnPropertyDescriptor -> defineProperty
-      mockLogger.log.should.have.callCount(3 * 3);
+      mockEmitter.emit.should.have.callCount(3 * 3);
+      mockEmitter.emit.should.have.been.calledWith('trap', 'set');
+      mockEmitter.emit.should.have.been.calledWith('trap', 'getOwnPropertyDescriptor');
+      mockEmitter.emit.should.have.been.calledWith('trap', 'defineProperty');
       target.hello.should.equal(proxy.hello);
       target.hello.should.equal('friend');
       target.foo.should.equal(proxy.foo);
@@ -441,7 +451,10 @@ describe('ObjectTrapHandler', () => {
 
       proxy.name = 'Jim';
 
-      mockLogger.log.should.have.been.calledThrice;
+      mockEmitter.emit.should.have.been.calledThrice;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'set');
+      mockEmitter.emit.should.have.been.calledWith('trap', 'getOwnPropertyDescriptor');
+      mockEmitter.emit.should.have.been.calledWith('trap', 'defineProperty');
       target.name.should.equal(proxy.name);
       target.name.should.equal('Jim');
     });
@@ -463,7 +476,10 @@ describe('ObjectTrapHandler', () => {
       // setters actually trigger a total of four traps for every write
       // traps are triggered in the following order:
       // set (on setter) -> set (on underlying property) -> getOwnPropertyDescriptor -> defineProperty
-      mockLogger.log.should.have.callCount(4);
+      mockEmitter.emit.should.have.callCount(4);
+      mockEmitter.emit.should.have.been.calledWith('trap', 'set');
+      mockEmitter.emit.should.have.been.calledWith('trap', 'getOwnPropertyDescriptor');
+      mockEmitter.emit.should.have.been.calledWith('trap', 'defineProperty');
       target.hello.should.equal(proxy.hello);
       target.hello.should.equal('friend');
     });
@@ -487,7 +503,8 @@ describe('ObjectTrapHandler', () => {
       Object.setPrototypeOf(objProxy, proto);
       Reflect.setPrototypeOf(reflectProxy, proto);
 
-      mockLogger.log.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledTwice;
+      mockEmitter.emit.should.have.been.calledWith('trap', 'setPrototypeOf');
       objProxy.__proto__.should.equal(target.__proto__);
       reflectProxy.__proto__.should.equal(target.__proto__);
     });
