@@ -1,9 +1,11 @@
-import { logger } from '../utils/logger';
-
 /** Class representing the traps used across all proxify-able types.
  * @memberOf handlers
  */
 class BaseTrapHandler {
+  constructor(emitter) {
+    this.emitter = emitter;
+  }
+
   /**
    * Trap for Object.defineProperty().
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/defineProperty}
@@ -13,7 +15,7 @@ class BaseTrapHandler {
    * @returns {Boolean} Boolean indicating whether or not property definition was successful.
    */
   defineProperty(target, property, descriptor) {
-    logger.log(`Property definition on ${target}, property: ${property}, descriptor: ${descriptor}`);
+    this.onTrap('defineProperty', target, property, descriptor);
     return Reflect.defineProperty(target, property, descriptor);
   }
 
@@ -25,7 +27,7 @@ class BaseTrapHandler {
    * @returns {Boolean} Boolean indicating whether or not property deletion was successful.
    */
   deleteProperty(target, property) {
-    logger.log(`Property deletion on ${target}, property: ${property}`);
+    this.onTrap('deleteProperty', target, property);
     return Reflect.deleteProperty(target, property);
   }
 
@@ -38,7 +40,7 @@ class BaseTrapHandler {
    * @returns {*} Value of the property.
    */
   get(target, property, receiver) {
-    logger.log(`Property access on ${target}, property: ${property}`);
+    this.onTrap('get', target, property, receiver);
     return Reflect.get(target, property, receiver);
   }
 
@@ -50,7 +52,7 @@ class BaseTrapHandler {
    * @returns {Object|undefined} The descriptor object or undefined if property is undefined.
    */
   getOwnPropertyDescriptor(target, property) {
-    logger.log(`Property descriptor access on ${target}, property: ${property}`);
+    this.onTrap('getOwnPropertyDescriptor', target, property);
     return Reflect.getOwnPropertyDescriptor(target, property);
   }
 
@@ -61,7 +63,7 @@ class BaseTrapHandler {
    * @returns {Object|null} The prototype object or null if object has no prototype.
    */
   getPrototypeOf(target) {
-    logger.log(`[[GetPrototypeOf]] on ${target}`);
+    this.onTrap('getPrototypeOf', target);
     return Reflect.getPrototypeOf(target);
   }
 
@@ -73,7 +75,7 @@ class BaseTrapHandler {
    * @returns {Boolean} Boolean indicating whether or not property exists.
    */
   has(target, property) {
-    logger.log(`Property query on ${target}, property: ${property}`);
+    this.onTrap('has', target, property);
     return Reflect.has(target, property);
   }
 
@@ -84,7 +86,7 @@ class BaseTrapHandler {
    * @returns {Boolean} Boolean indicating whether or not target is extensible.
    */
   isExtensible(target) {
-    logger.log(`Extensibility check on ${target}`);
+    this.onTrap('isExtensible', target);
     return Reflect.isExtensible(target);
   }
 
@@ -95,7 +97,7 @@ class BaseTrapHandler {
    * @returns {string[]|Symbol[]} Enumerable representing the object's own keys.
    */
   ownKeys(target) {
-    logger.log(`Own key enumeration on ${target}`);
+    this.onTrap('ownKeys', target);
     return Reflect.ownKeys(target);
   }
 
@@ -106,7 +108,7 @@ class BaseTrapHandler {
    * @returns {Boolean} Boolean indicating whether or not target is extensible.
    */
   preventExtensions(target) {
-    logger.log(`Prevent extensions call on ${target}`);
+    this.onTrap('preventExtensions', target);
     return Reflect.preventExtensions(target);
   }
 
@@ -120,7 +122,7 @@ class BaseTrapHandler {
    * @returns {Boolean} Boolean indicating whether assignment was successful.
    */
   set(target, property, value, receiver) {
-    logger.log(`Property write on ${target}, property: ${property}, value: ${value}`);
+    this.onTrap('set', target, property, value, receiver);
     return Reflect.set(target, property, value, receiver);
   }
 
@@ -132,8 +134,17 @@ class BaseTrapHandler {
    * @returns {Boolean} Boolean indicating whether prototype was successfully set.
    */
   setPrototypeOf(target, prototype) {
-    logger.log(`setPrototypeOf called on ${target}, prototype: ${prototype}`);
+    this.onTrap('setPrototypeOf', target);
     return Reflect.setPrototypeOf(target, prototype);
+  }
+
+  /**
+   * Helper method to trigger behavior whenever a trap is handled.
+   * @param {string} trap - The name of the trap that triggered event.
+   * @param {...*} trapArgs - The arguments describing the context of the trap.
+   */
+  onTrap(trap, ...trapArgs) {
+    this.emitter.emit('trap', trap, ...trapArgs);
   }
 }
 

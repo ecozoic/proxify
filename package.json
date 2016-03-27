@@ -5,11 +5,18 @@
   "main": "src/index.js",
   "scripts": {
     "start": "webpack-dev-server -d",
-    "test": "karma start",
-    "build:dev": "webpack -d",
-    "build:prod": "webpack -p",
-    "doc": "jsdoc -c conf.json",
-    "webpack": ""
+    "test": "npm run clean:test && karma start",
+    "prepublish": "npm test && npm run build:prod",
+    "build:dev": "npm run clean:build && webpack -d",
+    "build:prod": "npm run clean:build && webpack -p",
+    "clean": "npm run clean:build && npm run clean:doc && npm run clean:test",
+    "clean:build": "rimraf dist",
+    "clean:doc": "rimraf docs",
+    "clean:test": "rimraf coverage",
+    "doc": "npm run clean:doc && jsdoc -c conf.json",
+    "lint": "npm run lint:src && npm run lint:test",
+    "lint:src": "eslint src",
+    "lint:test": "eslint test"
   },
   "repository": {
     "type": "git",
@@ -58,6 +65,7 @@
     "karma-webpack": "^1.7.0",
     "lolex": "^1.4.0",
     "mocha": "^2.4.5",
+    "rimraf": "^2.5.2",
     "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0",
     "webpack": "^1.12.12",
