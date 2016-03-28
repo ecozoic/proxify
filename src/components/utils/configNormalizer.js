@@ -95,6 +95,12 @@ export function normalizeConfig(config, objKeys, availableTraps) {
   }, newConf);
 
   setObjectLevelTraps(newConf, traps, availableTraps, logLevel);
+
+  var key = performance.now();
+  var sym = Symbol(key);
+  //Use sym to create an entry in the proxyState here. Pass the symbol back to consumer,
+  //rather than the config, and then the handler instances can use the symbol to retrieve
+  //the config object from the proxyState.
   return newConf;
 }
 

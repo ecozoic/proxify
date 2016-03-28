@@ -1,3 +1,5 @@
+import { proxyState } from '../utils';
+
 /** Class representing the traps used across all proxify-able types.
  * @memberOf handlers
  */

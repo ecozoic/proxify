@@ -1,6 +1,6 @@
 /**
  * Holds the state information for each proxy we're tracking
- * @type {{}}
+ * @type {Object}
  */
 var proxyState = {};
 
@@ -14,7 +14,18 @@ Object.defineProperties(
      */
     'add': {
       value: function _add(config, symbol) {
-        this[symbol] = config;
+        this['_' + symbol] = config;
+        Object.defineProperty(
+          proxyState,
+          symbol, {
+            get: function _get() {
+              return this['_' + symbol];
+            },
+            set: function _set(conf) {
+              this['_' + symbol] = conf;
+            }
+          }
+        )
       },
       writable: false,
       configurable: false,
