@@ -52,6 +52,7 @@ Object.defineProperties(
     'delete': {
       value: function _delete(symbol) {
         delete this[symbol];
+        delete this['_' + symbol];
       },
       writable: false,
       configurable: false,

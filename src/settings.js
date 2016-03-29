@@ -5,9 +5,6 @@
   //Used for a visual reference to the settings object. Update this object reference as the
   //settings object changes.
 
-  //TODO: We need to be able to specify traps that operate on the object itself, and not on traps.
-  //Need a way to be able to specify that in the options object + have a way to normalize it.
-
   //ATTRIBUTES:
   //- name: A name for the object to show in the logs
   //- delegatable: Should we log against delegated properties, or only on the obj's own keys? If not specified, we don't trap delegation
