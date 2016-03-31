@@ -96,6 +96,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
 
   setObjectLevelTraps(newConf, traps, availableTraps, logLevel);
 
+  //TODO: figure out how to save config in proxyState, or if proxyState is even needed.
   var key = performance.now();
   var sym = Symbol(key);
   //Use sym to create an entry in the proxyState here. Pass the symbol back to consumer,
