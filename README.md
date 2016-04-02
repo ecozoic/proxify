@@ -57,7 +57,7 @@ To start the [Webpack dev server](https://github.com/webpack/webpack-dev-server)
 npm start
 ```
 
-To run [Karma](https://github.com/karma-runner/karma) unit tests and generate [Istanbul](https://github.com/gotwarlost/istanbul) coverage reports:
+To run [Mocha](https://github.com/mochajs/mocha) unit tests in [Karma](https://github.com/karma-runner/karma) and generate [Istanbul](https://github.com/gotwarlost/istanbul) coverage reports:
 
 ```javascript
 npm test
@@ -78,6 +78,6 @@ npm run doc
 
 ## Roadmap
 * Configuration layer (customize which keys and traps trigger logging)
-* Use EventEmitter within the traps for improved performance and to support multiple/custom reporters
+* Support multiple/custom reporters
 * Deep (recursive) proxification
 * Add more useful metadata to logs (stack traces, timestamps, etc)
