@@ -1,6 +1,6 @@
 # proxify
 
-[![Build Status](https://travis-ci.org/ecozoic/proxify.svg?branch=master)](https://travis-ci.org/ecozoic/proxify) [![Dependency Status](https://david-dm.org/ecozoic/proxify.svg)](https://david-dm.org/ecozoic/proxify) [![Code Climate](https://codeclimate.com/github/ecozoic/proxify/badges/gpa.svg)](https://codeclimate.com/github/ecozoic/proxify) [![Test Coverage](https://codeclimate.com/github/ecozoic/proxify/badges/coverage.svg)](https://codeclimate.com/github/ecozoic/proxify/coverage)
+[![Build Status](https://travis-ci.org/ecozoic/proxify.svg?branch=master)](https://travis-ci.org/ecozoic/proxify) [![Dependency Status](https://david-dm.org/ecozoic/proxify.svg)](https://david-dm.org/ecozoic/proxify) [![devDependency Status](https://david-dm.org/ecozoic/proxify/dev-status.png)](https://david-dm.org/ecozoic/proxify#info=devDependencies) [![NPM Version](https://img.shields.io/npm/v/proxify-js.svg)](https://www.npmjs.com/package/proxify-js) [![Download Total](https://img.shields.io/npm/dt/proxify-js.svg)](https://www.npmjs.com/package/proxify-js) [![Code Climate](https://codeclimate.com/github/ecozoic/proxify/badges/gpa.svg)](https://codeclimate.com/github/ecozoic/proxify) [![Test Coverage](https://codeclimate.com/github/ecozoic/proxify/badges/coverage.svg)](https://codeclimate.com/github/ecozoic/proxify/coverage) [![License](https://img.shields.io/npm/l/proxify-js.svg)](https://opensource.org/licenses/MIT)
 
 **proxify** provides ES6 proxies of objects, arrays, and functions with embedded logging functionality to assist in diagnostics or profiling.
 
@@ -57,7 +57,7 @@ To start the [Webpack dev server](https://github.com/webpack/webpack-dev-server)
 npm start
 ```
 
-To run [Karma](https://github.com/karma-runner/karma) unit tests and generate [Istanbul](https://github.com/gotwarlost/istanbul) coverage reports:
+To run [Mocha](https://github.com/mochajs/mocha) unit tests in [Karma](https://github.com/karma-runner/karma) and generate [Istanbul](https://github.com/gotwarlost/istanbul) coverage reports:
 
 ```javascript
 npm test
@@ -78,6 +78,6 @@ npm run doc
 
 ## Roadmap
 * Configuration layer (customize which keys and traps trigger logging)
-* Use EventEmitter within the traps for improved performance and to support multiple/custom reporters
+* Support multiple/custom reporters
 * Deep (recursive) proxification
 * Add more useful metadata to logs (stack traces, timestamps, etc)
