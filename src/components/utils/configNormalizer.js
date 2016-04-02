@@ -1,5 +1,5 @@
 
-var trapDefs = {
+const trapDefs = {
   defineProperty: 'object',
   deleteProperty: 'key',
   get: 'key',
