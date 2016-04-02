@@ -1,6 +1,6 @@
 # proxify
 
-[![Build Status](https://travis-ci.org/ecozoic/proxify.svg?branch=master)](https://travis-ci.org/ecozoic/proxify) [![Dependency Status](https://david-dm.org/ecozoic/proxify.svg)](https://david-dm.org/ecozoic/proxify) [![Code Climate](https://codeclimate.com/github/ecozoic/proxify/badges/gpa.svg)](https://codeclimate.com/github/ecozoic/proxify) [![Test Coverage](https://codeclimate.com/github/ecozoic/proxify/badges/coverage.svg)](https://codeclimate.com/github/ecozoic/proxify/coverage)
+[![Build Status](https://travis-ci.org/ecozoic/proxify.svg?branch=master)](https://travis-ci.org/ecozoic/proxify) [![Dependency Status](https://david-dm.org/ecozoic/proxify.svg)](https://david-dm.org/ecozoic/proxify) [![devDependency Status](https://david-dm.org/ecozoic/proxify/dev-status.png)](https://david-dm.org/ecozoic/proxify#info=devDependencies) [![Code Climate](https://codeclimate.com/github/ecozoic/proxify/badges/gpa.svg)](https://codeclimate.com/github/ecozoic/proxify) [![Test Coverage](https://codeclimate.com/github/ecozoic/proxify/badges/coverage.svg)](https://codeclimate.com/github/ecozoic/proxify/coverage)
 
 **proxify** provides ES6 proxies of objects, arrays, and functions with embedded logging functionality to assist in diagnostics or profiling.
 
