@@ -1,4 +1,5 @@
 
+//TODO: Add a collection of available traps or find a way to reuse trapDefs for both
 const trapDefs = {
   defineProperty: 'object',
   deleteProperty: 'key',
@@ -95,13 +96,6 @@ export function normalizeConfig() {
   }, newConf);
 
   setObjectLevelTraps(newConf, traps, availableTraps, logLevel);
-
-  //TODO: figure out how to save config in proxyState, or if proxyState is even needed.
-  var key = performance.now();
-  var sym = Symbol(key);
-  //Use sym to create an entry in the proxyState here. Pass the symbol back to consumer,
-  //rather than the config, and then the handler instances can use the symbol to retrieve
-  //the config object from the proxyState.
   return newConf;
 }
 
