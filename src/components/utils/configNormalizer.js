@@ -1,19 +1,5 @@
 
-const trapDefs = {
-  defineProperty: 'object',
-  deleteProperty: 'key',
-  get: 'key',
-  getOwnPropertyDescriptor: 'key',
-  getPrototypeOf: 'object',
-  has: 'object',
-  isExtensible: 'object',
-  ownKeys: 'object',
-  preventExtensions: 'object',
-  set: 'key',
-  setPrototypeOf: 'object',
-  apply: 'function',
-  construct: 'function'
-};
+import { trapDefinitions } from './trapDefinitions';
 
 /** Takes the settings object and extrapolates it to its
  * most specific form: 1 logLevel per trap per key.
@@ -88,7 +74,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
         traps: {}
       };
       traps.forEach(function trapIterationCallback(trap) {
-        if (_availableTraps.includes(trap) && trapDefs[trap] === 'key')
+        if (_availableTraps.includes(trap) && trapDefinitions[trap] === 'key')
           this[trap] = logLevel;
       }, this[key].traps);
     }
@@ -135,7 +121,7 @@ function setConfigKeySpecifiedTraps(newConfKeyDef, confKeyDef, availableTraps) {
   for (let trap in _confKeyDef.traps) {
     if (!Number.isInteger(_confKeyDef.traps[trap]))
       throw 'logLevel for trap is not an integer';
-    if (_confKeyDef.traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && trapDefs[trap] === 'key') {
+    if (_confKeyDef.traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && trapDefinitions[trap] === 'key') {
       newConfKeyDef.traps[trap] = _confKeyDef.traps[trap];
     }
   }
@@ -158,7 +144,7 @@ function inheritTopLevelTraps(newConfKeyDef, traps, availableTraps, logLevel) {
   if (!newConfKeyDef.traps)
     newConfKeyDef.traps = {};
   _traps.forEach(function trapIterationCallback(trap) {
-    if (!this[trap] && _availableTraps.includes(trap) && trapDefs[trap] === 'key') {
+    if (!this[trap] && _availableTraps.includes(trap) && trapDefinitions[trap] === 'key') {
       this[trap] = _logLevel;
     }
   }, newConfKeyDef.traps);
@@ -179,14 +165,14 @@ function setObjectLevelTraps(newConf, traps, availableTraps, logLevel) {
   newConf.objectTraps = {};
   if (Array.isArray(_traps)) {
     _traps.forEach(function trapIterationCallback(trap) {
-      if (_availableTraps.includes(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
+      if (_availableTraps.includes(trap) && (trapDefinitions[trap] === 'object' || trapDefinitions[trap] === 'function')) {
         this[trap] = _logLevel;
       }
     }, newConf.objectTraps);
   }
   else if (typeof _traps === 'object') {
     for (let trap in _traps) {
-      if (_traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
+      if (_traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && (trapDefinitions[trap] === 'object' || trapDefinitions[trap] === 'function')) {
         if (!Number.isInteger(trap))
           throw 'logLevel value for ' + trap + ' is not an integer';
         newConf.objectTraps[trap] = Number(_traps[trap]);
