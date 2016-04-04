@@ -5,4 +5,3 @@
 export { logger } from './logger';
 export { normalizeConfig } from './configNormalizer';
 export { AsyncEventEmitter } from './AsyncEventEmitter';
-export { proxyState } from './proxyState';

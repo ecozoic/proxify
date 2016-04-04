@@ -25,30 +25,31 @@ const trapDefs = {
 export function normalizeConfig(config, objKeys, availableTraps) {
   let logLevel;
   const _objKeys = objKeys,
-    _availableTraps = availableTraps;
+    _availableTraps = availableTraps,
+    _config = config;
 
   let newConf = {
-    delegatable: config.hasOwnProperty('delegatable') ? config.delegatable : false,
-    trapNewProperties: config.hasOwnProperty('trapNewProperties') ? config.trapNewProperties : true,
-    name: config.hasOwnProperty('name') ? config.name : undefined
+    delegatable: _config.hasOwnProperty('delegatable') ? _config.delegatable : false,
+    trapNewProperties: _config.hasOwnProperty('trapNewProperties') ? _config.trapNewProperties : true,
+    name: _config.hasOwnProperty('name') ? _config.name : undefined
   };
 
-  let keys = config.hasOwnProperty('keys') ? config.keys : [],
+  let keys = _config.hasOwnProperty('keys') ? _config.keys : [],
     normalizedKeys = [];
-  const traps = config.hasOwnProperty('traps') ? config.traps : _availableTraps;
+  const traps = _config.hasOwnProperty('traps') ? _config.traps : _availableTraps;
 
-  if (config.logLevel && !Number.isInteger(config.logLevel))
+  if (_config.logLevel && !Number.isInteger(_config.logLevel))
     throw 'logLevel value for config object is not an integer';
   else
-    logLevel = config.hasOwnProperty('logLevel') ? config.logLevel : 1;
+    logLevel = _config.hasOwnProperty('logLevel') ? _config.logLevel : 1;
 
   try {
-    delete config.keys;
-    delete config.traps;
-    delete config.logLevel;
-    delete config.delegatable;
-    delete config.trapNewProperties;
-    delete config.name;
+    delete _config.keys;
+    delete _config.traps;
+    delete _config.logLevel;
+    delete _config.delegatable;
+    delete _config.trapNewProperties;
+    delete _config.name;
   }
   catch(e) {
     throw 'Unable to delete properties from provided config object.';
@@ -59,16 +60,16 @@ export function normalizeConfig(config, objKeys, availableTraps) {
     keys = _objKeys;
 
   //Iterate the object keys that were specified in the settings object
-  for (let key in config) {
-    if (config.hasOwnProperty(key)) {
+  for (let key in _config) {
+    if (_config.hasOwnProperty(key)) {
       normalizedKeys.push(key);
-      if (typeof config[key].traps === 'object' && !Array.isArray(config[key].traps)) {
+      if (typeof _config[key].traps === 'object' && !Array.isArray(_config[key].traps)) {
         newConf[key] = { traps: {} };
-        setConfigKeySpecifiedTraps(newConf[key], config[key], _availableTraps);
+        setConfigKeySpecifiedTraps(newConf[key], _config[key], _availableTraps);
       }
-      else if (Array.isArray(config[key].traps)) {
+      else if (Array.isArray(_config[key].traps)) {
         newConf[key] = { traps: {} };
-        turnSettingsTrapDefinitionsIntoObjects(newConf[key], config[key], _availableTraps, logLevel);
+        turnSettingsTrapDefinitionsIntoObjects(newConf[key], _config[key], _availableTraps, logLevel);
       }
       //We only want to inherit down if this key was included at the top level.
       if (keys.includes(key)) {
