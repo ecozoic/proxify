@@ -9,79 +9,76 @@ import { trapDefinitions } from './trapDefinitions';
  * @returns {Object} - Returns a new config object
  */
 export function normalizeConfig(config, objKeys, availableTraps) {
-  let logLevel;
-  const _objKeys = objKeys,
-    _availableTraps = availableTraps,
-    _config = config;
-
-  let newConf = {
-    delegatable: _config.hasOwnProperty('delegatable') ? _config.delegatable : false,
-    trapNewProperties: _config.hasOwnProperty('trapNewProperties') ? _config.trapNewProperties : true,
-    name: _config.hasOwnProperty('name') ? _config.name : undefined
-  };
-
-  let keys = _config.hasOwnProperty('keys') ? _config.keys : [],
-    normalizedKeys = [];
-  const traps = _config.hasOwnProperty('traps') ? _config.traps : _availableTraps;
-
-  if (_config.logLevel && !Number.isInteger(_config.logLevel))
-    throw 'logLevel value for config object is not an integer';
-  else
-    logLevel = _config.hasOwnProperty('logLevel') ? _config.logLevel : 1;
-
-  try {
-    delete _config.keys;
-    delete _config.traps;
-    delete _config.logLevel;
-    delete _config.delegatable;
-    delete _config.trapNewProperties;
-    delete _config.name;
-  }
-  catch(e) {
-    throw 'Unable to delete properties from provided config object.';
-  }
-
-  //If a settings object with no keys was passed, default to the keys on the target object
-  if (!keys.length && !Object.getOwnPropertyNames(config).length)
-    keys = _objKeys;
-
-  //Iterate the object keys that were specified in the settings object
-  for (let key in _config) {
-    if (_config.hasOwnProperty(key)) {
-      normalizedKeys.push(key);
-      if (typeof _config[key].traps === 'object' && !Array.isArray(_config[key].traps)) {
-        newConf[key] = { traps: {} };
-        setConfigKeySpecifiedTraps(newConf[key], _config[key], _availableTraps);
-      }
-      else if (Array.isArray(_config[key].traps)) {
-        newConf[key] = { traps: {} };
-        turnSettingsTrapDefinitionsIntoObjects(newConf[key], _config[key], _availableTraps, logLevel);
-      }
-      //We only want to inherit down if this key was included at the top level.
-      if (keys.includes(key)) {
-        if (!newConf[key])
-          newConf[key] = { traps: {} };
-        inheritTopLevelTraps(newConf[key], traps, _availableTraps, logLevel);
-      }
-    }
-  }
-
-  //Get any remaining top-level keys that weren't inherited
-  keys.forEach(function keysIterationCallback(key) {
-    //If the current key iteration has already been normalizes, continue
-    if (!normalizedKeys.includes(key)) {
-      this[key] = {
-        traps: {}
+  {
+    let logLevel;
+    const _objKeys = objKeys,
+      _availableTraps = availableTraps,
+      _config = config,
+      keys = _config.hasOwnProperty('keys') ? _config.keys : Object.getOwnPropertyNames(config).length ? Object.getOwnPropertyNames(config) : _objKeys,
+      traps = _config.hasOwnProperty('traps') ? _config.traps : _availableTraps,
+      normalizedKeys = [],
+      newConf = {
+        delegatable: _config.hasOwnProperty('delegatable') ? _config.delegatable : false,
+        trapNewProperties: _config.hasOwnProperty('trapNewProperties') ? _config.trapNewProperties : true,
+        name: _config.hasOwnProperty('name') ? _config.name : undefined
       };
-      traps.forEach(function trapIterationCallback(trap) {
-        if (_availableTraps.includes(trap) && trapDefinitions[trap] === 'key')
-          this[trap] = logLevel;
-      }, this[key].traps);
-    }
-  }, newConf);
 
-  setObjectLevelTraps(newConf, traps, _availableTraps, logLevel);
-  return newConf;
+    if (_config.logLevel && !Number.isInteger(_config.logLevel))
+      throw 'logLevel value for config object is not an integer';
+    else
+      logLevel = _config.hasOwnProperty('logLevel') ? _config.logLevel : 1;
+    const _logLevel = logLevel;
+
+    try {
+      delete _config.keys;
+      delete _config.traps;
+      delete _config.logLevel;
+      delete _config.delegatable;
+      delete _config.trapNewProperties;
+      delete _config.name;
+    }
+    catch (e) {
+      throw 'Unable to delete properties from provided config object.';
+    }
+
+    //Iterate the object keys that were specified in the settings object
+    for (let key in _config) {
+      if (_config.hasOwnProperty(key)) {
+        normalizedKeys.push(key);
+        if (typeof _config[key].traps === 'object' && !Array.isArray(_config[key].traps)) {
+          newConf[key] = {traps: {}};
+          setConfigKeySpecifiedTraps(newConf[key], _config[key], _availableTraps);
+        }
+        else if (Array.isArray(_config[key].traps)) {
+          newConf[key] = {traps: {}};
+          turnSettingsTrapDefinitionsIntoObjects(newConf[key], _config[key], _availableTraps, _logLevel);
+        }
+        //We only want to inherit down if this key was included at the top level.
+        if (keys.includes(key)) {
+          if (!newConf[key])
+            newConf[key] = {traps: {}};
+          inheritTopLevelTraps(newConf[key], traps, _availableTraps, _logLevel);
+        }
+      }
+    }
+
+    //Get any remaining top-level keys that weren't inherited
+    keys.forEach(function keysIterationCallback(key) {
+      //If the current key iteration has already been normalizes, continue
+      if (!normalizedKeys.includes(key)) {
+        this[key] = {
+          traps: {}
+        };
+        traps.forEach(function trapIterationCallback(trap) {
+          if (_availableTraps.includes(trap) && trapDefinitions[trap] === 'key')
+            this[trap] = _logLevel;
+        }, this[key].traps);
+      }
+    }, newConf);
+
+    setObjectLevelTraps(newConf, traps, _availableTraps, _logLevel);
+    return newConf;
+  }
 }
 
 /**
@@ -93,19 +90,21 @@ export function normalizeConfig(config, objKeys, availableTraps) {
  * @returns {undefined}
  */
 function turnSettingsTrapDefinitionsIntoObjects(newConfKey, keyDef, availableTraps, logLevel) {
-  const _availableTraps = availableTraps,
-    _logLevel = logLevel;
-  let keyLogLevel = keyDef.logLevel || _logLevel,
-    keyTraps = keyDef.traps;
-  if (!Number.isInteger(keyLogLevel))
-    throw 'Cannot set non-integer value for traps';
+  {
+    const _availableTraps = availableTraps,
+      _logLevel = logLevel,
+      keyLogLevel = keyDef.logLevel || _logLevel,
+      keyTraps = keyDef.traps;
+    if (!Number.isInteger(keyLogLevel))
+      throw 'Cannot set non-integer value for traps';
 
-  //Add each key to the new traps object and set its logLevel to
-  //the pre-specified level.
-  keyTraps.forEach(function keyTrapsIterationCallback(trap) {
-    if (_availableTraps.includes(trap))
-      this[trap] = keyLogLevel;
-  }, newConfKey.traps);
+    //Add each key to the new traps object and set its logLevel to
+    //the pre-specified level.
+    keyTraps.forEach(function keyTrapsIterationCallback(trap) {
+      if (_availableTraps.includes(trap))
+        this[trap] = keyLogLevel;
+    }, newConfKey.traps);
+  }
 }
 
 /**
@@ -116,13 +115,15 @@ function turnSettingsTrapDefinitionsIntoObjects(newConfKey, keyDef, availableTra
  * @returns {undefined}
  */
 function setConfigKeySpecifiedTraps(newConfKeyDef, confKeyDef, availableTraps) {
-  const _confKeyDef = confKeyDef,
-    _availableTraps = availableTraps;
-  for (let trap in _confKeyDef.traps) {
-    if (!Number.isInteger(_confKeyDef.traps[trap]))
-      throw 'logLevel for trap is not an integer';
-    if (_confKeyDef.traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && trapDefinitions[trap] === 'key') {
-      newConfKeyDef.traps[trap] = _confKeyDef.traps[trap];
+  {
+    const _confKeyDef = confKeyDef,
+      _availableTraps = availableTraps;
+    for (let trap in _confKeyDef.traps) {
+      if (!Number.isInteger(_confKeyDef.traps[trap]))
+        throw 'logLevel for trap is not an integer';
+      if (_confKeyDef.traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && trapDefinitions[trap] === 'key') {
+        newConfKeyDef.traps[trap] = _confKeyDef.traps[trap];
+      }
     }
   }
 }
@@ -138,16 +139,18 @@ function setConfigKeySpecifiedTraps(newConfKeyDef, confKeyDef, availableTraps) {
  * @returns {undefined}
  */
 function inheritTopLevelTraps(newConfKeyDef, traps, availableTraps, logLevel) {
-  const _traps = traps,
-    _availableTraps = availableTraps,
-    _logLevel = logLevel;
-  if (!newConfKeyDef.traps)
-    newConfKeyDef.traps = {};
-  _traps.forEach(function trapIterationCallback(trap) {
-    if (!this[trap] && _availableTraps.includes(trap) && trapDefinitions[trap] === 'key') {
-      this[trap] = _logLevel;
-    }
-  }, newConfKeyDef.traps);
+  {
+    const _traps = traps,
+      _availableTraps = availableTraps,
+      _logLevel = logLevel;
+    if (!newConfKeyDef.traps)
+      newConfKeyDef.traps = {};
+    _traps.forEach(function trapIterationCallback(trap) {
+      if (!this[trap] && _availableTraps.includes(trap) && trapDefinitions[trap] === 'key') {
+        this[trap] = _logLevel;
+      }
+    }, newConfKeyDef.traps);
+  }
 }
 
 /**
@@ -159,23 +162,25 @@ function inheritTopLevelTraps(newConfKeyDef, traps, availableTraps, logLevel) {
  * @returns {undefined}
  */
 function setObjectLevelTraps(newConf, traps, availableTraps, logLevel) {
-  const _traps = traps,
-    _availableTraps = availableTraps,
-    _logLevel = logLevel;
-  newConf.objectTraps = {};
-  if (Array.isArray(_traps)) {
-    _traps.forEach(function trapIterationCallback(trap) {
-      if (_availableTraps.includes(trap) && (trapDefinitions[trap] === 'object' || trapDefinitions[trap] === 'function')) {
-        this[trap] = _logLevel;
-      }
-    }, newConf.objectTraps);
-  }
-  else if (typeof _traps === 'object') {
-    for (let trap in _traps) {
-      if (_traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && (trapDefinitions[trap] === 'object' || trapDefinitions[trap] === 'function')) {
-        if (!Number.isInteger(trap))
-          throw 'logLevel value for ' + trap + ' is not an integer';
-        newConf.objectTraps[trap] = Number(_traps[trap]);
+  {
+    const _traps = traps,
+      _availableTraps = availableTraps,
+      _logLevel = logLevel;
+    newConf.objectTraps = {};
+    if (Array.isArray(_traps)) {
+      _traps.forEach(function trapIterationCallback(trap) {
+        if (_availableTraps.includes(trap) && (trapDefinitions[trap] === 'object' || trapDefinitions[trap] === 'function')) {
+          this[trap] = _logLevel;
+        }
+      }, newConf.objectTraps);
+    }
+    else if (typeof _traps === 'object') {
+      for (let trap in _traps) {
+        if (_traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && (trapDefinitions[trap] === 'object' || trapDefinitions[trap] === 'function')) {
+          if (!Number.isInteger(trap))
+            throw 'logLevel value for ' + trap + ' is not an integer';
+          newConf.objectTraps[trap] = Number(_traps[trap]);
+        }
       }
     }
   }

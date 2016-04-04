@@ -1,6 +1,7 @@
 import { ArrayTrapHandler } from '../handlers';
 import { normalizeConfig } from '../utils';
 import { AsyncEventEmitter, logger } from '../utils';
+import { trapDefinitions } from '../utils';
 
 /**
  * Array proxy factory function.
@@ -12,8 +13,7 @@ import { AsyncEventEmitter, logger } from '../utils';
 export function proxifyArray (arr, config) {
   const emitter = new AsyncEventEmitter();
   emitter.on('trap', logger.logTrap.bind(logger));
-  var trapHandler = new ArrayTrapHandler(emitter);
-  config = normalizeConfig(config, Object.getOwnPropertyNames(arr), Object.getOwnPropertyNames(trapHandler.prototype));
+  config = normalizeConfig(config, Object.getOwnPropertyNames(arr), trapDefinitions.keys('objectAll'));
 
-  return new Proxy(arr, trapHandler);
+  return new Proxy(arr, new ArrayTrapHandler(emitter));
 }

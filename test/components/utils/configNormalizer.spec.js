@@ -1,4 +1,4 @@
-/*global expect*/
+/*global expect sinon*/
 import { normalizeConfig } from '../../../src/components/utils/configNormalizer';
 
 var objTraps = ['defineProperty', 'deleteProperty', 'get', 'getOwnPropertyDescriptor', 'getPrototypeOf', 'has', 'isExtensible', 'ownKeys', 'preventExtensions', 'set', 'setPrototypeOf'];
@@ -33,6 +33,25 @@ describe('settingsNormalizer', function configNormalizationModule() {
       trapNewProperties: true,
       name: undefined
     };
+    /*conf.should.exist;
+    conf.a.should.exist;
+    conf.a.traps.should.exist;
+    conf.a.traps.deleteProperty.should.equal(retSet.a.traps.deleteProperty);
+    conf.a.traps.get.should.equal(retSet.a.traps.get);
+    conf.a.traps.getOwnPropertyDescriptor.should.equal(retSet.a.traps.getOwnPropertyDescriptor);
+    conf.a.traps.set.should.equal(retSet.a.traps.set);
+    conf.objectTraps.should.exist;
+    conf.objectTraps.defineProperty.should.equal(retSet.objectTraps.defineProperty);
+    conf.objectTraps.getPrototypeOf.should.equal(retSet.objectTraps.getPrototypeOf);
+    conf.objectTraps.has.should.equal(retSet.objectTraps.has);
+    conf.objectTraps.isExtensible.should.equal(retSet.objectTraps.isExtensible);
+    conf.objectTraps.ownKeys.should.equal(retSet.objectTraps.ownKeys);
+    conf.objectTraps.preventExtensions.should.equal(retSet.objectTraps.preventExtensions);
+    conf.objectTraps.setPrototypeOf.should.equal(retSet.objectTraps.setPrototypeOf);
+    conf.delegatable.should.equal(retSet.delegatable);
+    conf.trapNewProperties.should.equal(retSet.trapNewProperties);
+    conf.name.should.equal(retSet.name);*/
+    //should.deepEqual(conf, retSet, '');
     expect(conf).to.deep.equal(retSet);
     expect(conf.objectTraps).to.deep.equal(retSet.objectTraps);
     expect(conf.a).to.deep.equal(retSet.a);
