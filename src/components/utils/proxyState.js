@@ -25,7 +25,7 @@ Object.defineProperties(
               this['_' + symbol] = conf;
             }
           }
-        )
+        );
       },
       writable: false,
       configurable: false,

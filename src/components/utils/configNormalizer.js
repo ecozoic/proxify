@@ -1,5 +1,4 @@
 
-//TODO: Add a collection of available traps or find a way to reuse trapDefs for both
 const trapDefs = {
   defineProperty: 'object',
   deleteProperty: 'key',
@@ -18,26 +17,25 @@ const trapDefs = {
 
 /** Takes the settings object and extrapolates it to its
  * most specific form: 1 logLevel per trap per key.
+ * @param {Object} config - The settings object received from the proxify function
+ * @param {Array} objKeys - The target object's keys
+ * @param {Array} availableTraps - The available traps for this object type
  * @returns {Object} - Returns a new config object
  */
-export function normalizeConfig() {
-  var config = arguments[0],
-    newConf, keys, traps, normalizedKeys, logLevel;
-  const objKeys = arguments[1];
-  const availableTraps = arguments[2];
-  if (~availableTraps.indexOf('constructor')) {
-    availableTraps.splice(availableTraps.indexOf('constructor', 1));
-  }
+export function normalizeConfig(config, objKeys, availableTraps) {
+  let logLevel;
+  const _objKeys = objKeys,
+    _availableTraps = availableTraps;
 
-  newConf = {
+  let newConf = {
     delegatable: config.hasOwnProperty('delegatable') ? config.delegatable : false,
     trapNewProperties: config.hasOwnProperty('trapNewProperties') ? config.trapNewProperties : true,
     name: config.hasOwnProperty('name') ? config.name : undefined
   };
 
-  keys = config.hasOwnProperty('keys') ? config.keys : [];
-  traps = config.hasOwnProperty('traps') ? config.traps : availableTraps;
-  normalizedKeys = [];
+  let keys = config.hasOwnProperty('keys') ? config.keys : [],
+    normalizedKeys = [];
+  const traps = config.hasOwnProperty('traps') ? config.traps : _availableTraps;
 
   if (config.logLevel && !Number.isInteger(config.logLevel))
     throw 'logLevel value for config object is not an integer';
@@ -58,7 +56,7 @@ export function normalizeConfig() {
 
   //If a settings object with no keys was passed, default to the keys on the target object
   if (!keys.length && !Object.getOwnPropertyNames(config).length)
-    keys = objKeys;
+    keys = _objKeys;
 
   //Iterate the object keys that were specified in the settings object
   for (let key in config) {
@@ -66,17 +64,17 @@ export function normalizeConfig() {
       normalizedKeys.push(key);
       if (typeof config[key].traps === 'object' && !Array.isArray(config[key].traps)) {
         newConf[key] = { traps: {} };
-        setConfigKeySpecifiedTraps(newConf[key], config[key], availableTraps);
+        setConfigKeySpecifiedTraps(newConf[key], config[key], _availableTraps);
       }
       else if (Array.isArray(config[key].traps)) {
         newConf[key] = { traps: {} };
-        turnSettingsTrapDefinitionsIntoObjects(newConf[key], config[key], availableTraps, logLevel);
+        turnSettingsTrapDefinitionsIntoObjects(newConf[key], config[key], _availableTraps, logLevel);
       }
       //We only want to inherit down if this key was included at the top level.
       if (keys.includes(key)) {
         if (!newConf[key])
           newConf[key] = { traps: {} };
-        inheritTopLevelTraps(newConf[key], traps, availableTraps, logLevel);
+        inheritTopLevelTraps(newConf[key], traps, _availableTraps, logLevel);
       }
     }
   }
@@ -89,26 +87,28 @@ export function normalizeConfig() {
         traps: {}
       };
       traps.forEach(function trapIterationCallback(trap) {
-        if (availableTraps.includes(trap) && trapDefs[trap] === 'key')
+        if (_availableTraps.includes(trap) && trapDefs[trap] === 'key')
           this[trap] = logLevel;
       }, this[key].traps);
     }
   }, newConf);
 
-  setObjectLevelTraps(newConf, traps, availableTraps, logLevel);
+  setObjectLevelTraps(newConf, traps, _availableTraps, logLevel);
   return newConf;
 }
 
 /**
  * Replaces an array of trap names with their object counterparts.
+ * @param {Object} keyDef - Reference to a specific key in the settings object.
+ * @param {Object} newConfKey - The key definition for the new config object being created.
+ * @param {Array} availableTraps - An array of available traps.
+ * @param {number} logLevel - The default logLevel of the proxy.
  * @returns {undefined}
  */
-function turnSettingsTrapDefinitionsIntoObjects() {
-  var newConfKey = arguments[0];
-  const keyDef = arguments[1],
-    availableTraps = arguments[2],
-    logLevel = arguments[3],
-    keyLogLevel = keyDef.logLevel || logLevel,
+function turnSettingsTrapDefinitionsIntoObjects(newConfKey, keyDef, availableTraps, logLevel) {
+  const _availableTraps = availableTraps,
+    _logLevel = logLevel;
+  let keyLogLevel = keyDef.logLevel || _logLevel,
     keyTraps = keyDef.traps;
   if (!Number.isInteger(keyLogLevel))
     throw 'Cannot set non-integer value for traps';
@@ -116,24 +116,26 @@ function turnSettingsTrapDefinitionsIntoObjects() {
   //Add each key to the new traps object and set its logLevel to
   //the pre-specified level.
   keyTraps.forEach(function keyTrapsIterationCallback(trap) {
-    if (availableTraps.includes(trap))
+    if (_availableTraps.includes(trap))
       this[trap] = keyLogLevel;
   }, newConfKey.traps);
 }
 
 /**
  * Sets the most specific level of trap definitions on the new config object.
+ * @param {Object} newConfKeyDef - The new config object's key's definition.
+ * @param {Object} confKeyDef - The config object's key's definition.
+ * @param {Array} availableTraps - An array of available traps.
  * @returns {undefined}
  */
-function setConfigKeySpecifiedTraps() {
-  var newConfKeyDef = arguments[0];
-  const confKeyDef = arguments[1],
-    availableTraps = arguments[2];
-  for (let trap in confKeyDef.traps) {
-    if (!Number.isInteger(confKeyDef.traps[trap]))
+function setConfigKeySpecifiedTraps(newConfKeyDef, confKeyDef, availableTraps) {
+  const _confKeyDef = confKeyDef,
+    _availableTraps = availableTraps;
+  for (let trap in _confKeyDef.traps) {
+    if (!Number.isInteger(_confKeyDef.traps[trap]))
       throw 'logLevel for trap is not an integer';
-    if (confKeyDef.traps.hasOwnProperty(trap) && availableTraps.includes(trap) && trapDefs[trap] === 'key') {
-      newConfKeyDef.traps[trap] = confKeyDef.traps[trap];
+    if (_confKeyDef.traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && trapDefs[trap] === 'key') {
+      newConfKeyDef.traps[trap] = _confKeyDef.traps[trap];
     }
   }
 }
@@ -142,45 +144,51 @@ function setConfigKeySpecifiedTraps() {
  * Set the key specific traps defined at the top level of the options object so they inherit
  * the traps defined above unless specifically overridden. Will not place object specific traps
  * on the keys.
+ * @param {Object} newConfKeyDef - The key definition for the new config object.
+ * @param {Object|Array} traps - The list of traps specified for this proxy at the top level.
+ * @param {Array} availableTraps - The list of available traps for this type of object
+ * @param {number} logLevel - The given logLevel
  * @returns {undefined}
  */
-function inheritTopLevelTraps() {
-  var newConfKeyDef = arguments[0];
-  const traps = arguments[1],
-    availableTraps = arguments[2],
-    logLevel = arguments[3];
+function inheritTopLevelTraps(newConfKeyDef, traps, availableTraps, logLevel) {
+  const _traps = traps,
+    _availableTraps = availableTraps,
+    _logLevel = logLevel;
   if (!newConfKeyDef.traps)
     newConfKeyDef.traps = {};
-  traps.forEach(function trapIterationCallback(trap) {
-    if (!this[trap] && availableTraps.includes(trap) && trapDefs[trap] === 'key') {
-      this[trap] = logLevel;
+  _traps.forEach(function trapIterationCallback(trap) {
+    if (!this[trap] && _availableTraps.includes(trap) && trapDefs[trap] === 'key') {
+      this[trap] = _logLevel;
     }
   }, newConfKeyDef.traps);
 }
 
 /**
  * Sets the object level traps on the options object.
+ * @param {Object} newConf - The new config object
+ * @param {Object|Array} traps - The given traps for the options object
+ * @param {Array} availableTraps - The list of available traps for this type of object
+ * @param {number} logLevel - The base logLevel for the options object
  * @returns {undefined}
  */
-function setObjectLevelTraps() {
-  var newConf = arguments[0];
-  const traps = arguments[1],
-    availableTraps = arguments[2],
-    logLevel = arguments[3];
+function setObjectLevelTraps(newConf, traps, availableTraps, logLevel) {
+  const _traps = traps,
+    _availableTraps = availableTraps,
+    _logLevel = logLevel;
   newConf.objectTraps = {};
-  if (Array.isArray(traps)) {
-    traps.forEach(function trapIterationCallback(trap) {
-      if (availableTraps.includes(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
-        this[trap] = logLevel;
+  if (Array.isArray(_traps)) {
+    _traps.forEach(function trapIterationCallback(trap) {
+      if (_availableTraps.includes(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
+        this[trap] = _logLevel;
       }
     }, newConf.objectTraps);
   }
-  else if (typeof traps === 'object') {
-    for (let trap in traps) {
-      if (traps.hasOwnProperty(trap) && availableTraps.includes(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
+  else if (typeof _traps === 'object') {
+    for (let trap in _traps) {
+      if (_traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && (trapDefs[trap] === 'object' || trapDefs[trap] === 'function')) {
         if (!Number.isInteger(trap))
           throw 'logLevel value for ' + trap + ' is not an integer';
-        newConf.objectTraps[trap] = Number(traps[trap]);
+        newConf.objectTraps[trap] = Number(_traps[trap]);
       }
     }
   }
