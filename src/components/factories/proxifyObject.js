@@ -14,5 +14,5 @@ export function proxifyObject(obj, config) {
   const emitter = new AsyncEventEmitter();
   emitter.on('trap', logger.logTrap.bind(logger));
   config = normalizeConfig(config, Object.getOwnPropertyNames(obj), trapDefinitions.keys('objectAll'));
-  return new Proxy(obj, new ObjectTrapHandler(emitter));
+  return new Proxy(obj, new ObjectTrapHandler(emitter, config));
 }

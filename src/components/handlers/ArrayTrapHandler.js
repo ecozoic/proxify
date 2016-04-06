@@ -6,8 +6,8 @@ import { BaseTrapHandler } from './BaseTrapHandler';
  * @memberOf handlers
  */
 class ArrayTrapHandler extends BaseTrapHandler {
-  constructor(emitter) {
-    super(emitter);
+  constructor(emitter, config) {
+    super(emitter, config);
   }
 }
 

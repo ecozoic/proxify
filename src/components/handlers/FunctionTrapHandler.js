@@ -6,8 +6,8 @@ import { BaseTrapHandler } from './BaseTrapHandler';
  * @memberOf handlers
  */
 class FunctionTrapHandler extends BaseTrapHandler {
-  constructor(emitter) {
-    super(emitter);
+  constructor(emitter, config) {
+    super(emitter, config);
   }
 
   /**
@@ -18,9 +18,9 @@ class FunctionTrapHandler extends BaseTrapHandler {
    * @param {Array} argumentsList - The list of arguments for the call.
    * @returns {*} The return value of the function.
    */
-  apply(target, thisArg, argumentsList) {
-    this.onTrap('apply', target, thisArg, argumentsList);
-    return Reflect.apply(target, thisArg, argumentsList);
+  apply(target, context, argumentsList) {
+    this.onTrap('apply', target, context, argumentsList);
+    return Reflect.apply(target, context, argumentsList);
   }
 
   /**

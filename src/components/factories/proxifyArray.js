@@ -15,5 +15,5 @@ export function proxifyArray (arr, config) {
   emitter.on('trap', logger.logTrap.bind(logger));
   config = normalizeConfig(config, Object.getOwnPropertyNames(arr), trapDefinitions.keys('objectAll'));
 
-  return new Proxy(arr, new ArrayTrapHandler(emitter));
+  return new Proxy(arr, new ArrayTrapHandler(emitter, config));
 }

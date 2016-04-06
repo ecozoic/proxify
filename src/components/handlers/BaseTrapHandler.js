@@ -2,8 +2,9 @@
  * @memberOf handlers
  */
 class BaseTrapHandler {
-  constructor(emitter) {
+  constructor(emitter, config) {
     this.emitter = emitter;
+    this.config = config;
   }
 
   /**
@@ -144,7 +145,8 @@ class BaseTrapHandler {
    * @param {...*} trapArgs - The arguments describing the context of the trap.
    */
   onTrap(trap, ...trapArgs) {
-    this.emitter.emit('trap', trap, ...trapArgs);
+    if (trapArgs[1] != null && (this.config[trapArgs[1]] && this.config[trapArgs[1]][trap]) || this.config.objectTraps[trapArgs[0]])
+      this.emitter.emit('trap', trap, ...trapArgs);
   }
 }
 
