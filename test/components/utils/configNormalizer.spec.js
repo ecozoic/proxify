@@ -7,11 +7,11 @@ var fnTraps = ['defineProperty', 'deleteProperty', 'get', 'getOwnPropertyDescrip
 var defaultLogLevel = 1;
 
 
-describe('settingsNormalizer', function configNormalizationModule() {
+describe('configNormalizer', function configNormalizationModule() {
   it('should return default values for empty config object', function configNormalizationTest1() {
     var set = {};
     var conf = normalizeConfig(set, Object.getOwnPropertyNames({a:1}), objTraps);
-    var retSet = {
+    var retConf = {
       a: {
         traps: {
           deleteProperty: defaultLogLevel,
@@ -36,26 +36,26 @@ describe('settingsNormalizer', function configNormalizationModule() {
     /*conf.should.exist;
     conf.a.should.exist;
     conf.a.traps.should.exist;
-    conf.a.traps.deleteProperty.should.equal(retSet.a.traps.deleteProperty);
-    conf.a.traps.get.should.equal(retSet.a.traps.get);
-    conf.a.traps.getOwnPropertyDescriptor.should.equal(retSet.a.traps.getOwnPropertyDescriptor);
-    conf.a.traps.set.should.equal(retSet.a.traps.set);
+    conf.a.traps.deleteProperty.should.equal(retConf.a.traps.deleteProperty);
+    conf.a.traps.get.should.equal(retConf.a.traps.get);
+    conf.a.traps.getOwnPropertyDescriptor.should.equal(retConf.a.traps.getOwnPropertyDescriptor);
+    conf.a.traps.set.should.equal(retConf.a.traps.set);
     conf.objectTraps.should.exist;
-    conf.objectTraps.defineProperty.should.equal(retSet.objectTraps.defineProperty);
-    conf.objectTraps.getPrototypeOf.should.equal(retSet.objectTraps.getPrototypeOf);
-    conf.objectTraps.has.should.equal(retSet.objectTraps.has);
-    conf.objectTraps.isExtensible.should.equal(retSet.objectTraps.isExtensible);
-    conf.objectTraps.ownKeys.should.equal(retSet.objectTraps.ownKeys);
-    conf.objectTraps.preventExtensions.should.equal(retSet.objectTraps.preventExtensions);
-    conf.objectTraps.setPrototypeOf.should.equal(retSet.objectTraps.setPrototypeOf);
-    conf.delegatable.should.equal(retSet.delegatable);
-    conf.trapNewProperties.should.equal(retSet.trapNewProperties);
-    conf.name.should.equal(retSet.name);*/
-    //should.deepEqual(conf, retSet, '');
-    expect(conf).to.deep.equal(retSet);
-    expect(conf.objectTraps).to.deep.equal(retSet.objectTraps);
-    expect(conf.a).to.deep.equal(retSet.a);
-    expect(conf.a.traps).to.deep.equal(retSet.a.traps);
+    conf.objectTraps.defineProperty.should.equal(retConf.objectTraps.defineProperty);
+    conf.objectTraps.getPrototypeOf.should.equal(retConf.objectTraps.getPrototypeOf);
+    conf.objectTraps.has.should.equal(retConf.objectTraps.has);
+    conf.objectTraps.isExtensible.should.equal(retConf.objectTraps.isExtensible);
+    conf.objectTraps.ownKeys.should.equal(retConf.objectTraps.ownKeys);
+    conf.objectTraps.preventExtensions.should.equal(retConf.objectTraps.preventExtensions);
+    conf.objectTraps.setPrototypeOf.should.equal(retConf.objectTraps.setPrototypeOf);
+    conf.delegatable.should.equal(retConf.delegatable);
+    conf.trapNewProperties.should.equal(retConf.trapNewProperties);
+    conf.name.should.equal(retConf.name);*/
+    //should.deepEqual(conf, retConf, '');
+    expect(conf).to.deep.equal(retConf);
+    expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
+    expect(conf.a).to.deep.equal(retConf.a);
+    expect(conf.a.traps).to.deep.equal(retConf.a.traps);
   });
 
   it('normalizes the config object', function configNormalizationTest2() {
@@ -66,7 +66,7 @@ describe('settingsNormalizer', function configNormalizationModule() {
     };
     var conf = normalizeConfig(settings, Object.getOwnPropertyNames({}), objTraps);
 
-    var retSet = {
+    var retConf = {
       test1: {
         traps: {
           get: 1
@@ -82,12 +82,12 @@ describe('settingsNormalizer', function configNormalizationModule() {
       trapNewProperties: true,
       name: undefined
     };
-    expect(conf).to.deep.equal(retSet);
-    expect(conf.objectTraps).to.deep.equal(retSet.objectTraps);
-    expect(conf.test1).to.deep.equal(retSet.test1);
-    expect(conf.test1.traps).to.deep.equal(retSet.test1.traps);
-    expect(conf.test2).to.deep.equal(retSet.test2);
-    expect(conf.test2.traps).to.deep.equal(retSet.test2.traps);
+    expect(conf).to.deep.equal(retConf);
+    expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
+    expect(conf.test1).to.deep.equal(retConf.test1);
+    expect(conf.test1.traps).to.deep.equal(retConf.test1.traps);
+    expect(conf.test2).to.deep.equal(retConf.test2);
+    expect(conf.test2.traps).to.deep.equal(retConf.test2.traps);
   });
 
   it('should create default settings due to disallowed delegation', function configNormalizationTest3() {
