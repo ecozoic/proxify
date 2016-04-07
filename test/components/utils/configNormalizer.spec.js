@@ -1,4 +1,4 @@
-/*global expect sinon*/
+/*global sinon*/
 import { normalizeConfig } from '../../../src/components/utils/configNormalizer';
 
 var objTraps = ['defineProperty', 'deleteProperty', 'get', 'getOwnPropertyDescriptor', 'getPrototypeOf', 'has', 'isExtensible', 'ownKeys', 'preventExtensions', 'set', 'setPrototypeOf'];
@@ -31,13 +31,15 @@ describe('configNormalizer', function configNormalizationModule() {
       },
       delegatable: false,
       trapNewProperties: true,
-      name: undefined
+      name: undefined,
+      logLevel: defaultLogLevel
     };
-    /*conf.should.exist;
+    console.log(conf);
+    conf.should.exist;
     conf.a.should.exist;
     conf.a.traps.should.exist;
-    conf.a.traps.deleteProperty.should.equal(retConf.a.traps.deleteProperty);
-    conf.a.traps.get.should.equal(retConf.a.traps.get);
+    conf.a.traps.should.have.property('deleteProperty'); //should.equal(retConf.a.traps.deleteProperty);
+    /*conf.a.traps.get.should.equal(retConf.a.traps.get);
     conf.a.traps.getOwnPropertyDescriptor.should.equal(retConf.a.traps.getOwnPropertyDescriptor);
     conf.a.traps.set.should.equal(retConf.a.traps.set);
     conf.objectTraps.should.exist;
@@ -80,7 +82,8 @@ describe('configNormalizer', function configNormalizationModule() {
       objectTraps: {},
       delegatable: false,
       trapNewProperties: true,
-      name: undefined
+      name: undefined,
+      logLevel: defaultLogLevel
     };
     expect(conf).to.deep.equal(retConf);
     expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
@@ -119,7 +122,8 @@ describe('configNormalizer', function configNormalizationModule() {
         ownKeys: defaultLogLevel,
         preventExtensions: defaultLogLevel,
         setPrototypeOf: defaultLogLevel
-      }
+      },
+      logLevel: defaultLogLevel
     };
     expect(conf).to.deep.equal(retConf);
     expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
@@ -150,7 +154,8 @@ describe('configNormalizer', function configNormalizationModule() {
         ownKeys: defaultLogLevel,
         preventExtensions: defaultLogLevel,
         setPrototypeOf: defaultLogLevel
-      }
+      },
+      logLevel: defaultLogLevel
     };
     expect(conf).to.deep.equal(retConf);
     expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
@@ -183,7 +188,8 @@ describe('configNormalizer', function configNormalizationModule() {
         setPrototypeOf: defaultLogLevel,
         apply: defaultLogLevel,
         construct: defaultLogLevel
-      }
+      },
+      logLevel: defaultLogLevel
     };
     expect(conf).to.deep.equal(retConf);
     expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
@@ -208,7 +214,8 @@ describe('configNormalizer', function configNormalizationModule() {
           get: 4,
           set: 2
         }
-      }
+      },
+      logLevel: defaultLogLevel
     };
 
     var conf = normalizeConfig(settings, Object.getOwnPropertyNames({}), fnTraps);
@@ -240,7 +247,8 @@ describe('configNormalizer', function configNormalizationModule() {
       objectTraps: {
         preventExtensions: 3,
         getPrototypeOf: 3
-      }
+      },
+      logLevel: defaultLogLevel
     };
     expect(conf).to.deep.equal(retConf);
     expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
@@ -270,7 +278,8 @@ describe('configNormalizer', function configNormalizationModule() {
           set: 2,
           getOwnPropertyDescriptor: 3
         }
-      }
+      },
+      logLevel: defaultLogLevel
     };
 
     var conf = normalizeConfig(settings, Object.getOwnPropertyNames({}), fnTraps);
@@ -295,7 +304,8 @@ describe('configNormalizer', function configNormalizationModule() {
           deleteProperty: 1
         }
       },
-      objectTraps: {}
+      objectTraps: {},
+      logLevel: defaultLogLevel
     };
     expect(conf).to.deep.equal(retConf);
     expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
@@ -361,7 +371,8 @@ describe('configNormalizer', function configNormalizationModule() {
       objectTraps: {},
       name: undefined,
       delegatable: false,
-      trapNewProperties: true
+      trapNewProperties: true,
+      logLevel: defaultLogLevel
     };
     expect(conf).to.deep.equal(retConf);
     expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);

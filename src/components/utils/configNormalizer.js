@@ -77,6 +77,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
     }, newConf);
 
     setObjectLevelTraps(newConf, traps, _availableTraps, _logLevel);
+    newConf.logLevel = _logLevel;
     return newConf;
   }
 }
