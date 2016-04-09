@@ -81,12 +81,19 @@ describe('configNormalizer', function configNormalizationModule() {
       name: undefined,
       logLevel: defaultLogLevel
     };
-    expect(conf).to.deep.equal(retConf);
-    expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
-    expect(conf.test1).to.deep.equal(retConf.test1);
-    expect(conf.test1.traps).to.deep.equal(retConf.test1.traps);
-    expect(conf.test2).to.deep.equal(retConf.test2);
-    expect(conf.test2.traps).to.deep.equal(retConf.test2.traps);
+
+    conf.should.exist;
+    conf.test1.should.exist;
+    conf.test1.traps.should.exists;
+    conf.test1.traps.should.have.property('get', 1);
+    conf.test2.should.exist;
+    conf.test2.traps.should.exist;
+    conf.test2.traps.should.have.property('get', 1);
+    conf.objectTraps.should.exist;
+    conf.should.have.property('delegatable', false);
+    conf.should.have.property('trapNewProperties', true);
+    conf.should.have.property('name', undefined);
+    conf.should.have.property('logLevel', defaultLogLevel);
   });
 
   it('should create default settings due to disallowed delegation', function configNormalizationTest3() {
@@ -121,10 +128,24 @@ describe('configNormalizer', function configNormalizationModule() {
       },
       logLevel: defaultLogLevel
     };
-    expect(conf).to.deep.equal(retConf);
-    expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
-    expect(conf.a).to.deep.equal(retConf.a);
-    expect(conf.a.traps).to.deep.equal(retConf.a.traps);
+    conf.should.exist;
+    conf.should.have.property('delegatable', false);
+    conf.should.have.property('trapNewProperties', true);
+    conf.should.have.property('name', undefined);
+    conf.should.have.property('logLevel', defaultLogLevel);
+    conf.a.should.exist;
+    conf.a.traps.should.exist;
+    conf.a.traps.should.have.property('deleteProperty', defaultLogLevel);
+    conf.a.traps.should.have.property('get', defaultLogLevel);
+    conf.a.traps.should.have.property('getOwnPropertyDescriptor', defaultLogLevel);
+    conf.a.traps.should.have.property('set', defaultLogLevel);
+    conf.objectTraps.should.exist;
+    conf.objectTraps.should.have.property('defineProperty', defaultLogLevel);
+    conf.objectTraps.should.have.property('getPrototypeOf', defaultLogLevel);
+    conf.objectTraps.should.have.property('has', defaultLogLevel);
+    conf.objectTraps.should.have.property('isExtensible', defaultLogLevel);
+    conf.objectTraps.should.have.property('ownKeys', defaultLogLevel);
+    conf.objectTraps.should.have.property('setPrototypeOf', defaultLogLevel);
   });
 
   it('should proxify an array with defaults on empty config object', function configNormalizationTest4() {
