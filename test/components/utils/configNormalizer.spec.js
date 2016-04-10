@@ -200,7 +200,7 @@ describe('configNormalizer', function configNormalizationModule() {
     };
 
     var conf = normalizeConfig(settings, Object.getOwnPropertyNames({}), fnTraps);
-    
+
     conf.should.exist;
     conf.should.have.property('delegatable', true);
     conf.should.have.property('trapNewProperties', true);
@@ -223,16 +223,10 @@ describe('configNormalizer', function configNormalizationModule() {
 
   it('should throw when logLevel is NaN', function configNormalizationTest8() {
     var set = {logLevel: '3'};
-    var thrown = 0;
     var conf;
-    try {
+    (function configThrowTest() {
       conf = normalizeConfig(set, Object.getOwnPropertyNames({}), objTraps);
-    }
-    catch(e) {
-      thrown++;
-    }
-    expect(thrown).to.equal(1);
-    expect(conf).to.equal(undefined);
+    }).should.throw();
   });
 
   it('should throw when config props are non-configurable', function configNormalizationTest9() {
@@ -247,17 +241,10 @@ describe('configNormalizer', function configNormalizationModule() {
         }
       }
     );
-    var thrown = 0;
     var conf;
-    try {
+    (function configThrowTest2() {
       conf = normalizeConfig(set, Object.getOwnPropertyNames({}), objTraps);
-    }
-    catch(e) {
-      thrown++;
-    }
-
-    expect(thrown).to.equal(1);
-    expect(conf).to.equal(undefined);
+    }).should.throw();
   });
 
   it('should not add non-available traps to config', function configNormalizationTest10() {
@@ -267,22 +254,15 @@ describe('configNormalizer', function configNormalizationModule() {
     };
     var conf = normalizeConfig(set, Object.getOwnPropertyNames({}), objTraps);
 
-    var retConf = {
-      key1: {
-        traps: {
-          get: defaultLogLevel,
-          set: defaultLogLevel
-        }
-      },
-      objectTraps: {},
-      name: undefined,
-      delegatable: false,
-      trapNewProperties: true,
-      logLevel: defaultLogLevel
-    };
-    expect(conf).to.deep.equal(retConf);
-    expect(conf.objectTraps).to.deep.equal(retConf.objectTraps);
-    expect(conf.key1).to.deep.equal(retConf.key1);
-    expect(conf.key1.traps).to.deep.equal(retConf.key1.traps);
+    conf.should.exist;
+    conf.key1.should.exist;
+    conf.key1.traps.should.exist;
+    conf.key1.traps.should.have.property('get', defaultLogLevel);
+    conf.key1.traps.should.have.property('set', defaultLogLevel);
+    conf.objectTraps.should.exist;
+    conf.should.have.property('name', undefined);
+    conf.should.have.property('delegatable', false);
+    conf.should.have.property('trapNewProperties', true);
+    conf.should.have.property('logLevel', defaultLogLevel);
   });
 });
