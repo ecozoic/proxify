@@ -1,16 +1,14 @@
 /*global sinon*/
 import { normalizeConfig } from '../../../src/components/utils/configNormalizer';
 
-var objTraps = ['defineProperty', 'deleteProperty', 'get', 'getOwnPropertyDescriptor', 'getPrototypeOf', 'has', 'isExtensible', 'ownKeys', 'preventExtensions', 'set', 'setPrototypeOf'];
-var arrTraps = ['defineProperty', 'deleteProperty', 'get', 'getOwnPropertyDescriptor', 'getPrototypeOf', 'has', 'isExtensible', 'ownKeys', 'preventExtensions', 'set', 'setPrototypeOf'];
-var fnTraps = ['defineProperty', 'deleteProperty', 'get', 'getOwnPropertyDescriptor', 'getPrototypeOf', 'has', 'isExtensible', 'ownKeys', 'preventExtensions', 'set', 'setPrototypeOf', 'apply', 'construct'];
+var traps = ['defineProperty', 'deleteProperty', 'get', 'getOwnPropertyDescriptor', 'getPrototypeOf', 'has', 'isExtensible', 'ownKeys', 'preventExtensions', 'set', 'setPrototypeOf'];
+var fnTraps = traps.concat('apply', 'construct');
 var defaultLogLevel = 1;
-
 
 describe('configNormalizer', function configNormalizationModule() {
   it('should return default values for empty config object', function configNormalizationTest1() {
     var set = {};
-    var conf = normalizeConfig(set, Object.getOwnPropertyNames({a:1}), objTraps);
+    var conf = normalizeConfig(set, Object.getOwnPropertyNames({a:1}), traps);
 
     conf.should.exist;
     conf.a.should.exist;
@@ -39,7 +37,7 @@ describe('configNormalizer', function configNormalizationModule() {
       traps: ['get'],
       logLevel: 1
     };
-    var conf = normalizeConfig(settings, Object.getOwnPropertyNames({}), objTraps);
+    var conf = normalizeConfig(settings, Object.getOwnPropertyNames({}), traps);
 
     conf.should.exist;
     conf.test1.should.exist;
@@ -62,7 +60,7 @@ describe('configNormalizer', function configNormalizationModule() {
         logLevel: 2
       },
       delSet = Object.create(set);
-    var conf = normalizeConfig(delSet, Object.getOwnPropertyNames({a: 1}), objTraps);
+    var conf = normalizeConfig(delSet, Object.getOwnPropertyNames({a: 1}), traps);
 
     conf.should.exist;
     conf.should.have.property('delegatable', false);
@@ -85,7 +83,7 @@ describe('configNormalizer', function configNormalizationModule() {
   });
 
   it('should proxify an array with defaults on empty config object', function configNormalizationTest4() {
-    var conf = normalizeConfig({}, Object.getOwnPropertyNames({a: 1}), arrTraps);
+    var conf = normalizeConfig({}, Object.getOwnPropertyNames({a: 1}), traps);
 
     conf.should.exist;
     conf.should.have.property('delegatable', false);
@@ -225,7 +223,7 @@ describe('configNormalizer', function configNormalizationModule() {
     var set = {logLevel: '3'};
     var conf;
     (function configThrowTest() {
-      conf = normalizeConfig(set, Object.getOwnPropertyNames({}), objTraps);
+      conf = normalizeConfig(set, Object.getOwnPropertyNames({}), traps);
     }).should.throw();
   });
 
@@ -243,7 +241,7 @@ describe('configNormalizer', function configNormalizationModule() {
     );
     var conf;
     (function configThrowTest2() {
-      conf = normalizeConfig(set, Object.getOwnPropertyNames({}), objTraps);
+      conf = normalizeConfig(set, Object.getOwnPropertyNames({}), traps);
     }).should.throw();
   });
 
@@ -252,7 +250,7 @@ describe('configNormalizer', function configNormalizationModule() {
       keys: ['key1'],
       traps: ['get', 'set', 'test']
     };
-    var conf = normalizeConfig(set, Object.getOwnPropertyNames({}), objTraps);
+    var conf = normalizeConfig(set, Object.getOwnPropertyNames({}), traps);
 
     conf.should.exist;
     conf.key1.should.exist;

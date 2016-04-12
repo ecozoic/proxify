@@ -16,13 +16,13 @@ var trapDefinitions = {
 
 Object.defineProperty(
   trapDefinitions,
-  'keys', {
+  'getTraps', {
     /**
      * Returns an array of traps on the trapDefinitions object by type
      * @param {string} types - The types of traps desired (property, object, function, objectAll, functionAll, all)
      * @returns {Array} - An array of the requested traps of the specified type
      */
-    value: function _getKeys(types) {
+    value: function getTraps(types) {
       switch (types) {
       case 'property':
         return getTrapKeys('key');
