@@ -26,30 +26,49 @@ Object.defineProperty(
       switch (types) {
       case 'property':
         return getTrapKeys('key');
-        break;
       case 'object':
         return getTrapKeys('object');
-        break;
       case 'function':
         return getTrapKeys('function');
-        break;
       case 'objectAll':
         return getTrapKeys('key', 'object');
-        break;
       case 'functionAll':
         return getTrapKeys('key', 'function');
-        break;
       case 'all':
         return getTrapKeys('key', 'object', 'function');
-        break;
       default:
         return [];
-        break;
       }
     },
     writable: false,
     enumerable: false,
     configurable: false
+  }
+);
+
+Object.defineProperties(
+  trapDefinitions, {
+    'propertyTraps': {
+      get: function _getPropertyTraps() {
+        return getTrapKeys('key');
+      },
+      configurable: false,
+      enumerable: false
+    },
+    'objectTraps': {
+      get: function _getObjectTraps() {
+        return getTrapKeys('object');
+      },
+      configurable: false,
+      enumerable: false
+    },
+    'functionTraps': {
+      get: function _getFunctionTraps() {
+        return getTrapKeys('function');
+      },
+      configurable: false,
+      enumerable: false
+    }
   }
 );
 

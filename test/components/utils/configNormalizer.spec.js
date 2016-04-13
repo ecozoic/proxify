@@ -1,4 +1,4 @@
-/*global sinon*/
+/*global*/
 import { normalizeConfig } from '../../../src/components/utils/configNormalizer';
 
 var traps = ['defineProperty', 'deleteProperty', 'get', 'getOwnPropertyDescriptor', 'getPrototypeOf', 'has', 'isExtensible', 'ownKeys', 'preventExtensions', 'set', 'setPrototypeOf'];
@@ -193,8 +193,7 @@ describe('configNormalizer', function configNormalizationModule() {
           set: 2,
           getOwnPropertyDescriptor: 3
         }
-      },
-      logLevel: defaultLogLevel
+      }
     };
 
     var conf = normalizeConfig(settings, Object.getOwnPropertyNames({}), fnTraps);
@@ -221,9 +220,8 @@ describe('configNormalizer', function configNormalizationModule() {
 
   it('should throw when logLevel is NaN', function configNormalizationTest8() {
     var set = {logLevel: '3'};
-    var conf;
     (function configThrowTest() {
-      conf = normalizeConfig(set, Object.getOwnPropertyNames({}), traps);
+      normalizeConfig(set, Object.getOwnPropertyNames({}), traps);
     }).should.throw('logLevel for traps is not an integer');
   });
 
@@ -239,9 +237,9 @@ describe('configNormalizer', function configNormalizationModule() {
         }
       }
     );
-    var conf;
+
     (function configThrowTest2() {
-      conf = normalizeConfig(set, Object.getOwnPropertyNames({}), traps);
+      normalizeConfig(set, Object.getOwnPropertyNames({}), traps);
     }).should.throw('Unable to delete properties from provided config object.');
   });
 

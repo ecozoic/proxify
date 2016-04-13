@@ -20,6 +20,9 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
     trapDefinitions.should.have.property('apply', 'function');
     trapDefinitions.should.have.property('construct', 'function');
     trapDefinitions.should.have.property('getTraps', getTraps);
+    trapDefinitions.should.have.property('propertyTraps');
+    trapDefinitions.should.have.property('objectTraps');
+    trapDefinitions.should.have.property('functionTraps');
     trapDefinitions.getTraps.should.have.property('length', 1);
     trapDefinitions.should.have.ownPropertyDescriptor('getTraps').to.have.property('enumerable', false);
     trapDefinitions.should.have.ownPropertyDescriptor('getTraps').to.have.property('writable', false);
@@ -27,14 +30,14 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
   });
 
   it('should return only traps for properties', function trapDefinitionsTest2() {
-    var keyTraps = trapDefinitions.getTraps('property');
+    var propTraps = trapDefinitions.getTraps('property');
 
-    keyTraps.should.exist;
-    keyTraps.should.have.lengthOf(4);
-    keyTraps.should.include('deleteProperty');
-    keyTraps.should.include('get');
-    keyTraps.should.include('getOwnPropertyDescriptor');
-    keyTraps.should.include('set');
+    propTraps.should.exist;
+    propTraps.should.have.lengthOf(4);
+    propTraps.should.include('deleteProperty');
+    propTraps.should.include('get');
+    propTraps.should.include('getOwnPropertyDescriptor');
+    propTraps.should.include('set');
   });
 
   it('should return only traps for objects', function trapDefinitionsTest3() {
@@ -116,5 +119,66 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
 
     traps.should.exist;
     traps.should.have.lengthOf(0);
+  });
+
+  it('should return all property traps', function trapDefinitionTest6() {
+    var traps = trapDefinitions.propertyTraps;
+
+    traps.should.exist;
+    traps.should.have.lengthOf(4);
+    traps.should.include('deleteProperty');
+    traps.should.include('get');
+    traps.should.include('getOwnPropertyDescriptor');
+    traps.should.include('set');
+  });
+
+  it('should return all object traps', function trapDefinitionsTest7() {
+    var traps = trapDefinitions.objectTraps;
+
+    traps.should.exist;
+    traps.should.have.lengthOf(7);
+    traps.should.include('defineProperty');
+    traps.should.include('getPrototypeOf');
+    traps.should.include('has');
+    traps.should.include('isExtensible');
+    traps.should.include('ownKeys');
+    traps.should.include('preventExtensions');
+    traps.should.include('setPrototypeOf');
+  });
+
+  it('should return all function traps', function trapDefinitionsTest8() {
+    var traps = trapDefinitions.functionTraps;
+
+    traps.should.exist;
+    traps.should.have.lengthOf(2);
+    traps.should.include('apply');
+    traps.should.include('construct');
+  });
+
+  it('should return same values for property traps', function trapDefinitionsTest9() {
+    var propTraps1 = trapDefinitions.getTraps('property');
+    var propTraps2 = trapDefinitions.propertyTraps;
+
+    propTraps1.should.exist;
+    propTraps2.should.exist;
+    propTraps2.should.deep.equal(propTraps1);
+  });
+
+  it('should return same values for object traps', function trapDefinitionsTest10() {
+    var objTraps1 = trapDefinitions.getTraps('object');
+    var objTraps2 = trapDefinitions.objectTraps;
+
+    objTraps1.should.exist;
+    objTraps2.should.exist;
+    objTraps2.should.deep.equal(objTraps1);
+  });
+
+  it('should return same values for function traps', function trapDefinitionsTest11() {
+    var fnTraps1 = trapDefinitions.getTraps('function');
+    var fnTraps2 = trapDefinitions.functionTraps;
+
+    fnTraps1.should.exist;
+    fnTraps2.should.exist;
+    fnTraps2.should.deep.equal(fnTraps1);
   });
 });
