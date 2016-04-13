@@ -38,6 +38,7 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
     objTraps.should.have.length(7);
     objTraps.should.include('defineProperty');
     objTraps.should.include('getPrototypeOf');
+    objTraps.should.include('has');
     objTraps.should.include('isExtensible');
     objTraps.should.include('ownKeys');
     objTraps.should.include('preventExtensions');
@@ -64,6 +65,7 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
     objTraps.should.include('ownKeys');
     objTraps.should.include('preventExtensions');
     objTraps.should.include('setPrototypeOf');
+    objTraps.should.include('has');
     objTraps.should.include('deleteProperty');
     objTraps.should.include('get');
     objTraps.should.include('getOwnPropertyDescriptor');
@@ -89,12 +91,13 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
     traps.should.exist;
     traps.should.have.length(13);
     traps.should.include('defineProperty');
+    traps.should.include('deleteProperty');
+    traps.should.include('has');
     traps.should.include('getPrototypeOf');
     traps.should.include('isExtensible');
     traps.should.include('ownKeys');
     traps.should.include('preventExtensions');
     traps.should.include('setPrototypeOf');
-    traps.should.include('deleteProperty');
     traps.should.include('get');
     traps.should.include('getOwnPropertyDescriptor');
     traps.should.include('set');
