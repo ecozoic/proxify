@@ -24,7 +24,7 @@ export function normalizeConfig(config, objKeys, availableTraps) {
       };
 
     if (_config.logLevel && !Number.isInteger(_config.logLevel))
-      throw 'logLevel value for config object is not an integer';
+      throw 'logLevel for traps is not an integer';
     else
       logLevel = _config.hasOwnProperty('logLevel') ? _config.logLevel : 1;
     const _logLevel = logLevel;
@@ -97,7 +97,7 @@ function turnSettingsTrapDefinitionsIntoObjects(newConfKey, keyDef, availableTra
       keyLogLevel = keyDef.logLevel || _logLevel,
       keyTraps = keyDef.traps;
     if (!Number.isInteger(keyLogLevel))
-      throw 'Cannot set non-integer value for traps';
+      throw 'logLevel for traps is not an integer';
 
     //Add each key to the new traps object and set its logLevel to
     //the pre-specified level.
@@ -121,7 +121,7 @@ function setConfigKeySpecifiedTraps(newConfKeyDef, confKeyDef, availableTraps) {
       _availableTraps = availableTraps;
     for (let trap in _confKeyDef.traps) {
       if (!Number.isInteger(_confKeyDef.traps[trap]))
-        throw 'logLevel for trap is not an integer';
+        throw 'logLevel for traps is not an integer';
       if (_confKeyDef.traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && trapDefinitions[trap] === 'key') {
         newConfKeyDef.traps[trap] = _confKeyDef.traps[trap];
       }
@@ -179,7 +179,7 @@ function setObjectLevelTraps(newConf, traps, availableTraps, logLevel) {
       for (let trap in _traps) {
         if (_traps.hasOwnProperty(trap) && _availableTraps.includes(trap) && (trapDefinitions[trap] === 'object' || trapDefinitions[trap] === 'function')) {
           if (!Number.isInteger(trap))
-            throw 'logLevel value for ' + trap + ' is not an integer';
+            throw 'logLevel for traps is not an integer';
           newConf.objectTraps[trap] = Number(_traps[trap]);
         }
       }

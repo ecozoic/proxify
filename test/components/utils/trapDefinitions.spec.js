@@ -1,5 +1,6 @@
-/*global sinon*/
+/*global*/
 import { trapDefinitions } from '../../../src/components/utils/trapDefinitions';
+var getTraps = trapDefinitions.getTraps;
 
 describe('trapDefinitions', function trapDefinitionTestModule() {
   it('should have all available traps defined', function trapDefinitionsTest1() {
@@ -18,13 +19,18 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
     trapDefinitions.should.have.property('setPrototypeOf', 'object');
     trapDefinitions.should.have.property('apply', 'function');
     trapDefinitions.should.have.property('construct', 'function');
+    trapDefinitions.should.have.property('getTraps', getTraps);
+    trapDefinitions.getTraps.should.have.property('length', 1);
+    trapDefinitions.should.have.ownPropertyDescriptor('getTraps').to.have.property('enumerable', false);
+    trapDefinitions.should.have.ownPropertyDescriptor('getTraps').to.have.property('writable', false);
+    trapDefinitions.should.have.ownPropertyDescriptor('getTraps').to.have.property('configurable', false);
   });
 
   it('should return only traps for properties', function trapDefinitionsTest2() {
     var keyTraps = trapDefinitions.getTraps('property');
 
     keyTraps.should.exist;
-    keyTraps.should.have.length(4);
+    keyTraps.should.have.lengthOf(4);
     keyTraps.should.include('deleteProperty');
     keyTraps.should.include('get');
     keyTraps.should.include('getOwnPropertyDescriptor');
@@ -35,7 +41,7 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
     var objTraps = trapDefinitions.getTraps('object');
 
     objTraps.should.exist;
-    objTraps.should.have.length(7);
+    objTraps.should.have.lengthOf(7);
     objTraps.should.include('defineProperty');
     objTraps.should.include('getPrototypeOf');
     objTraps.should.include('has');
@@ -49,7 +55,7 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
     var fnTraps = trapDefinitions.getTraps('function');
 
     fnTraps.should.exist;
-    fnTraps.should.have.length(2);
+    fnTraps.should.have.lengthOf(2);
     fnTraps.should.include('apply');
     fnTraps.should.include('construct');
   });
@@ -58,7 +64,7 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
     var objTraps = trapDefinitions.getTraps('objectAll');
 
     objTraps.should.exist;
-    objTraps.should.have.length(11);
+    objTraps.should.have.lengthOf(11);
     objTraps.should.include('defineProperty');
     objTraps.should.include('getPrototypeOf');
     objTraps.should.include('isExtensible');
@@ -76,7 +82,7 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
     var fnTraps = trapDefinitions.getTraps('functionAll');
 
     fnTraps.should.exist;
-    fnTraps.should.have.length(6);
+    fnTraps.should.have.lengthOf(6);
     fnTraps.should.include('apply');
     fnTraps.should.include('construct');
     fnTraps.should.include('deleteProperty');
@@ -89,7 +95,7 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
     var traps = trapDefinitions.getTraps('all');
 
     traps.should.exist;
-    traps.should.have.length(13);
+    traps.should.have.lengthOf(13);
     traps.should.include('defineProperty');
     traps.should.include('deleteProperty');
     traps.should.include('has');
@@ -109,6 +115,6 @@ describe('trapDefinitions', function trapDefinitionTestModule() {
     var traps = trapDefinitions.getTraps('');
 
     traps.should.exist;
-    traps.should.have.length(0);
+    traps.should.have.lengthOf(0);
   });
 });

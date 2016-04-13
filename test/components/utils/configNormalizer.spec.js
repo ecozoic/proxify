@@ -224,7 +224,7 @@ describe('configNormalizer', function configNormalizationModule() {
     var conf;
     (function configThrowTest() {
       conf = normalizeConfig(set, Object.getOwnPropertyNames({}), traps);
-    }).should.throw();
+    }).should.throw('logLevel for traps is not an integer');
   });
 
   it('should throw when config props are non-configurable', function configNormalizationTest9() {
@@ -242,7 +242,7 @@ describe('configNormalizer', function configNormalizationModule() {
     var conf;
     (function configThrowTest2() {
       conf = normalizeConfig(set, Object.getOwnPropertyNames({}), traps);
-    }).should.throw();
+    }).should.throw('Unable to delete properties from provided config object.');
   });
 
   it('should not add non-available traps to config', function configNormalizationTest10() {
