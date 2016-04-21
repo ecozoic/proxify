@@ -1,4 +1,4 @@
-var trapDefinitions = {
+const trapDefinitions = {
   defineProperty: 'object',
   deleteProperty: 'key',
   get: 'key',
@@ -23,21 +23,24 @@ Object.defineProperty(
      * @returns {Array} - An array of the requested traps of the specified type
      */
     value: function getTraps(types) {
-      switch (types) {
-      case 'property':
-        return getTrapKeys('key');
-      case 'object':
-        return getTrapKeys('object');
-      case 'function':
-        return getTrapKeys('function');
-      case 'objectAll':
-        return getTrapKeys('key', 'object');
-      case 'functionAll':
-        return getTrapKeys('key', 'function');
-      case 'all':
-        return getTrapKeys('key', 'object', 'function');
-      default:
-        return [];
+      {
+        const trapTypes = types;
+        switch (trapTypes) {
+          case 'property':
+            return getTrapKeys('key');
+          case 'object':
+            return getTrapKeys('object');
+          case 'function':
+            return getTrapKeys('function');
+          case 'objectAll':
+            return getTrapKeys('key', 'object');
+          case 'functionAll':
+            return getTrapKeys('key', 'function');
+          case 'all':
+            return getTrapKeys('key', 'object', 'function');
+          default:
+            return [];
+        }
       }
     },
     writable: false,
@@ -79,12 +82,15 @@ Object.defineProperties(
  * @returns {Array} - Array of traps available for the requested type
  */
 function getTrapKeys(...types) {
-  const retArr = [];
-  Array.from(Object.keys(trapDefinitions)).forEach(function trapIterationCallback(trap) {
-    if (this.includes(trapDefinitions[trap]))
-      retArr.push(trap);
-  }, types);
-  return retArr;
+  {
+    const trapTypes = types,
+      retArr = [];
+    Array.from(Object.keys(trapDefinitions)).forEach(function trapIterationCallback(trap) {
+      if (this.includes(trapDefinitions[trap]))
+        retArr.push(trap);
+    }, trapTypes);
+    return retArr;
+  }
 }
 
 export { trapDefinitions };
