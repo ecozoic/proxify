@@ -38,6 +38,8 @@ Object.defineProperty(
             return getTrapKeys('key', 'function');
           case 'all':
             return getTrapKeys('key', 'object', 'function');
+          case '':
+                return getTrapKeys('key', 'object', 'function');
           default:
             return [];
         }
@@ -51,6 +53,10 @@ Object.defineProperty(
 
 Object.defineProperties(
   trapDefinitions, {
+    /**
+     * Returns all traps available for object properties
+     * @Returns {Array} - Returns an array of object property trap names
+     */
     'propertyTraps': {
       get: function _getPropertyTraps() {
         return getTrapKeys('key');
@@ -58,6 +64,10 @@ Object.defineProperties(
       configurable: false,
       enumerable: false
     },
+    /**
+     * Returns all traps available for objects
+     * @Returns {Array} - Returns an array of object trap names
+     */
     'objectTraps': {
       get: function _getObjectTraps() {
         return getTrapKeys('object');
@@ -65,12 +75,27 @@ Object.defineProperties(
       configurable: false,
       enumerable: false
     },
+    /**
+     * Returns all available traps for functions
+     * @Returns {Array} - Returns an array of function trap names
+     */
     'functionTraps': {
       get: function _getFunctionTraps() {
         return getTrapKeys('function');
       },
       configurable: false,
       enumerable: false
+    },
+    /**
+     * Returns all traps
+     * @Returns {Array} - Returns an array of all trap names
+     */
+    'traps': {
+      get: function _getTraps() {
+        return getTrapKeys('all');
+      },
+      configurable: false,
+      writable: false
     }
   }
 );
