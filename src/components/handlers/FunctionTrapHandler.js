@@ -13,8 +13,8 @@ class FunctionTrapHandler extends BaseTrapHandler {
   /**
    * Trap for a function call.
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/apply}
-   * @param {Object} target - The target object.
-   * @param {Object} thisArg - The this argument for a function call.
+   * @param {Function} target - The target object.
+   * @param {*} context - The this context for a function call.
    * @param {Array} argumentsList - The list of arguments for the call.
    * @returns {*} The return value of the function.
    */
